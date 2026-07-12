@@ -211,13 +211,15 @@ function LessonPage() {
             {lesson.chapters.map((c, i) => (
               <button
                 key={i}
-                className="flex w-full items-center gap-4 p-4 text-left hover:bg-accent/40 transition"
+                onClick={() => seekTo(parseTimestamp(c.time))}
+                aria-label={`Ir para ${c.title} em ${c.time}`}
+                className="flex w-full items-center gap-4 p-4 text-left hover:bg-accent/40 transition min-h-11"
               >
                 <span className="grid h-8 w-8 place-items-center rounded-full bg-primary/15 text-primary text-xs font-mono">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="flex-1 text-sm">{c.title}</span>
-                <span className="text-xs font-mono tabular-nums text-muted-foreground">
+                <span className="text-xs font-mono tabular-nums text-primary group-hover:underline">
                   {c.time}
                 </span>
               </button>
@@ -228,14 +230,28 @@ function LessonPage() {
         {/* TRANSCRIÇÃO */}
         <TabsContent value="transcricao" className="mt-6">
           <div className="rounded-2xl border border-border bg-card p-6 lg:p-8">
-            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
-              <FileText className="h-3 w-3" /> Transcrição da aula
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
+                <FileText className="h-3 w-3" /> Transcrição da aula
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {lesson.chapters.map((c, i) => (
+                  <button
+                    key={i}
+                    onClick={() => seekTo(parseTimestamp(c.time))}
+                    className="rounded-full border border-border px-2 py-1 text-[11px] font-mono tabular-nums text-muted-foreground hover:border-primary/60 hover:text-primary transition"
+                  >
+                    {c.time}
+                  </button>
+                ))}
+              </div>
             </div>
-            <p className="mt-4 text-sm leading-loose text-foreground/90">
+            <p className="mt-4 text-sm leading-loose text-foreground/90 whitespace-pre-wrap">
               {lesson.transcript}
             </p>
           </div>
         </TabsContent>
+
 
         {/* CÓDIGO */}
         {lesson.code && (
