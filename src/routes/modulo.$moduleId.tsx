@@ -104,6 +104,27 @@ function ModulePage() {
         })}
       </ol>
 
+      <Link
+        to="/quiz/$moduleId"
+        params={{ moduleId: mod.id }}
+        className="mt-8 flex items-center gap-4 rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-transparent p-5 hover:border-primary/60 transition"
+      >
+        <span className="grid h-11 w-11 place-items-center rounded-full bg-primary/15 border border-primary/40">
+          <ScrollText className="h-5 w-5 text-primary" />
+        </span>
+        <div className="flex-1 min-w-0">
+          <div className="text-[10px] uppercase tracking-[0.2em] text-primary/70">Quiz do módulo</div>
+          <div className="font-serif text-lg">
+            {quizResult
+              ? `Sua melhor: ${quizResult.score}/${quizResult.total}`
+              : "Teste sua absorção em 5 perguntas"}
+          </div>
+        </div>
+        <span className="text-xs uppercase tracking-[0.2em] text-primary">
+          {quizResult ? "refazer →" : "começar →"}
+        </span>
+      </Link>
+
       {nextModule && (
         <Link
           to="/modulo/$moduleId"
