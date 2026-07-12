@@ -4,16 +4,20 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { Flame } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { StudentSidebar } from "@/components/StudentSidebar";
 import { CommandPalette } from "@/components/CommandPalette";
+import { useProfile } from "@/lib/profile";
+import { useGamification } from "@/lib/gamification";
 
 function NotFoundComponent() {
   return (
@@ -127,29 +131,64 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
   return (
     <QueryClientProvider client={queryClient}>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-background text-foreground">
-          <StudentSidebar />
-          <div className="flex-1 flex flex-col min-w-0">
-            <header className="h-14 flex items-center gap-3 border-b border-border px-4 sticky top-0 z-30 backdrop-blur bg-background/70">
-              <SidebarTrigger />
-              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Concierge de Elite
-              </div>
-              <div className="ml-auto">
-                <CommandPalette />
-              </div>
-            </header>
-            <main className="flex-1 min-w-0">
-              <Outlet />
-            </main>
-          </div>
-        </div>
+        <AppShell />
       </SidebarProvider>
     </QueryClientProvider>
+  );
+}
+
+function AppShell() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { profile } = useProfile();
+  const { xp, level, streak } = useGamification();
+  const nav = useRouter();
+
+  useEffect(() => {
+    if (!profile.onboarded && pathname !== "/onboarding") {
+      nav.navigate({ to: "/onboarding" });
+    }
+  }, [profile.onboarded, pathname, nav]);
+
+  if (pathname === "/onboarding") {
+    return <Outlet />;
+  }
+
+  return (
+    <div className="min-h-screen flex w-full bg-background text-foreground">
+      <StudentSidebar />
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="h-14 flex items-center gap-3 border-b border-border px-4 sticky top-0 z-30 backdrop-blur bg-background/70">
+          <SidebarTrigger />
+          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            Concierge de Elite
+          </div>
+          <div className="ml-auto flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-3 text-xs">
+              <span className="inline-flex items-center gap-1 text-primary">
+                <Flame className="h-3 w-3" /> {streak.current}d
+              </span>
+              <span className="inline-flex items-center gap-1 text-muted-foreground">
+                Lv <span className="font-serif text-primary">{level}</span>
+              </span>
+              <span className="text-muted-foreground">{xp.toLocaleString("pt-BR")} XP</span>
+            </div>
+            <CommandPalette />
+            <Link
+              to="/perfil"
+              className="grid h-8 w-8 place-items-center rounded-full border border-primary/40 bg-primary/10 text-sm hover:border-primary"
+            >
+              {profile.avatar}
+            </Link>
+          </div>
+        </header>
+        <main className="flex-1 min-w-0">
+          <Outlet />
+        </main>
+      </div>
+    </div>
   );
 }
