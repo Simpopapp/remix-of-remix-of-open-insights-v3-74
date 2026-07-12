@@ -106,6 +106,30 @@ export function StudentSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/prompts"}>
+                  <Link to="/prompts">
+                    <Wand2 />
+                    <span>Prompts</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/projetos"}>
+                  <Link to="/projetos">
+                    <Layers />
+                    <span>Projetos</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/lancamento"}>
+                  <Link to="/lancamento">
+                    <Rocket />
+                    <span>Lançamento</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/prova"}>
                   <Link to="/prova">
                     <ScrollText />
