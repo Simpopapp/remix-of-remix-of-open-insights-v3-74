@@ -14,7 +14,7 @@ import {
   Target,
 } from "lucide-react";
 import { useState } from "react";
-import { findLesson } from "@/lib/course-data";
+import { findLesson, type Lesson, type Module } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { useNotes } from "@/lib/notes";
 import { useBookmarks, useExercises, lessonKey } from "@/lib/user-state";
@@ -46,7 +46,8 @@ export const Route = createFileRoute("/aula/$moduleId/$lessonId")({
 });
 
 function LessonPage() {
-  const { module: mod, lesson, prev, next } = Route.useLoaderData();
+  const data = Route.useLoaderData() as { module: Module; lesson: Lesson; prev?: Lesson; next?: Lesson };
+  const { module: mod, lesson, prev, next } = data;
   const { isDone, setDone } = useProgress();
   const done = isDone(mod.id, lesson.id);
   const [notes, setNotes] = useNotes(mod.id, lesson.id);
@@ -57,12 +58,13 @@ function LessonPage() {
   const exerciseDone = exercises.has(k);
   const [copied, setCopied] = useState(false);
 
-  const difficultyColor = {
+  const difficultyColors: Record<Lesson["exercise"]["difficulty"], string> = {
     Fácil: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30",
     Média: "bg-amber-500/15 text-amber-500 border-amber-500/30",
     Difícil: "bg-orange-500/15 text-orange-500 border-orange-500/30",
     Elite: "bg-primary/15 text-primary border-primary/40",
-  }[lesson.exercise.difficulty];
+  };
+  const difficultyColor = difficultyColors[lesson.exercise.difficulty];
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8 lg:py-12">

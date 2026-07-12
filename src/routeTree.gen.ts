@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
+import { Route as ExerciciosRouteImport } from './routes/exercicios'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
@@ -16,6 +18,16 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ModuloModuleIdRouteImport } from './routes/modulo.$moduleId'
 import { Route as AulaModuleIdLessonIdRouteImport } from './routes/aula.$moduleId.$lessonId'
 
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExerciciosRoute = ExerciciosRouteImport.update({
+  id: '/exercicios',
+  path: '/exercicios',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConquistasRoute = ConquistasRouteImport.update({
   id: '/conquistas',
   path: '/conquistas',
@@ -52,6 +64,8 @@ export interface FileRoutesByFullPath {
   '/biblioteca': typeof BibliotecaRoute
   '/comunidade': typeof ComunidadeRoute
   '/conquistas': typeof ConquistasRoute
+  '/exercicios': typeof ExerciciosRoute
+  '/favoritos': typeof FavoritosRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
@@ -60,6 +74,8 @@ export interface FileRoutesByTo {
   '/biblioteca': typeof BibliotecaRoute
   '/comunidade': typeof ComunidadeRoute
   '/conquistas': typeof ConquistasRoute
+  '/exercicios': typeof ExerciciosRoute
+  '/favoritos': typeof FavoritosRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
@@ -69,6 +85,8 @@ export interface FileRoutesById {
   '/biblioteca': typeof BibliotecaRoute
   '/comunidade': typeof ComunidadeRoute
   '/conquistas': typeof ConquistasRoute
+  '/exercicios': typeof ExerciciosRoute
+  '/favoritos': typeof FavoritosRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
@@ -79,6 +97,8 @@ export interface FileRouteTypes {
     | '/biblioteca'
     | '/comunidade'
     | '/conquistas'
+    | '/exercicios'
+    | '/favoritos'
     | '/modulo/$moduleId'
     | '/aula/$moduleId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +107,8 @@ export interface FileRouteTypes {
     | '/biblioteca'
     | '/comunidade'
     | '/conquistas'
+    | '/exercicios'
+    | '/favoritos'
     | '/modulo/$moduleId'
     | '/aula/$moduleId/$lessonId'
   id:
@@ -95,6 +117,8 @@ export interface FileRouteTypes {
     | '/biblioteca'
     | '/comunidade'
     | '/conquistas'
+    | '/exercicios'
+    | '/favoritos'
     | '/modulo/$moduleId'
     | '/aula/$moduleId/$lessonId'
   fileRoutesById: FileRoutesById
@@ -104,12 +128,28 @@ export interface RootRouteChildren {
   BibliotecaRoute: typeof BibliotecaRoute
   ComunidadeRoute: typeof ComunidadeRoute
   ConquistasRoute: typeof ConquistasRoute
+  ExerciciosRoute: typeof ExerciciosRoute
+  FavoritosRoute: typeof FavoritosRoute
   ModuloModuleIdRoute: typeof ModuloModuleIdRoute
   AulaModuleIdLessonIdRoute: typeof AulaModuleIdLessonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exercicios': {
+      id: '/exercicios'
+      path: '/exercicios'
+      fullPath: '/exercicios'
+      preLoaderRoute: typeof ExerciciosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/conquistas': {
       id: '/conquistas'
       path: '/conquistas'
@@ -160,6 +200,8 @@ const rootRouteChildren: RootRouteChildren = {
   BibliotecaRoute: BibliotecaRoute,
   ComunidadeRoute: ComunidadeRoute,
   ConquistasRoute: ConquistasRoute,
+  ExerciciosRoute: ExerciciosRoute,
+  FavoritosRoute: FavoritosRoute,
   ModuloModuleIdRoute: ModuloModuleIdRoute,
   AulaModuleIdLessonIdRoute: AulaModuleIdLessonIdRoute,
 }
