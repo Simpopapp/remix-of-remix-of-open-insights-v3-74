@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { StudentSidebar } from "@/components/StudentSidebar";
 import { CommandPalette } from "@/components/CommandPalette";
+import { ConciergeChat } from "@/components/ConciergeChat";
 import { useProfile } from "@/lib/profile";
 import { useGamification } from "@/lib/gamification";
 
@@ -189,6 +190,7 @@ function AppShell() {
           <Outlet />
         </main>
       </div>
+      <ConciergeChat />
     </div>
   );
 }

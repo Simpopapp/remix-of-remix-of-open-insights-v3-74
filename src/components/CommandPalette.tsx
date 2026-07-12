@@ -1,6 +1,6 @@
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "@tanstack/react-router";
-import { Award, BookOpen, Home, Library, PlayCircle, Target, Trophy, Users } from "lucide-react";
+import { Award, BookOpen, Home, Layers, Library, PlayCircle, Rocket, Target, Trophy, Users, Wand2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { course } from "@/lib/course-data";
 
@@ -56,6 +56,15 @@ export function CommandPalette() {
             </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/biblioteca" }))}>
               <Library className="mr-2 h-4 w-4" /> Biblioteca
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/prompts" }))}>
+              <Wand2 className="mr-2 h-4 w-4" /> Prompts
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/projetos" }))}>
+              <Layers className="mr-2 h-4 w-4" /> Projetos da Cohort
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/lancamento" }))}>
+              <Rocket className="mr-2 h-4 w-4" /> Playbook de Lançamento
             </CommandItem>
           </CommandGroup>
           <CommandGroup heading="Módulos">

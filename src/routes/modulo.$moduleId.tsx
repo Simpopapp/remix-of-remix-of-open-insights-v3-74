@@ -1,8 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { CheckCircle2, Circle, PlayCircle } from "lucide-react";
+import { CheckCircle2, Circle, PlayCircle, ScrollText } from "lucide-react";
 import type { Lesson } from "@/lib/course-data";
 import { findModule, course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
+import { useQuizResults } from "@/lib/quiz-data";
 import { Progress } from "@/components/ui/progress";
 
 export const Route = createFileRoute("/modulo/$moduleId")({
@@ -32,6 +33,8 @@ export const Route = createFileRoute("/modulo/$moduleId")({
 function ModulePage() {
   const { mod } = Route.useLoaderData();
   const { isDone, toggle } = useProgress();
+  const { get: getQuiz } = useQuizResults();
+  const quizResult = getQuiz(mod.id);
   const done = mod.lessons.filter((l: Lesson) => isDone(mod.id, l.id)).length;
   const pct = Math.round((done / mod.lessons.length) * 100);
   const nextModule = course.modules[course.modules.indexOf(mod) + 1];
@@ -100,6 +103,27 @@ function ModulePage() {
           );
         })}
       </ol>
+
+      <Link
+        to="/quiz/$moduleId"
+        params={{ moduleId: mod.id }}
+        className="mt-8 flex items-center gap-4 rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-transparent p-5 hover:border-primary/60 transition"
+      >
+        <span className="grid h-11 w-11 place-items-center rounded-full bg-primary/15 border border-primary/40">
+          <ScrollText className="h-5 w-5 text-primary" />
+        </span>
+        <div className="flex-1 min-w-0">
+          <div className="text-[10px] uppercase tracking-[0.2em] text-primary/70">Quiz do módulo</div>
+          <div className="font-serif text-lg">
+            {quizResult
+              ? `Sua melhor: ${quizResult.score}/${quizResult.total}`
+              : "Teste sua absorção em 5 perguntas"}
+          </div>
+        </div>
+        <span className="text-xs uppercase tracking-[0.2em] text-primary">
+          {quizResult ? "refazer →" : "começar →"}
+        </span>
+      </Link>
 
       {nextModule && (
         <Link

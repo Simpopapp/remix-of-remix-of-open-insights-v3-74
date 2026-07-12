@@ -12,8 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrilhasRouteImport } from './routes/trilhas'
 import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as ProvaRouteImport } from './routes/prova'
+import { Route as PromptsRouteImport } from './routes/prompts'
+import { Route as ProjetosRouteImport } from './routes/projetos'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as LancamentoRouteImport } from './routes/lancamento'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as ExerciciosRouteImport } from './routes/exercicios'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
@@ -21,6 +24,7 @@ import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as CertificadoRouteImport } from './routes/certificado'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as QuizModuleIdRouteImport } from './routes/quiz.$moduleId'
 import { Route as ModuloModuleIdRouteImport } from './routes/modulo.$moduleId'
 import { Route as AulaModuleIdLessonIdRouteImport } from './routes/aula.$moduleId.$lessonId'
 
@@ -39,6 +43,16 @@ const ProvaRoute = ProvaRouteImport.update({
   path: '/prova',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PromptsRoute = PromptsRouteImport.update({
+  id: '/prompts',
+  path: '/prompts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjetosRoute = ProjetosRouteImport.update({
+  id: '/projetos',
+  path: '/projetos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PerfilRoute = PerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
@@ -47,6 +61,11 @@ const PerfilRoute = PerfilRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LancamentoRoute = LancamentoRouteImport.update({
+  id: '/lancamento',
+  path: '/lancamento',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FavoritosRoute = FavoritosRouteImport.update({
@@ -84,6 +103,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuizModuleIdRoute = QuizModuleIdRouteImport.update({
+  id: '/quiz/$moduleId',
+  path: '/quiz/$moduleId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuloModuleIdRoute = ModuloModuleIdRouteImport.update({
   id: '/modulo/$moduleId',
   path: '/modulo/$moduleId',
@@ -103,12 +127,16 @@ export interface FileRoutesByFullPath {
   '/conquistas': typeof ConquistasRoute
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
+  '/lancamento': typeof LancamentoRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
+  '/projetos': typeof ProjetosRoute
+  '/prompts': typeof PromptsRoute
   '/prova': typeof ProvaRoute
   '/ranking': typeof RankingRoute
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
+  '/quiz/$moduleId': typeof QuizModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRoutesByTo {
@@ -119,12 +147,16 @@ export interface FileRoutesByTo {
   '/conquistas': typeof ConquistasRoute
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
+  '/lancamento': typeof LancamentoRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
+  '/projetos': typeof ProjetosRoute
+  '/prompts': typeof PromptsRoute
   '/prova': typeof ProvaRoute
   '/ranking': typeof RankingRoute
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
+  '/quiz/$moduleId': typeof QuizModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRoutesById {
@@ -136,12 +168,16 @@ export interface FileRoutesById {
   '/conquistas': typeof ConquistasRoute
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
+  '/lancamento': typeof LancamentoRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
+  '/projetos': typeof ProjetosRoute
+  '/prompts': typeof PromptsRoute
   '/prova': typeof ProvaRoute
   '/ranking': typeof RankingRoute
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
+  '/quiz/$moduleId': typeof QuizModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRouteTypes {
@@ -154,12 +190,16 @@ export interface FileRouteTypes {
     | '/conquistas'
     | '/exercicios'
     | '/favoritos'
+    | '/lancamento'
     | '/onboarding'
     | '/perfil'
+    | '/projetos'
+    | '/prompts'
     | '/prova'
     | '/ranking'
     | '/trilhas'
     | '/modulo/$moduleId'
+    | '/quiz/$moduleId'
     | '/aula/$moduleId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -170,12 +210,16 @@ export interface FileRouteTypes {
     | '/conquistas'
     | '/exercicios'
     | '/favoritos'
+    | '/lancamento'
     | '/onboarding'
     | '/perfil'
+    | '/projetos'
+    | '/prompts'
     | '/prova'
     | '/ranking'
     | '/trilhas'
     | '/modulo/$moduleId'
+    | '/quiz/$moduleId'
     | '/aula/$moduleId/$lessonId'
   id:
     | '__root__'
@@ -186,12 +230,16 @@ export interface FileRouteTypes {
     | '/conquistas'
     | '/exercicios'
     | '/favoritos'
+    | '/lancamento'
     | '/onboarding'
     | '/perfil'
+    | '/projetos'
+    | '/prompts'
     | '/prova'
     | '/ranking'
     | '/trilhas'
     | '/modulo/$moduleId'
+    | '/quiz/$moduleId'
     | '/aula/$moduleId/$lessonId'
   fileRoutesById: FileRoutesById
 }
@@ -203,12 +251,16 @@ export interface RootRouteChildren {
   ConquistasRoute: typeof ConquistasRoute
   ExerciciosRoute: typeof ExerciciosRoute
   FavoritosRoute: typeof FavoritosRoute
+  LancamentoRoute: typeof LancamentoRoute
   OnboardingRoute: typeof OnboardingRoute
   PerfilRoute: typeof PerfilRoute
+  ProjetosRoute: typeof ProjetosRoute
+  PromptsRoute: typeof PromptsRoute
   ProvaRoute: typeof ProvaRoute
   RankingRoute: typeof RankingRoute
   TrilhasRoute: typeof TrilhasRoute
   ModuloModuleIdRoute: typeof ModuloModuleIdRoute
+  QuizModuleIdRoute: typeof QuizModuleIdRoute
   AulaModuleIdLessonIdRoute: typeof AulaModuleIdLessonIdRoute
 }
 
@@ -235,6 +287,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProvaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prompts': {
+      id: '/prompts'
+      path: '/prompts'
+      fullPath: '/prompts'
+      preLoaderRoute: typeof PromptsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projetos': {
+      id: '/projetos'
+      path: '/projetos'
+      fullPath: '/projetos'
+      preLoaderRoute: typeof ProjetosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/perfil': {
       id: '/perfil'
       path: '/perfil'
@@ -247,6 +313,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lancamento': {
+      id: '/lancamento'
+      path: '/lancamento'
+      fullPath: '/lancamento'
+      preLoaderRoute: typeof LancamentoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/favoritos': {
@@ -298,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quiz/$moduleId': {
+      id: '/quiz/$moduleId'
+      path: '/quiz/$moduleId'
+      fullPath: '/quiz/$moduleId'
+      preLoaderRoute: typeof QuizModuleIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/modulo/$moduleId': {
       id: '/modulo/$moduleId'
       path: '/modulo/$moduleId'
@@ -323,12 +403,16 @@ const rootRouteChildren: RootRouteChildren = {
   ConquistasRoute: ConquistasRoute,
   ExerciciosRoute: ExerciciosRoute,
   FavoritosRoute: FavoritosRoute,
+  LancamentoRoute: LancamentoRoute,
   OnboardingRoute: OnboardingRoute,
   PerfilRoute: PerfilRoute,
+  ProjetosRoute: ProjetosRoute,
+  PromptsRoute: PromptsRoute,
   ProvaRoute: ProvaRoute,
   RankingRoute: RankingRoute,
   TrilhasRoute: TrilhasRoute,
   ModuloModuleIdRoute: ModuloModuleIdRoute,
+  QuizModuleIdRoute: QuizModuleIdRoute,
   AulaModuleIdLessonIdRoute: AulaModuleIdLessonIdRoute,
 }
 export const routeTree = rootRouteImport
