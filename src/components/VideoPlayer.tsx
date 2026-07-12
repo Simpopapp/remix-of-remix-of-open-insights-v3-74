@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Play, Pause, RotateCcw, Volume2, VolumeX, Maximize2, Gauge } from "lucide-react";
 import { useVideoProgress } from "@/lib/video-progress";
 import { addWatchSeconds, pingStreak } from "@/lib/gamification";
+import { onSeek, reportTime } from "@/lib/video-bus";
 
 // Public sample video used as placeholder — swap per lesson later.
 const DEFAULT_SRC = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
@@ -43,6 +44,7 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }:
     };
     const onTime = () => {
       setCur(v.currentTime);
+      reportTime(v.currentTime);
       const now = Date.now();
       if (now - lastPingRef.current > 5000) {
         save(v.currentTime, v.duration || 0);
@@ -69,6 +71,19 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }:
       save(v.currentTime, v.duration || 0);
     };
   }, [moduleId, lessonId, save, time, onNearComplete]);
+
+  // External seek bus (chapters, transcript timestamps, notes)
+  useEffect(() => {
+    return onSeek((t) => {
+      const v = ref.current;
+      if (!v) return;
+      v.currentTime = Math.max(0, t);
+      setShowResume(false);
+      v.play().catch(() => {});
+    });
+  }, []);
+
+
 
   // Keyboard shortcuts
   useEffect(() => {

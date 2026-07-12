@@ -1,6 +1,6 @@
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "@tanstack/react-router";
-import { Award, BookOpen, Home, Layers, Library, PlayCircle, Rocket, Target, Trophy, Users, Wand2 } from "lucide-react";
+import { Award, BookOpen, Home, Layers, Library, PlayCircle, Rocket, Search, Target, Trophy, Users, Wand2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { course } from "@/lib/course-data";
 
@@ -28,11 +28,14 @@ export function CommandPalette() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="hidden sm:inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground hover:border-primary/50 hover:text-foreground transition"
+        aria-label="Abrir busca"
+        className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-2 sm:px-3 py-1.5 text-xs text-muted-foreground hover:border-primary/50 hover:text-foreground transition min-h-9"
       >
-        <span>Buscar aulas, módulos…</span>
-        <kbd className="rounded bg-background/80 border border-border px-1.5 py-0.5 text-[10px] font-mono">⌘K</kbd>
+        <Search className="h-3.5 w-3.5 sm:hidden" />
+        <span className="hidden sm:inline">Buscar aulas, módulos…</span>
+        <kbd className="hidden sm:inline rounded bg-background/80 border border-border px-1.5 py-0.5 text-[10px] font-mono">⌘K</kbd>
       </button>
+
 
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Buscar aulas, módulos, seções…" />
