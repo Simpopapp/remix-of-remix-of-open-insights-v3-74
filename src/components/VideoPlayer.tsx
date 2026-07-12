@@ -72,6 +72,19 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }:
     };
   }, [moduleId, lessonId, save, time, onNearComplete]);
 
+  // External seek bus (chapters, transcript timestamps, notes)
+  useEffect(() => {
+    return onSeek((t) => {
+      const v = ref.current;
+      if (!v) return;
+      v.currentTime = Math.max(0, t);
+      setShowResume(false);
+      v.play().catch(() => {});
+    });
+  }, []);
+
+
+
   // Keyboard shortcuts
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
