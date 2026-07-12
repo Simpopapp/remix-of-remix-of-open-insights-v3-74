@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Award, Bookmark, BookOpen, Compass, Home, Library, Route as RouteIcon, ScrollText, Sparkles, Target, Trophy, User, Users } from "lucide-react";
+import { Award, Bookmark, BookOpen, Compass, Home, Library, Rocket, Route as RouteIcon, ScrollText, Sparkles, Target, Trophy, User, Users, Wand2, Layers } from "lucide-react";
 import { course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import {
