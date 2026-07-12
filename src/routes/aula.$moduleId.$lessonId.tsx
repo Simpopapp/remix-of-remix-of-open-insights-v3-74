@@ -359,25 +359,106 @@ function LessonPage() {
 
       {/* Notes always visible */}
       <div className="mt-10 rounded-2xl border border-border bg-card p-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
             <MessageSquare className="h-3 w-3" /> Suas anotações
           </div>
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
-            {notes.length} car.
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={insertTimestamp}
+              className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-[11px] hover:border-primary/60 hover:text-primary transition min-h-9"
+            >
+              <Timer className="h-3 w-3" /> Inserir tempo
+            </button>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              {notes.length} car.
+            </span>
+          </div>
         </div>
         <textarea
+          ref={notesRef}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Capture insights, comandos e decisões desta aula…"
+          placeholder="Capture insights. Use [Inserir tempo] para marcar um trecho — depois clique nos chips para voltar exatamente ali."
           rows={5}
           className="mt-3 w-full resize-y rounded-xl border border-border bg-background/60 p-4 text-sm leading-relaxed placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
+        {noteStamps.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {noteStamps.map((t, i) => (
+              <button
+                key={`${t}-${i}`}
+                type="button"
+                onClick={() => seekTo(parseTimestamp(t))}
+                className="rounded-full border border-primary/40 bg-primary/10 px-2 py-1 text-[11px] font-mono tabular-nums text-primary hover:bg-primary/20 transition"
+                aria-label={`Ir para ${t} no vídeo`}
+              >
+                ▶ {t}
+              </button>
+            ))}
+          </div>
+        )}
         <div className="mt-2 text-[11px] text-muted-foreground">
           Salvo automaticamente no seu dispositivo.
         </div>
       </div>
+
+      {/* Feedback */}
+      <div className="mt-6 rounded-2xl border border-border bg-card p-6">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <div className="text-xs uppercase tracking-[0.24em] text-primary">
+              Essa aula te ajudou?
+            </div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Seu feedback afina o próximo lote de aulas.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => feedback.setRating(feedback.rating === "up" ? null : "up")}
+              aria-label="Curti a aula"
+              aria-pressed={feedback.rating === "up"}
+              className={
+                "inline-flex items-center justify-center h-11 w-11 rounded-full border transition " +
+                (feedback.rating === "up"
+                  ? "bg-primary/15 text-primary border-primary/50"
+                  : "border-border text-muted-foreground hover:border-primary/60 hover:text-foreground")
+              }
+            >
+              <ThumbsUp className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => feedback.setRating(feedback.rating === "down" ? null : "down")}
+              aria-label="Não curti"
+              aria-pressed={feedback.rating === "down"}
+              className={
+                "inline-flex items-center justify-center h-11 w-11 rounded-full border transition " +
+                (feedback.rating === "down"
+                  ? "bg-destructive/15 text-destructive border-destructive/50"
+                  : "border-border text-muted-foreground hover:border-destructive/60 hover:text-foreground")
+              }
+            >
+              <ThumbsDown className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+        {feedback.rating && (
+          <textarea
+            value={feedback.comment}
+            onChange={(e) => feedback.setComment(e.target.value)}
+            placeholder={
+              feedback.rating === "up"
+                ? "O que fez a diferença? (opcional)"
+                : "O que faltou ou poderia melhorar? (opcional)"
+            }
+            rows={3}
+            className="mt-4 w-full resize-y rounded-xl border border-border bg-background/60 p-3 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        )}
+      </div>
+
 
       {/* Prev / Next */}
       <div className="mt-10 grid gap-3 sm:grid-cols-2">
