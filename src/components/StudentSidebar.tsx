@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, Home, Sparkles } from "lucide-react";
+import { BookOpen, Home, Library, Sparkles, Trophy, Users } from "lucide-react";
 import { course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import {
@@ -46,6 +46,30 @@ export function StudentSidebar() {
                   <Link to="/">
                     <Home />
                     <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/conquistas"}>
+                  <Link to="/conquistas">
+                    <Trophy />
+                    <span>Conquistas</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/comunidade"}>
+                  <Link to="/comunidade">
+                    <Users />
+                    <span>Comunidade</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/biblioteca"}>
+                  <Link to="/biblioteca">
+                    <Library />
+                    <span>Biblioteca</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

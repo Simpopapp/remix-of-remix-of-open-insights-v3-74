@@ -9,10 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ConquistasRouteImport } from './routes/conquistas'
+import { Route as ComunidadeRouteImport } from './routes/comunidade'
+import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ModuloModuleIdRouteImport } from './routes/modulo.$moduleId'
 import { Route as AulaModuleIdLessonIdRouteImport } from './routes/aula.$moduleId.$lessonId'
 
+const ConquistasRoute = ConquistasRouteImport.update({
+  id: '/conquistas',
+  path: '/conquistas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComunidadeRoute = ComunidadeRouteImport.update({
+  id: '/comunidade',
+  path: '/comunidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliotecaRoute = BibliotecaRouteImport.update({
+  id: '/biblioteca',
+  path: '/biblioteca',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,36 +49,88 @@ const AulaModuleIdLessonIdRoute = AulaModuleIdLessonIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/biblioteca': typeof BibliotecaRoute
+  '/comunidade': typeof ComunidadeRoute
+  '/conquistas': typeof ConquistasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/biblioteca': typeof BibliotecaRoute
+  '/comunidade': typeof ComunidadeRoute
+  '/conquistas': typeof ConquistasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/biblioteca': typeof BibliotecaRoute
+  '/comunidade': typeof ComunidadeRoute
+  '/conquistas': typeof ConquistasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/modulo/$moduleId' | '/aula/$moduleId/$lessonId'
+  fullPaths:
+    | '/'
+    | '/biblioteca'
+    | '/comunidade'
+    | '/conquistas'
+    | '/modulo/$moduleId'
+    | '/aula/$moduleId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/modulo/$moduleId' | '/aula/$moduleId/$lessonId'
-  id: '__root__' | '/' | '/modulo/$moduleId' | '/aula/$moduleId/$lessonId'
+  to:
+    | '/'
+    | '/biblioteca'
+    | '/comunidade'
+    | '/conquistas'
+    | '/modulo/$moduleId'
+    | '/aula/$moduleId/$lessonId'
+  id:
+    | '__root__'
+    | '/'
+    | '/biblioteca'
+    | '/comunidade'
+    | '/conquistas'
+    | '/modulo/$moduleId'
+    | '/aula/$moduleId/$lessonId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BibliotecaRoute: typeof BibliotecaRoute
+  ComunidadeRoute: typeof ComunidadeRoute
+  ConquistasRoute: typeof ConquistasRoute
   ModuloModuleIdRoute: typeof ModuloModuleIdRoute
   AulaModuleIdLessonIdRoute: typeof AulaModuleIdLessonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/conquistas': {
+      id: '/conquistas'
+      path: '/conquistas'
+      fullPath: '/conquistas'
+      preLoaderRoute: typeof ConquistasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comunidade': {
+      id: '/comunidade'
+      path: '/comunidade'
+      fullPath: '/comunidade'
+      preLoaderRoute: typeof ComunidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biblioteca': {
+      id: '/biblioteca'
+      path: '/biblioteca'
+      fullPath: '/biblioteca'
+      preLoaderRoute: typeof BibliotecaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -87,6 +157,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BibliotecaRoute: BibliotecaRoute,
+  ComunidadeRoute: ComunidadeRoute,
+  ConquistasRoute: ConquistasRoute,
   ModuloModuleIdRoute: ModuloModuleIdRoute,
   AulaModuleIdLessonIdRoute: AulaModuleIdLessonIdRoute,
 }
