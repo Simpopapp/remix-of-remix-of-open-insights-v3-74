@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { StudentSidebar } from "@/components/StudentSidebar";
+import { CommandPalette } from "@/components/CommandPalette";
 
 function NotFoundComponent() {
   return (
@@ -138,6 +139,9 @@ function RootComponent() {
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                 Concierge de Elite
+              </div>
+              <div className="ml-auto">
+                <CommandPalette />
               </div>
             </header>
             <main className="flex-1 min-w-0">
