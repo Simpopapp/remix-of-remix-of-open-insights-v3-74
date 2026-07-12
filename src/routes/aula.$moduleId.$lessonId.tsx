@@ -62,6 +62,27 @@ function LessonPage() {
   const bookmarked = bookmarks.has(k);
   const exerciseDone = exercises.has(k);
   const [copied, setCopied] = useState(false);
+  const feedback = useLessonFeedback(mod.id, lesson.id);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
+
+  const insertTimestamp = () => {
+    const stamp = `[${fmtTimestamp(getCurrentTime())}] `;
+    const ta = notesRef.current;
+    if (!ta) {
+      setNotes(notes + stamp);
+      return;
+    }
+    const start = ta.selectionStart ?? notes.length;
+    const end = ta.selectionEnd ?? notes.length;
+    const next = notes.slice(0, start) + stamp + notes.slice(end);
+    setNotes(next);
+    requestAnimationFrame(() => {
+      ta.focus();
+      const pos = start + stamp.length;
+      ta.setSelectionRange(pos, pos);
+    });
+  };
+  const noteStamps = Array.from(notes.matchAll(/\[(\d{1,2}:\d{2}(?::\d{2})?)\]/g)).map((m) => m[1]);
 
   const difficultyColors: Record<Lesson["exercise"]["difficulty"], string> = {
     Fácil: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30",
