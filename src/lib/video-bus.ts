@@ -7,7 +7,9 @@ let currentTime = 0;
 
 export function onSeek(cb: Listener) {
   listeners.add(cb);
-  return () => listeners.delete(cb);
+  return () => {
+    listeners.delete(cb);
+  };
 }
 export function seekTo(seconds: number) {
   listeners.forEach((l) => l(seconds));
