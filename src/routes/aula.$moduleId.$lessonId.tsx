@@ -11,13 +11,18 @@ import {
   MessageSquare,
   Sparkles,
   Target,
+  ThumbsDown,
+  ThumbsUp,
+  Timer,
 } from "lucide-react";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { findLesson, type Lesson, type Module } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { useNotes } from "@/lib/notes";
 import { useBookmarks, useExercises, lessonKey } from "@/lib/user-state";
+import { useLessonFeedback } from "@/lib/feedback";
+import { seekTo, parseTimestamp, fmtTimestamp, getCurrentTime } from "@/lib/video-bus";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 
