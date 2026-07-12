@@ -190,6 +190,7 @@ function AppShell() {
           <Outlet />
         </main>
       </div>
+      <ConciergeChat />
     </div>
   );
 }
