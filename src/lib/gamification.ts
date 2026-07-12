@@ -100,7 +100,7 @@ export function useGamification() {
   }, []);
 
   const { completedCount } = useProgress();
-  const { doneCount: exercisesDone } = useExercises();
+  const { count: exercisesDone } = useExercises();
 
   const xp = useMemo(() => {
     // 50 XP por aula, 120 por exercício, 5 por hora assistida, 25 por dia de streak

@@ -1,7 +1,8 @@
 import { useCallback, useSyncExternalStore } from "react";
 
 const KEY = "aiae:video:v1";
-type Store = Record<string, { t: number; d: number }>; // key -> {time, duration}
+type Store = Record<string, { t: number; d: number }>;
+const EMPTY: Store = {};
 
 const listeners = new Set<() => void>();
 
@@ -27,7 +28,7 @@ export function useVideoProgress(moduleId: string, lessonId: string) {
       return () => listeners.delete(cb);
     },
     read,
-    () => ({}),
+    () => EMPTY,
   );
   const entry = store[key] ?? { t: 0, d: 0 };
 
