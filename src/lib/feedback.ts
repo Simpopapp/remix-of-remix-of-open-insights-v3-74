@@ -21,7 +21,9 @@ function write(next: Store) {
 }
 const subscribe = (cb: () => void) => {
   listeners.add(cb);
-  return () => listeners.delete(cb);
+  return () => {
+    listeners.delete(cb);
+  };
 };
 const empty: Store = {};
 
