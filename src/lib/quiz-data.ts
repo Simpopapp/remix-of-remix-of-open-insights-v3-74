@@ -213,7 +213,7 @@ function snapshot() {
 }
 
 export function useQuizResults() {
-  const state = useSyncExternalStore(subscribe, snapshot, () => ({}));
+  const state = useSyncExternalStore(subscribe, snapshot, () => ({} as QuizState));
   return {
     results: state,
     get(mid: string) {
