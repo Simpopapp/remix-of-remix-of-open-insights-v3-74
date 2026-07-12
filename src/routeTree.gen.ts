@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrilhasRouteImport } from './routes/trilhas'
 import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as ProvaRouteImport } from './routes/prova'
+import { Route as ProjetosRouteImport } from './routes/projetos'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LancamentoRouteImport } from './routes/lancamento'
@@ -39,6 +40,11 @@ const RankingRoute = RankingRouteImport.update({
 const ProvaRoute = ProvaRouteImport.update({
   id: '/prova',
   path: '/prova',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjetosRoute = ProjetosRouteImport.update({
+  id: '/projetos',
+  path: '/projetos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PerfilRoute = PerfilRouteImport.update({
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/lancamento': typeof LancamentoRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
+  '/projetos': typeof ProjetosRoute
   '/prova': typeof ProvaRoute
   '/ranking': typeof RankingRoute
   '/trilhas': typeof TrilhasRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/lancamento': typeof LancamentoRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
+  '/projetos': typeof ProjetosRoute
   '/prova': typeof ProvaRoute
   '/ranking': typeof RankingRoute
   '/trilhas': typeof TrilhasRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/lancamento': typeof LancamentoRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
+  '/projetos': typeof ProjetosRoute
   '/prova': typeof ProvaRoute
   '/ranking': typeof RankingRoute
   '/trilhas': typeof TrilhasRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/lancamento'
     | '/onboarding'
     | '/perfil'
+    | '/projetos'
     | '/prova'
     | '/ranking'
     | '/trilhas'
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | '/lancamento'
     | '/onboarding'
     | '/perfil'
+    | '/projetos'
     | '/prova'
     | '/ranking'
     | '/trilhas'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/lancamento'
     | '/onboarding'
     | '/perfil'
+    | '/projetos'
     | '/prova'
     | '/ranking'
     | '/trilhas'
@@ -230,6 +242,7 @@ export interface RootRouteChildren {
   LancamentoRoute: typeof LancamentoRoute
   OnboardingRoute: typeof OnboardingRoute
   PerfilRoute: typeof PerfilRoute
+  ProjetosRoute: typeof ProjetosRoute
   ProvaRoute: typeof ProvaRoute
   RankingRoute: typeof RankingRoute
   TrilhasRoute: typeof TrilhasRoute
@@ -259,6 +272,13 @@ declare module '@tanstack/react-router' {
       path: '/prova'
       fullPath: '/prova'
       preLoaderRoute: typeof ProvaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projetos': {
+      id: '/projetos'
+      path: '/projetos'
+      fullPath: '/projetos'
+      preLoaderRoute: typeof ProjetosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/perfil': {
@@ -366,6 +386,7 @@ const rootRouteChildren: RootRouteChildren = {
   LancamentoRoute: LancamentoRoute,
   OnboardingRoute: OnboardingRoute,
   PerfilRoute: PerfilRoute,
+  ProjetosRoute: ProjetosRoute,
   ProvaRoute: ProvaRoute,
   RankingRoute: RankingRoute,
   TrilhasRoute: TrilhasRoute,
