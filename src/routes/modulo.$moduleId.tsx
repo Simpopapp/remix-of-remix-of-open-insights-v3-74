@@ -1,8 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { CheckCircle2, Circle, PlayCircle } from "lucide-react";
+import { CheckCircle2, Circle, PlayCircle, ScrollText } from "lucide-react";
 import type { Lesson } from "@/lib/course-data";
 import { findModule, course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
+import { useQuizResults } from "@/lib/quiz-data";
 import { Progress } from "@/components/ui/progress";
 
 export const Route = createFileRoute("/modulo/$moduleId")({
