@@ -44,6 +44,7 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }:
     };
     const onTime = () => {
       setCur(v.currentTime);
+      reportTime(v.currentTime);
       const now = Date.now();
       if (now - lastPingRef.current > 5000) {
         save(v.currentTime, v.duration || 0);
