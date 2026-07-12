@@ -21,6 +21,7 @@ import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as CertificadoRouteImport } from './routes/certificado'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as QuizModuleIdRouteImport } from './routes/quiz.$moduleId'
 import { Route as ModuloModuleIdRouteImport } from './routes/modulo.$moduleId'
 import { Route as AulaModuleIdLessonIdRouteImport } from './routes/aula.$moduleId.$lessonId'
 
@@ -84,6 +85,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuizModuleIdRoute = QuizModuleIdRouteImport.update({
+  id: '/quiz/$moduleId',
+  path: '/quiz/$moduleId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuloModuleIdRoute = ModuloModuleIdRouteImport.update({
   id: '/modulo/$moduleId',
   path: '/modulo/$moduleId',
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/ranking': typeof RankingRoute
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
+  '/quiz/$moduleId': typeof QuizModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRoutesByTo {
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/ranking': typeof RankingRoute
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
+  '/quiz/$moduleId': typeof QuizModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRoutesById {
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/ranking': typeof RankingRoute
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
+  '/quiz/$moduleId': typeof QuizModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRouteTypes {
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/ranking'
     | '/trilhas'
     | '/modulo/$moduleId'
+    | '/quiz/$moduleId'
     | '/aula/$moduleId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/ranking'
     | '/trilhas'
     | '/modulo/$moduleId'
+    | '/quiz/$moduleId'
     | '/aula/$moduleId/$lessonId'
   id:
     | '__root__'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/ranking'
     | '/trilhas'
     | '/modulo/$moduleId'
+    | '/quiz/$moduleId'
     | '/aula/$moduleId/$lessonId'
   fileRoutesById: FileRoutesById
 }
@@ -209,6 +221,7 @@ export interface RootRouteChildren {
   RankingRoute: typeof RankingRoute
   TrilhasRoute: typeof TrilhasRoute
   ModuloModuleIdRoute: typeof ModuloModuleIdRoute
+  QuizModuleIdRoute: typeof QuizModuleIdRoute
   AulaModuleIdLessonIdRoute: typeof AulaModuleIdLessonIdRoute
 }
 
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quiz/$moduleId': {
+      id: '/quiz/$moduleId'
+      path: '/quiz/$moduleId'
+      fullPath: '/quiz/$moduleId'
+      preLoaderRoute: typeof QuizModuleIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/modulo/$moduleId': {
       id: '/modulo/$moduleId'
       path: '/modulo/$moduleId'
@@ -329,6 +349,7 @@ const rootRouteChildren: RootRouteChildren = {
   RankingRoute: RankingRoute,
   TrilhasRoute: TrilhasRoute,
   ModuloModuleIdRoute: ModuloModuleIdRoute,
+  QuizModuleIdRoute: QuizModuleIdRoute,
   AulaModuleIdLessonIdRoute: AulaModuleIdLessonIdRoute,
 }
 export const routeTree = rootRouteImport
