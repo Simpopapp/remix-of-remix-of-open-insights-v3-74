@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Check, PlayCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, FileText, PlayCircle, Sparkles } from "lucide-react";
 import { findLesson } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
+import { useNotes } from "@/lib/notes";
 
 export const Route = createFileRoute("/aula/$moduleId/$lessonId")({
   loader: ({ params }) => {
@@ -31,6 +32,7 @@ function LessonPage() {
   const { module: mod, lesson, prev, next } = Route.useLoaderData();
   const { isDone, setDone } = useProgress();
   const done = isDone(mod.id, lesson.id);
+  const [notes, setNotes] = useNotes(mod.id, lesson.id);
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8 lg:py-12">
@@ -93,23 +95,76 @@ function LessonPage() {
         </button>
       </div>
 
-      {/* Notes / description block */}
+      {/* Content grid */}
       <div className="mt-10 grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 rounded-xl border border-border bg-card p-6">
-          <h2 className="font-serif text-xl">Sobre esta aula</h2>
-          <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-            {lesson.description} Nesta aula você recebe o framework prático, os exemplos reais
-            e o passo a passo para aplicar imediatamente no seu projeto. O padrão AI App Empire:
-            zero enrolação, tudo executável.
-          </p>
+        <div className="lg:col-span-2 space-y-6">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
+              <Sparkles className="h-3 w-3" /> Sobre esta aula
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+              {lesson.description} Nesta aula você recebe o framework prático, os
+              exemplos reais e o passo a passo para aplicar imediatamente no seu
+              projeto. O padrão AI App Empire: zero enrolação, tudo executável.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
+                <FileText className="h-3 w-3" /> Suas anotações
+              </div>
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                {notes.length} car.
+              </span>
+            </div>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Capture insights, comandos e decisões desta aula…"
+              rows={6}
+              className="mt-3 w-full resize-y rounded-xl border border-border bg-background/60 p-4 text-sm leading-relaxed placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40"
+            />
+            <div className="mt-2 text-[11px] text-muted-foreground">
+              Salvo automaticamente no seu dispositivo.
+            </div>
+          </div>
         </div>
-        <div className="rounded-xl border border-border bg-card p-6">
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Recursos</div>
-          <ul className="mt-3 space-y-2 text-sm">
-            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-primary" /> Slides da aula</li>
-            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-primary" /> Repositório de exemplo</li>
-            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-primary" /> Checklist executável</li>
-          </ul>
+
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <div className="text-xs uppercase tracking-[0.24em] text-primary">
+              Recursos
+            </div>
+            <ul className="mt-3 space-y-2 text-sm">
+              {[
+                "Slides da aula",
+                "Repositório de exemplo",
+                "Checklist executável",
+                "Transcrição completa",
+              ].map((r) => (
+                <li
+                  key={r}
+                  className="flex items-center justify-between rounded-lg border border-transparent hover:border-border hover:bg-accent/40 -mx-2 px-2 py-1.5 transition cursor-pointer"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {r}
+                  </span>
+                  <ArrowRight className="h-3 w-3 text-muted-foreground" />
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-transparent p-6">
+            <div className="text-xs uppercase tracking-[0.24em] text-primary">
+              Nota do Concierge
+            </div>
+            <p className="mt-2 text-sm leading-relaxed">
+              Assista uma vez sem pausar. Depois volte e execute cada passo. É
+              assim que os alunos de elite aprendem 3x mais rápido.
+            </p>
+          </div>
         </div>
       </div>
 
