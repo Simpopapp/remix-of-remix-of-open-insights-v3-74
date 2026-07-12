@@ -57,6 +57,15 @@ export function CommandPalette() {
             <CommandItem onSelect={() => go(() => navigate({ to: "/biblioteca" }))}>
               <Library className="mr-2 h-4 w-4" /> Biblioteca
             </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/prompts" }))}>
+              <Wand2 className="mr-2 h-4 w-4" /> Prompts
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/projetos" }))}>
+              <Layers className="mr-2 h-4 w-4" /> Projetos da Cohort
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/lancamento" }))}>
+              <Rocket className="mr-2 h-4 w-4" /> Playbook de Lançamento
+            </CommandItem>
           </CommandGroup>
           <CommandGroup heading="Módulos">
             {course.modules.map((m) => (
