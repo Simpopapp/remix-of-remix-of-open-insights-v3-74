@@ -158,29 +158,33 @@ function AppShell() {
   }
 
   return (
-    <div className="min-h-screen flex w-full bg-background text-foreground">
+    <div className="min-h-dvh flex w-full bg-background text-foreground">
       <StudentSidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-14 flex items-center gap-3 border-b border-border px-4 sticky top-0 z-30 backdrop-blur bg-background/70">
+        <header className="h-14 flex items-center gap-2 sm:gap-3 border-b border-border px-3 sm:px-4 sticky top-0 z-30 backdrop-blur bg-background/70">
           <SidebarTrigger />
-          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          <div className="hidden sm:flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" />
             Concierge de Elite
           </div>
-          <div className="ml-auto flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-3 text-xs">
+          <div className="ml-auto flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="hidden md:flex items-center gap-3 text-xs">
               <span className="inline-flex items-center gap-1 text-primary">
                 <Flame className="h-3 w-3" /> {streak.current}d
               </span>
               <span className="inline-flex items-center gap-1 text-muted-foreground">
                 Lv <span className="font-serif text-primary">{level}</span>
               </span>
-              <span className="text-muted-foreground">{xp.toLocaleString("pt-BR")} XP</span>
+              <span className="text-muted-foreground tabular-nums">{xp.toLocaleString("pt-BR")} XP</span>
             </div>
+            <span className="md:hidden inline-flex items-center gap-1 text-[11px] text-primary">
+              <Flame className="h-3 w-3" /> {streak.current}
+            </span>
             <CommandPalette />
             <Link
               to="/perfil"
-              className="grid h-8 w-8 place-items-center rounded-full border border-primary/40 bg-primary/10 text-sm hover:border-primary"
+              aria-label="Abrir perfil"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-primary/40 bg-primary/10 text-sm hover:border-primary"
             >
               {profile.avatar}
             </Link>
