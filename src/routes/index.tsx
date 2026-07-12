@@ -80,7 +80,7 @@ function Dashboard() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 lg:py-14">
       {/* Hero */}
       <section className="relative overflow-hidden rounded-3xl border border-border">
         <img
@@ -93,23 +93,23 @@ function Dashboard() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
         <div className="absolute inset-0 bg-[radial-gradient(600px_circle_at_85%_10%,oklch(0.76_0.09_82/0.18),transparent_60%)]" />
 
-        <div className="relative p-8 lg:p-14">
-          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-primary">
+        <div className="relative p-6 sm:p-8 lg:p-14">
+          <div className="flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-[0.28em] text-primary">
             <Sparkles className="h-3 w-3" />
             Curso premium · Cohort 01
           </div>
-          <h1 className="mt-4 font-serif text-4xl lg:text-6xl leading-[1.02] tracking-tight max-w-3xl">
+          <h1 className="mt-4 font-serif text-3xl sm:text-4xl lg:text-6xl leading-[1.05] tracking-tight max-w-3xl">
             {course.title}
             <span className="block bg-gradient-to-r from-primary via-[oklch(0.86_0.09_82)] to-primary bg-clip-text text-transparent">
               Sua vez de construir o império.
             </span>
           </h1>
-          <p className="mt-5 max-w-2xl text-base lg:text-lg text-muted-foreground">
+          <p className="mt-4 sm:mt-5 max-w-2xl text-sm sm:text-base lg:text-lg text-muted-foreground">
             {course.subtitle}
           </p>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] items-end">
-            <div className="max-w-md">
+          <div className="mt-8 sm:mt-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] items-end">
+            <div className="max-w-md min-w-0">
               <div className="flex items-baseline gap-2">
                 <span className="font-serif text-4xl">{pct}%</span>
                 <span className="text-xs uppercase tracking-widest text-muted-foreground">
@@ -127,23 +127,23 @@ function Dashboard() {
               <Link
                 to="/aula/$moduleId/$lessonId"
                 params={{ moduleId: next.moduleId, lessonId: next.lessonId }}
-                className="group relative inline-flex items-center gap-4 rounded-2xl border border-primary/40 bg-primary/10 backdrop-blur p-5 pr-6 transition hover:bg-primary/20 min-w-[300px]"
+                className="group relative inline-flex items-center gap-3 sm:gap-4 rounded-2xl border border-primary/40 bg-primary/10 backdrop-blur p-4 sm:p-5 pr-5 sm:pr-6 transition hover:bg-primary/20 w-full lg:w-auto lg:min-w-[300px]"
               >
-                <span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0_40px_-8px_oklch(0.76_0.09_82/0.7)] transition group-hover:scale-105">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0_40px_-8px_oklch(0.76_0.09_82/0.7)] transition group-hover:scale-105">
                   <PlayCircle className="h-6 w-6" />
                 </span>
-                <span className="text-left">
+                <span className="text-left min-w-0 flex-1">
                   <span className="block text-[10px] uppercase tracking-[0.24em] text-primary">
                     Continuar
                   </span>
-                  <span className="block font-serif text-lg leading-tight">
+                  <span className="block font-serif text-lg leading-tight truncate">
                     {next.title}
                   </span>
-                  <span className="block text-xs text-muted-foreground mt-0.5">
+                  <span className="block text-xs text-muted-foreground mt-0.5 truncate">
                     {next.moduleTitle} · {next.duration}
                   </span>
                 </span>
-                <ArrowUpRight className="h-4 w-4 text-primary transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                <ArrowUpRight className="h-4 w-4 shrink-0 text-primary transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </Link>
             ) : (
               <div className="text-sm text-muted-foreground">
@@ -153,6 +153,7 @@ function Dashboard() {
           </div>
         </div>
       </section>
+
 
       {/* Stats */}
       <section className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
