@@ -9,10 +9,10 @@ import {
   FileText,
   ListChecks,
   MessageSquare,
-  PlayCircle,
   Sparkles,
   Target,
 } from "lucide-react";
+import { VideoPlayer } from "@/components/VideoPlayer";
 import { useState } from "react";
 import { findLesson, type Lesson, type Module } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
@@ -78,31 +78,12 @@ function LessonPage() {
       </Link>
 
       {/* Player */}
-      <div className="mt-6 relative aspect-video overflow-hidden rounded-2xl border border-border bg-card">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(circle at 30% 30%, oklch(0.76 0.09 82 / 0.15), transparent 60%), radial-gradient(circle at 70% 80%, oklch(0.5 0.1 260 / 0.2), transparent 60%)",
-          }}
+      <div className="mt-6">
+        <VideoPlayer
+          moduleId={mod.id}
+          lessonId={lesson.id}
+          onNearComplete={() => setDone(mod.id, lesson.id, true)}
         />
-        <div className="relative h-full w-full grid place-items-center">
-          <button
-            className="group flex flex-col items-center gap-3 text-center"
-            aria-label="Reproduzir aula"
-          >
-            <span className="grid h-20 w-20 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0_60px_-10px_oklch(0.76_0.09_82/0.6)] transition group-hover:scale-105">
-              <PlayCircle className="h-10 w-10" />
-            </span>
-            <span className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
-              {lesson.duration}
-            </span>
-          </button>
-        </div>
-        {/* progress bar mock */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-background/60">
-          <div className="h-full w-1/3 bg-primary" />
-        </div>
       </div>
 
       {/* Meta */}

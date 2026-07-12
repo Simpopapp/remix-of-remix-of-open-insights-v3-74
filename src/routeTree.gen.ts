@@ -9,15 +9,46 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrilhasRouteImport } from './routes/trilhas'
+import { Route as RankingRouteImport } from './routes/ranking'
+import { Route as ProvaRouteImport } from './routes/prova'
+import { Route as PerfilRouteImport } from './routes/perfil'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as ExerciciosRouteImport } from './routes/exercicios'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
+import { Route as CertificadoRouteImport } from './routes/certificado'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ModuloModuleIdRouteImport } from './routes/modulo.$moduleId'
 import { Route as AulaModuleIdLessonIdRouteImport } from './routes/aula.$moduleId.$lessonId'
 
+const TrilhasRoute = TrilhasRouteImport.update({
+  id: '/trilhas',
+  path: '/trilhas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RankingRoute = RankingRouteImport.update({
+  id: '/ranking',
+  path: '/ranking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProvaRoute = ProvaRouteImport.update({
+  id: '/prova',
+  path: '/prova',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FavoritosRoute = FavoritosRouteImport.update({
   id: '/favoritos',
   path: '/favoritos',
@@ -36,6 +67,11 @@ const ConquistasRoute = ConquistasRouteImport.update({
 const ComunidadeRoute = ComunidadeRouteImport.update({
   id: '/comunidade',
   path: '/comunidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CertificadoRoute = CertificadoRouteImport.update({
+  id: '/certificado',
+  path: '/certificado',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BibliotecaRoute = BibliotecaRouteImport.update({
@@ -62,20 +98,32 @@ const AulaModuleIdLessonIdRoute = AulaModuleIdLessonIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/biblioteca': typeof BibliotecaRoute
+  '/certificado': typeof CertificadoRoute
   '/comunidade': typeof ComunidadeRoute
   '/conquistas': typeof ConquistasRoute
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
+  '/onboarding': typeof OnboardingRoute
+  '/perfil': typeof PerfilRoute
+  '/prova': typeof ProvaRoute
+  '/ranking': typeof RankingRoute
+  '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/biblioteca': typeof BibliotecaRoute
+  '/certificado': typeof CertificadoRoute
   '/comunidade': typeof ComunidadeRoute
   '/conquistas': typeof ConquistasRoute
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
+  '/onboarding': typeof OnboardingRoute
+  '/perfil': typeof PerfilRoute
+  '/prova': typeof ProvaRoute
+  '/ranking': typeof RankingRoute
+  '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
@@ -83,10 +131,16 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/biblioteca': typeof BibliotecaRoute
+  '/certificado': typeof CertificadoRoute
   '/comunidade': typeof ComunidadeRoute
   '/conquistas': typeof ConquistasRoute
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
+  '/onboarding': typeof OnboardingRoute
+  '/perfil': typeof PerfilRoute
+  '/prova': typeof ProvaRoute
+  '/ranking': typeof RankingRoute
+  '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
@@ -95,30 +149,48 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/biblioteca'
+    | '/certificado'
     | '/comunidade'
     | '/conquistas'
     | '/exercicios'
     | '/favoritos'
+    | '/onboarding'
+    | '/perfil'
+    | '/prova'
+    | '/ranking'
+    | '/trilhas'
     | '/modulo/$moduleId'
     | '/aula/$moduleId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/biblioteca'
+    | '/certificado'
     | '/comunidade'
     | '/conquistas'
     | '/exercicios'
     | '/favoritos'
+    | '/onboarding'
+    | '/perfil'
+    | '/prova'
+    | '/ranking'
+    | '/trilhas'
     | '/modulo/$moduleId'
     | '/aula/$moduleId/$lessonId'
   id:
     | '__root__'
     | '/'
     | '/biblioteca'
+    | '/certificado'
     | '/comunidade'
     | '/conquistas'
     | '/exercicios'
     | '/favoritos'
+    | '/onboarding'
+    | '/perfil'
+    | '/prova'
+    | '/ranking'
+    | '/trilhas'
     | '/modulo/$moduleId'
     | '/aula/$moduleId/$lessonId'
   fileRoutesById: FileRoutesById
@@ -126,16 +198,57 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BibliotecaRoute: typeof BibliotecaRoute
+  CertificadoRoute: typeof CertificadoRoute
   ComunidadeRoute: typeof ComunidadeRoute
   ConquistasRoute: typeof ConquistasRoute
   ExerciciosRoute: typeof ExerciciosRoute
   FavoritosRoute: typeof FavoritosRoute
+  OnboardingRoute: typeof OnboardingRoute
+  PerfilRoute: typeof PerfilRoute
+  ProvaRoute: typeof ProvaRoute
+  RankingRoute: typeof RankingRoute
+  TrilhasRoute: typeof TrilhasRoute
   ModuloModuleIdRoute: typeof ModuloModuleIdRoute
   AulaModuleIdLessonIdRoute: typeof AulaModuleIdLessonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trilhas': {
+      id: '/trilhas'
+      path: '/trilhas'
+      fullPath: '/trilhas'
+      preLoaderRoute: typeof TrilhasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ranking': {
+      id: '/ranking'
+      path: '/ranking'
+      fullPath: '/ranking'
+      preLoaderRoute: typeof RankingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prova': {
+      id: '/prova'
+      path: '/prova'
+      fullPath: '/prova'
+      preLoaderRoute: typeof ProvaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/favoritos': {
       id: '/favoritos'
       path: '/favoritos'
@@ -162,6 +275,13 @@ declare module '@tanstack/react-router' {
       path: '/comunidade'
       fullPath: '/comunidade'
       preLoaderRoute: typeof ComunidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificado': {
+      id: '/certificado'
+      path: '/certificado'
+      fullPath: '/certificado'
+      preLoaderRoute: typeof CertificadoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/biblioteca': {
@@ -198,10 +318,16 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BibliotecaRoute: BibliotecaRoute,
+  CertificadoRoute: CertificadoRoute,
   ComunidadeRoute: ComunidadeRoute,
   ConquistasRoute: ConquistasRoute,
   ExerciciosRoute: ExerciciosRoute,
   FavoritosRoute: FavoritosRoute,
+  OnboardingRoute: OnboardingRoute,
+  PerfilRoute: PerfilRoute,
+  ProvaRoute: ProvaRoute,
+  RankingRoute: RankingRoute,
+  TrilhasRoute: TrilhasRoute,
   ModuloModuleIdRoute: ModuloModuleIdRoute,
   AulaModuleIdLessonIdRoute: AulaModuleIdLessonIdRoute,
 }

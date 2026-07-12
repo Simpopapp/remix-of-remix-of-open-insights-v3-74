@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bookmark, BookOpen, Home, Library, Sparkles, Target, Trophy, Users } from "lucide-react";
+import { Award, Bookmark, BookOpen, Compass, Home, Library, Route as RouteIcon, ScrollText, Sparkles, Target, Trophy, User, Users } from "lucide-react";
 import { course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import {
@@ -74,6 +74,22 @@ export function StudentSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/trilhas"}>
+                  <Link to="/trilhas">
+                    <RouteIcon />
+                    <span>Trilhas</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/ranking"}>
+                  <Link to="/ranking">
+                    <Compass />
+                    <span>Ranking</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/comunidade"}>
                   <Link to="/comunidade">
                     <Users />
@@ -86,6 +102,30 @@ export function StudentSidebar() {
                   <Link to="/biblioteca">
                     <Library />
                     <span>Biblioteca</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/prova"}>
+                  <Link to="/prova">
+                    <ScrollText />
+                    <span>Prova Final</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/certificado"}>
+                  <Link to="/certificado">
+                    <Award />
+                    <span>Certificado</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/perfil"}>
+                  <Link to="/perfil">
+                    <User />
+                    <span>Perfil</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
