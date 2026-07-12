@@ -1,6 +1,6 @@
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "@tanstack/react-router";
-import { Award, BookOpen, Home, Library, PlayCircle, Target, Trophy, Users } from "lucide-react";
+import { Award, BookOpen, Home, Layers, Library, PlayCircle, Rocket, Target, Trophy, Users, Wand2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { course } from "@/lib/course-data";
 
