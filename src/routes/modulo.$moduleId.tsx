@@ -33,6 +33,8 @@ export const Route = createFileRoute("/modulo/$moduleId")({
 function ModulePage() {
   const { mod } = Route.useLoaderData();
   const { isDone, toggle } = useProgress();
+  const { get: getQuiz } = useQuizResults();
+  const quizResult = getQuiz(mod.id);
   const done = mod.lessons.filter((l: Lesson) => isDone(mod.id, l.id)).length;
   const pct = Math.round((done / mod.lessons.length) * 100);
   const nextModule = course.modules[course.modules.indexOf(mod) + 1];
