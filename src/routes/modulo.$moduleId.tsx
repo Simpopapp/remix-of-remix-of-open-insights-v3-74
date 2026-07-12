@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { CheckCircle2, Circle, PlayCircle } from "lucide-react";
+import type { Lesson } from "@/lib/course-data";
 import { findModule, course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { Progress } from "@/components/ui/progress";
@@ -31,7 +32,7 @@ export const Route = createFileRoute("/modulo/$moduleId")({
 function ModulePage() {
   const { mod } = Route.useLoaderData();
   const { isDone, toggle } = useProgress();
-  const done = mod.lessons.filter((l) => isDone(mod.id, l.id)).length;
+  const done = mod.lessons.filter((l: Lesson) => isDone(mod.id, l.id)).length;
   const pct = Math.round((done / mod.lessons.length) * 100);
   const nextModule = course.modules[course.modules.indexOf(mod) + 1];
 
@@ -58,7 +59,7 @@ function ModulePage() {
       </div>
 
       <ol className="mt-10 divide-y divide-border rounded-xl border border-border bg-card overflow-hidden">
-        {mod.lessons.map((l, i) => {
+        {mod.lessons.map((l: Lesson, i: number) => {
           const complete = isDone(mod.id, l.id);
           return (
             <li key={l.id} className="group flex items-center gap-4 p-4 hover:bg-accent/40 transition">
