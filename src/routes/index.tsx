@@ -15,6 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import heroImg from "@/assets/hero-midnight.jpg";
 import { QuestsWidget } from "@/components/QuestsWidget";
 import { ContinueWatching } from "@/components/ContinueWatching";
+import { RecentLessons } from "@/components/RecentLessons";
 import { useStreak } from "@/lib/streak";
 
 export const Route = createFileRoute("/")({
@@ -260,6 +261,8 @@ function Dashboard() {
           })}
         </div>
       </section>
+
+      <RecentLessons />
 
       {/* Ritual + Community */}
       <section className="mt-14">

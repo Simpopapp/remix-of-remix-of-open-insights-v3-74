@@ -1,6 +1,6 @@
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "@tanstack/react-router";
-import { Award, BookOpen, FileText, Home, Layers, Library, PlayCircle, Rocket, Search, Target, Trophy, Users, Wand2 } from "lucide-react";
+import { Award, Bell, BookOpen, CalendarDays, FileText, Highlighter, Home, Layers, Library, LineChart, NotebookPen, PlayCircle, Rocket, Search, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { course } from "@/lib/course-data";
 import { buildIndex, resetIndex, searchContent, snippet } from "@/lib/search-index";
@@ -96,6 +96,21 @@ export function CommandPalette() {
             <CommandItem onSelect={() => go(() => navigate({ to: "/" }))}>
               <Home className="mr-2 h-4 w-4" /> Dashboard
             </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/revisao" }))}>
+              <LineChart className="mr-2 h-4 w-4" /> Revisão semanal
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/agenda" }))}>
+              <CalendarDays className="mr-2 h-4 w-4" /> Agenda
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/foco" }))}>
+              <Timer className="mr-2 h-4 w-4" /> Modo Foco
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/inbox" }))}>
+              <Bell className="mr-2 h-4 w-4" /> Inbox
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/notas" }))}>
+              <NotebookPen className="mr-2 h-4 w-4" /> Minhas notas
+            </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/conquistas" }))}>
               <Trophy className="mr-2 h-4 w-4" /> Conquistas
             </CommandItem>
@@ -103,7 +118,7 @@ export function CommandPalette() {
               <Target className="mr-2 h-4 w-4" /> Exercícios
             </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/favoritos" }))}>
-              <Award className="mr-2 h-4 w-4" /> Favoritos
+              <Highlighter className="mr-2 h-4 w-4" /> Favoritos
             </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/comunidade" }))}>
               <Users className="mr-2 h-4 w-4" /> Comunidade
@@ -119,6 +134,9 @@ export function CommandPalette() {
             </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/lancamento" }))}>
               <Rocket className="mr-2 h-4 w-4" /> Playbook de Lançamento
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/perfil" }))}>
+              <Award className="mr-2 h-4 w-4" /> Perfil
             </CommandItem>
           </CommandGroup>
           <CommandGroup heading="Módulos">

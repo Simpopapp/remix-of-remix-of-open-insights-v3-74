@@ -7,25 +7,31 @@ import {
   Check,
   Clock3,
   FileText,
+  Highlighter,
+  Link2,
   ListChecks,
   MessageSquare,
+  Quote,
   Sparkles,
   Target,
   ThumbsDown,
   ThumbsUp,
   Timer,
+  Trash2,
 } from "lucide-react";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { findLesson, type Lesson, type Module } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { useNotes } from "@/lib/notes";
 import { useBookmarks, useExercises, lessonKey } from "@/lib/user-state";
 import { useLessonFeedback } from "@/lib/feedback";
+import { useHighlights } from "@/lib/highlights";
 import { seekTo, parseTimestamp, fmtTimestamp, getCurrentTime } from "@/lib/video-bus";
 import { renderMarkdown, bindTimestamps } from "@/lib/markdown";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/aula/$moduleId/$lessonId")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -74,10 +80,58 @@ function LessonPage() {
   const exerciseDone = exercises.has(k);
   const [copied, setCopied] = useState(false);
   const feedback = useLessonFeedback(mod.id, lesson.id);
+  const highlights = useHighlights(mod.id, lesson.id);
+  const transcriptRef = useRef<HTMLParagraphElement>(null);
+  const [selectedText, setSelectedText] = useState("");
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [preview, setPreview] = useState(false);
   useEffect(() => bindTimestamps(previewRef.current), [preview, notes]);
+
+  const onTranscriptSelect = useCallback(() => {
+    const sel = window.getSelection?.();
+    if (!sel) return;
+    const text = sel.toString().trim();
+    if (!text) {
+      setSelectedText("");
+      return;
+    }
+    // Only accept selection if fully inside the transcript node
+    if (transcriptRef.current && sel.rangeCount > 0) {
+      const range = sel.getRangeAt(0);
+      if (transcriptRef.current.contains(range.commonAncestorContainer)) {
+        setSelectedText(text.slice(0, 500));
+        return;
+      }
+    }
+    setSelectedText("");
+  }, []);
+
+  const saveHighlight = () => {
+    if (!selectedText) return;
+    highlights.add({
+      moduleId: mod.id,
+      lessonId: lesson.id,
+      text: selectedText,
+      t: Math.floor(getCurrentTime()) || undefined,
+    });
+    toast.success("Trecho destacado", { description: selectedText.slice(0, 80) + (selectedText.length > 80 ? "…" : "") });
+    setSelectedText("");
+    window.getSelection?.()?.removeAllRanges();
+  };
+
+  const shareLink = async () => {
+    const t = Math.floor(getCurrentTime());
+    const base = `${window.location.origin}/aula/${mod.id}/${lesson.id}`;
+    const url = t > 0 ? `${base}?t=${t}` : base;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copiado", { description: t > 0 ? `Aponta para ${fmtTimestamp(t)}` : "Link da aula" });
+    } catch {
+      toast.error("Não consegui copiar", { description: url });
+    }
+  };
+
 
   const insertTimestamp = () => {
     const stamp = `[${fmtTimestamp(getCurrentTime())}] `;
@@ -148,6 +202,14 @@ function LessonPage() {
 
         <div className="flex gap-2">
           <button
+            onClick={shareLink}
+            aria-label="Copiar link da aula com o tempo atual"
+            title="Copiar link (com timestamp)"
+            className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-border text-muted-foreground hover:border-primary/60 hover:text-foreground transition"
+          >
+            <Link2 className="h-4 w-4" />
+          </button>
+          <button
             onClick={() => bookmarks.toggle(k)}
             aria-label={bookmarked ? "Remover favorito" : "Favoritar"}
             className={
@@ -176,10 +238,13 @@ function LessonPage() {
 
       {/* Tabs */}
       <Tabs defaultValue="visao" className="mt-10">
-        <TabsList className="grid grid-cols-3 sm:grid-cols-6 w-full bg-card border border-border p-1 h-auto">
+        <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 w-full bg-card border border-border p-1 h-auto">
           <TabsTrigger value="visao" className="text-xs">Visão</TabsTrigger>
           <TabsTrigger value="capitulos" className="text-xs">Capítulos</TabsTrigger>
           <TabsTrigger value="transcricao" className="text-xs">Transcrição</TabsTrigger>
+          <TabsTrigger value="trechos" className="text-xs">
+            Trechos{highlights.list.length > 0 && ` · ${highlights.list.length}`}
+          </TabsTrigger>
           {lesson.code && <TabsTrigger value="codigo" className="text-xs">Código</TabsTrigger>}
           <TabsTrigger value="exercicio" className="text-xs">Exercício</TabsTrigger>
           <TabsTrigger value="recursos" className="text-xs">Recursos</TabsTrigger>
@@ -261,11 +326,94 @@ function LessonPage() {
                 ))}
               </div>
             </div>
-            <p className="mt-4 text-sm leading-loose text-foreground/90 whitespace-pre-wrap">
+            <p
+              ref={transcriptRef}
+              onMouseUp={onTranscriptSelect}
+              onKeyUp={onTranscriptSelect}
+              onTouchEnd={onTranscriptSelect}
+              className="mt-4 text-sm leading-loose text-foreground/90 whitespace-pre-wrap select-text"
+            >
               {lesson.transcript}
             </p>
+            {selectedText && (
+              <div
+                role="region"
+                aria-label="Ação sobre trecho selecionado"
+                className="sticky bottom-4 mt-4 flex items-center gap-3 rounded-full border border-primary/40 bg-primary/10 backdrop-blur px-4 py-2 shadow-lg"
+              >
+                <Quote className="h-4 w-4 text-primary shrink-0" />
+                <span className="text-xs text-muted-foreground truncate flex-1">
+                  "{selectedText.slice(0, 80)}
+                  {selectedText.length > 80 ? "…" : ""}"
+                </span>
+                <button
+                  onClick={saveHighlight}
+                  className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-95 shrink-0"
+                >
+                  <Highlighter className="h-3 w-3" /> Destacar
+                </button>
+              </div>
+            )}
           </div>
         </TabsContent>
+
+        {/* TRECHOS */}
+        <TabsContent value="trechos" className="mt-6">
+          <div className="rounded-2xl border border-border bg-card p-6 lg:p-8">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
+                <Highlighter className="h-3 w-3" /> Trechos destacados
+              </div>
+              <div className="text-[11px] text-muted-foreground">
+                Selecione texto na aba Transcrição para destacar.
+              </div>
+            </div>
+            {highlights.list.length === 0 ? (
+              <div className="mt-6 rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+                Nenhum trecho ainda. Vá para <em>Transcrição</em>, selecione uma frase e toque em <em>Destacar</em>.
+              </div>
+            ) : (
+              <ul className="mt-4 space-y-3">
+                {highlights.list.map((h) => (
+                  <li
+                    key={h.id}
+                    className="group relative rounded-xl border-l-2 border-primary bg-primary/5 p-4"
+                  >
+                    <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
+                      "{h.text}"
+                    </p>
+                    <div className="mt-2 flex items-center gap-3 text-[11px] text-muted-foreground">
+                      {typeof h.t === "number" && h.t > 0 && (
+                        <button
+                          onClick={() => seekTo(h.t!)}
+                          className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 font-mono tabular-nums text-primary hover:bg-primary/20"
+                        >
+                          ▶ {fmtTimestamp(h.t)}
+                        </button>
+                      )}
+                      <span>
+                        {new Date(h.createdAt).toLocaleString("pt-BR", {
+                          day: "2-digit",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      <button
+                        onClick={() => highlights.remove(h.id)}
+                        aria-label="Remover trecho"
+                        className="ml-auto inline-flex items-center gap-1 text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive transition"
+                      >
+                        <Trash2 className="h-3 w-3" /> Remover
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </TabsContent>
+
 
 
         {/* CÓDIGO */}
