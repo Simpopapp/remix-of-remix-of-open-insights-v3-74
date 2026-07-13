@@ -183,11 +183,7 @@ function DataSection() {
   );
 }
 
-        </div>
-      </div>
-    </div>
-  );
-}
+
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
