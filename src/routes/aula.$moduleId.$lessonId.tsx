@@ -82,6 +82,7 @@ function LessonPage() {
   const [copied, setCopied] = useState(false);
   const feedback = useLessonFeedback(mod.id, lesson.id);
   const highlights = useHighlights(mod.id, lesson.id);
+  const markers = useMarkers(mod.id, lesson.id);
   const transcriptRef = useRef<HTMLParagraphElement>(null);
   const [selectedText, setSelectedText] = useState("");
   const notesRef = useRef<HTMLTextAreaElement>(null);
