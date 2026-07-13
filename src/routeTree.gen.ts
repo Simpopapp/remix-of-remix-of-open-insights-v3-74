@@ -29,6 +29,7 @@ import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as CertificadoRouteImport } from './routes/certificado'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
+import { Route as AtalhosRouteImport } from './routes/atalhos'
 import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuizModuleIdRouteImport } from './routes/quiz.$moduleId'
@@ -135,6 +136,11 @@ const BibliotecaRoute = BibliotecaRouteImport.update({
   path: '/biblioteca',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AtalhosRoute = AtalhosRouteImport.update({
+  id: '/atalhos',
+  path: '/atalhos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgendaRoute = AgendaRouteImport.update({
   id: '/agenda',
   path: '/agenda',
@@ -164,6 +170,7 @@ const AulaModuleIdLessonIdRoute = AulaModuleIdLessonIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/atalhos': typeof AtalhosRoute
   '/biblioteca': typeof BibliotecaRoute
   '/certificado': typeof CertificadoRoute
   '/comunidade': typeof ComunidadeRoute
@@ -191,6 +198,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/atalhos': typeof AtalhosRoute
   '/biblioteca': typeof BibliotecaRoute
   '/certificado': typeof CertificadoRoute
   '/comunidade': typeof ComunidadeRoute
@@ -219,6 +227,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/atalhos': typeof AtalhosRoute
   '/biblioteca': typeof BibliotecaRoute
   '/certificado': typeof CertificadoRoute
   '/comunidade': typeof ComunidadeRoute
@@ -248,6 +257,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/agenda'
+    | '/atalhos'
     | '/biblioteca'
     | '/certificado'
     | '/comunidade'
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/agenda'
+    | '/atalhos'
     | '/biblioteca'
     | '/certificado'
     | '/comunidade'
@@ -302,6 +313,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/agenda'
+    | '/atalhos'
     | '/biblioteca'
     | '/certificado'
     | '/comunidade'
@@ -330,6 +342,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgendaRoute: typeof AgendaRoute
+  AtalhosRoute: typeof AtalhosRoute
   BibliotecaRoute: typeof BibliotecaRoute
   CertificadoRoute: typeof CertificadoRoute
   ComunidadeRoute: typeof ComunidadeRoute
@@ -497,6 +510,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BibliotecaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/atalhos': {
+      id: '/atalhos'
+      path: '/atalhos'
+      fullPath: '/atalhos'
+      preLoaderRoute: typeof AtalhosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agenda': {
       id: '/agenda'
       path: '/agenda'
@@ -538,6 +558,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgendaRoute: AgendaRoute,
+  AtalhosRoute: AtalhosRoute,
   BibliotecaRoute: BibliotecaRoute,
   CertificadoRoute: CertificadoRoute,
   ComunidadeRoute: ComunidadeRoute,

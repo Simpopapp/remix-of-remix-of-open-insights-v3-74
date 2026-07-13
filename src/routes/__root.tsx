@@ -20,6 +20,8 @@ import { ConciergeChat } from "@/components/ConciergeChat";
 import { ShortcutsOverlay } from "@/components/ShortcutsOverlay";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { MiniPlayer } from "@/components/MiniPlayer";
+import { OfflineBanner } from "@/components/OfflineBanner";
+
 import { Toaster } from "@/components/ui/sonner";
 import { LevelUpWatcher } from "@/lib/level-toast";
 import { useTheme } from "@/lib/theme";
@@ -223,7 +225,9 @@ function AppShell() {
       <ShortcutsOverlay />
       <LevelUpWatcher />
       <MiniPlayer />
+      <OfflineBanner />
       <Toaster position="top-right" theme={resolved} />
+
     </div>
   );
 }

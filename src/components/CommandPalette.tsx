@@ -132,6 +132,10 @@ export function CommandPalette() {
             <CommandItem onSelect={() => go(() => navigate({ to: "/glossario" }))}>
               <BookMarked className="mr-2 h-4 w-4" /> Glossário
             </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/atalhos" }))}>
+              <FileText className="mr-2 h-4 w-4" /> Atalhos de teclado
+
+            </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/prompts" }))}>
               <Wand2 className="mr-2 h-4 w-4" /> Prompts
             </CommandItem>
