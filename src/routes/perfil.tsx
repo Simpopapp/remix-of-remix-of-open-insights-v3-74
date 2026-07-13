@@ -6,6 +6,7 @@ import { useProgress } from "@/lib/progress";
 import { useExercises } from "@/lib/user-state";
 import { course } from "@/lib/course-data";
 import { downloadDump, importDump, wipeAll } from "@/lib/storage";
+import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 import { Download, RefreshCw, Trash2, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/perfil")({
@@ -62,6 +63,10 @@ function PerfilPage() {
               {Math.round(levelProgress * 100)}% até o nível {level + 1}
             </div>
           </div>
+
+          <ActivityHeatmap />
+
+
 
           <div className="rounded-2xl border border-primary/25 bg-card/50 p-6">
             <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Editar dados</div>

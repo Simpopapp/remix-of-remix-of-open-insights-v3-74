@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
+import { pingActivity } from "./activity";
 
 const KEY_BOOK = "aiae:bookmarks:v1";
 const KEY_EX = "aiae:exercises:v1";
@@ -43,7 +44,10 @@ function makeHook(key: string, set: Set<() => void>) {
     const toggle = useCallback((k: string) => {
       const cur = read(key);
       if (cur[k]) delete cur[k];
-      else cur[k] = true;
+      else {
+        cur[k] = true;
+        if (key === KEY_EX) pingActivity("exercise");
+      }
       write(key, cur, set);
     }, []);
     const setVal = useCallback((k: string, on: boolean) => {
