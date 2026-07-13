@@ -1,6 +1,6 @@
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "@tanstack/react-router";
-import { Award, Bell, BookOpen, CalendarDays, FileText, Highlighter, Home, Layers, Library, LineChart, Map, NotebookPen, PlayCircle, Rocket, Search, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
+import { Award, Bell, BookMarked, BookOpen, CalendarDays, FileText, Highlighter, Home, Layers, Library, LineChart, Map, NotebookPen, PlayCircle, Rocket, Search, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { course } from "@/lib/course-data";
 import { buildIndex, resetIndex, searchContent, snippet } from "@/lib/search-index";
@@ -128,6 +128,9 @@ export function CommandPalette() {
             </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/biblioteca" }))}>
               <Library className="mr-2 h-4 w-4" /> Biblioteca
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/glossario" }))}>
+              <BookMarked className="mr-2 h-4 w-4" /> Glossário
             </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/prompts" }))}>
               <Wand2 className="mr-2 h-4 w-4" /> Prompts
