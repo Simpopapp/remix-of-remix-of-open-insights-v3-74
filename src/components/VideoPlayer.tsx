@@ -127,6 +127,8 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, chapters, onNearC
       }
     });
   }, [rate]);
+
+  const toggle = () => {
     const v = ref.current;
     if (!v) return;
     v.paused ? v.play() : v.pause();
