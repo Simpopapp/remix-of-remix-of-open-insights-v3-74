@@ -25,6 +25,7 @@ import { findLesson, type Lesson, type Module } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { useNotes } from "@/lib/notes";
 import { useBookmarks, useExercises, lessonKey } from "@/lib/user-state";
+import { useMarkers } from "@/lib/markers";
 import { useLessonFeedback } from "@/lib/feedback";
 import { useHighlights } from "@/lib/highlights";
 import { seekTo, parseTimestamp, fmtTimestamp, getCurrentTime } from "@/lib/video-bus";
@@ -81,6 +82,7 @@ function LessonPage() {
   const [copied, setCopied] = useState(false);
   const feedback = useLessonFeedback(mod.id, lesson.id);
   const highlights = useHighlights(mod.id, lesson.id);
+  const markers = useMarkers(mod.id, lesson.id);
   const transcriptRef = useRef<HTMLParagraphElement>(null);
   const [selectedText, setSelectedText] = useState("");
   const notesRef = useRef<HTMLTextAreaElement>(null);
@@ -238,12 +240,15 @@ function LessonPage() {
 
       {/* Tabs */}
       <Tabs defaultValue="visao" className="mt-10">
-        <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 w-full bg-card border border-border p-1 h-auto">
+        <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 w-full bg-card border border-border p-1 h-auto">
           <TabsTrigger value="visao" className="text-xs">Visão</TabsTrigger>
           <TabsTrigger value="capitulos" className="text-xs">Capítulos</TabsTrigger>
           <TabsTrigger value="transcricao" className="text-xs">Transcrição</TabsTrigger>
           <TabsTrigger value="trechos" className="text-xs">
             Trechos{highlights.list.length > 0 && ` · ${highlights.list.length}`}
+          </TabsTrigger>
+          <TabsTrigger value="marcadores" className="text-xs">
+            Marcadores{markers.list.length > 0 && ` · ${markers.list.length}`}
           </TabsTrigger>
           {lesson.code && <TabsTrigger value="codigo" className="text-xs">Código</TabsTrigger>}
           <TabsTrigger value="exercicio" className="text-xs">Exercício</TabsTrigger>
@@ -413,6 +418,68 @@ function LessonPage() {
             )}
           </div>
         </TabsContent>
+
+        {/* MARCADORES */}
+        <TabsContent value="marcadores" className="mt-6">
+          <div className="rounded-2xl border border-border bg-card p-6 lg:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
+                <Bookmark className="h-3 w-3" /> Marcadores de tempo
+              </div>
+              <button
+                onClick={() => {
+                  const t = Math.floor(getCurrentTime());
+                  const label = window.prompt("Rótulo para este marcador (opcional):", "") ?? "";
+                  markers.add({ moduleId: mod.id, lessonId: lesson.id, t, label: label.trim() });
+                  toast.success(`Marcador salvo em ${fmtTimestamp(t)}`);
+                }}
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-95"
+              >
+                <Bookmark className="h-3 w-3" /> Salvar marcador aqui
+              </button>
+            </div>
+            {markers.list.length === 0 ? (
+              <div className="mt-6 rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+                Nenhum marcador nesta aula. Pause no momento certo e toque em <em>Salvar marcador aqui</em>.
+              </div>
+            ) : (
+              <ul className="mt-4 divide-y divide-border">
+                {markers.list
+                  .slice()
+                  .sort((a, b) => a.t - b.t)
+                  .map((m) => (
+                    <li key={m.id} className="group flex items-center gap-3 py-3">
+                      <button
+                        onClick={() => seekTo(m.t)}
+                        className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 font-mono text-xs tabular-nums text-primary hover:bg-primary/20"
+                      >
+                        ▶ {fmtTimestamp(m.t)}
+                      </button>
+                      <span className="flex-1 truncate text-sm">{m.label || "Sem rótulo"}</span>
+                      <button
+                        onClick={() => {
+                          const label = window.prompt("Novo rótulo:", m.label) ?? m.label;
+                          markers.rename(m.id, label.trim());
+                        }}
+                        className="text-[11px] text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-primary"
+                      >
+                        Renomear
+                      </button>
+                      <button
+                        onClick={() => markers.remove(m.id)}
+                        aria-label="Remover marcador"
+                        className="text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </div>
+        </TabsContent>
+
+
 
 
 

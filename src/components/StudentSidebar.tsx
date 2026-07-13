@@ -89,6 +89,14 @@ export function StudentSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/marcadores"}>
+                  <Link to="/marcadores">
+                    <BookMarked />
+                    <span>Marcadores</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/notas"}>
                   <Link to="/notas">
                     <NotebookPen />

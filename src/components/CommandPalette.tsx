@@ -123,6 +123,9 @@ export function CommandPalette() {
             <CommandItem onSelect={() => go(() => navigate({ to: "/favoritos" }))}>
               <Highlighter className="mr-2 h-4 w-4" /> Favoritos
             </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/marcadores" }))}>
+              <BookMarked className="mr-2 h-4 w-4" /> Marcadores de tempo
+            </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/comunidade" }))}>
               <Users className="mr-2 h-4 w-4" /> Comunidade
             </CommandItem>
