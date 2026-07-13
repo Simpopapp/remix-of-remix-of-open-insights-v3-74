@@ -806,17 +806,18 @@ function Onboarding() {
                       aria-disabled={!canAdvance}
                       title={blockReason ?? "Continuar"}
                       className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-8 py-3.5 text-sm font-semibold text-primary-foreground transition aria-disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:grayscale"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, oklch(0.88 0.08 82), oklch(0.72 0.11 78) 55%, oklch(0.6 0.09 78))",
-                      boxShadow:
-                        "0 20px 50px -14px oklch(0.76 0.09 82 / 0.7), inset 0 1px 0 oklch(1 0 0 / 0.35), inset 0 -1px 0 oklch(0 0 0 / 0.15)",
-                    }}
-                  >
-                    <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-                    <span className="relative">Continuar</span>
-                    <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  </button>
+                      style={{
+                        background:
+                          "linear-gradient(135deg, oklch(0.88 0.08 82), oklch(0.72 0.11 78) 55%, oklch(0.6 0.09 78))",
+                        boxShadow:
+                          "0 20px 50px -14px oklch(0.76 0.09 82 / 0.7), inset 0 1px 0 oklch(1 0 0 / 0.35), inset 0 -1px 0 oklch(0 0 0 / 0.15)",
+                      }}
+                    >
+                      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                      <span className="relative">Continuar</span>
+                      <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </button>
+                  </div>
                 ) : (
                   <button
                     type="button"
