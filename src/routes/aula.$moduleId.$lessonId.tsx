@@ -118,6 +118,7 @@ function LessonPage() {
         <VideoPlayer
           moduleId={mod.id}
           lessonId={lesson.id}
+          chapters={lesson.chapters}
           onNearComplete={() => setDone(mod.id, lesson.id, true)}
         />
       </div>
