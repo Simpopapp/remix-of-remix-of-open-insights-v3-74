@@ -87,10 +87,15 @@ export function useQuests(): Quest[] {
   const { completedCount } = useProgress();
   const { count: exercisesDone } = useExercises();
 
-  const state = useSyncExternalStore((cb) => {
+  const state = useSyncExternalStore(
+    (cb) => {
       listeners.add(cb);
-      return () => listeners.delete(cb);
-    }, read, read), claimed: [], lessonsAtStart: 0, exercisesAtStart: 0, focusMinutes: 0, notesWritten: 0 }),
+      return () => {
+        listeners.delete(cb);
+      };
+    },
+    read,
+    read,
   );
 
   useEffect(() => {
