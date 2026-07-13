@@ -7,13 +7,22 @@ import { onSeek, reportTime } from "@/lib/video-bus";
 // Public sample video used as placeholder — swap per lesson later.
 const DEFAULT_SRC = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
+type Chapter = { time: string; title: string };
 type Props = {
   moduleId: string;
   lessonId: string;
   poster?: string;
   src?: string;
+  chapters?: Chapter[];
   onNearComplete?: () => void;
 };
+
+function parseTs(s: string): number {
+  const parts = s.split(":").map((n) => parseInt(n, 10));
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return parts[0] || 0;
+}
 
 function fmt(t: number) {
   if (!Number.isFinite(t)) return "0:00";
