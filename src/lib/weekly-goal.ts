@@ -27,7 +27,7 @@ export function setWeeklyGoal(minutes: number) {
 }
 
 export function useWeeklyGoal() {
-  const goal = useSyncExternalStore(subscribe, read, () => DEFAULT);
+  const goal = useSyncExternalStore(subscribe, read, read);
   const { days } = useActivity(7);
   const focusEvents = days.reduce((a, d) => a + (d.kinds.focus ?? 0), 0);
   const current = focusEvents * FOCUS_MIN;

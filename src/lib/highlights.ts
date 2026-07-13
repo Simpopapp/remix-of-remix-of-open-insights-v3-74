@@ -43,7 +43,7 @@ function subscribe(cb: () => void) {
 }
 
 export function useHighlights(moduleId?: string, lessonId?: string) {
-  const store = useSyncExternalStore(subscribe, read, () => ({}) as Store);
+  const store = useSyncExternalStore(subscribe, read, read) as Store);
   const key = moduleId && lessonId ? `${moduleId}/${lessonId}` : null;
   const list = key ? (store[key] ?? []) : Object.values(store).flat();
 

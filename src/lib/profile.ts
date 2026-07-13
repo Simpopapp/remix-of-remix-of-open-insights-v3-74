@@ -57,14 +57,10 @@ function write(p: Profile) {
 }
 
 export function useProfile() {
-  const profile = useSyncExternalStore(
-    (cb) => {
+  const profile = useSyncExternalStore((cb) => {
       listeners.add(cb);
       return () => listeners.delete(cb);
-    },
-    read,
-    () => DEFAULT,
-  );
+    }, read, read);
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {

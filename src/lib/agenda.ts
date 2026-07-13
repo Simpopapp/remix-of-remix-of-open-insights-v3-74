@@ -48,14 +48,10 @@ function write(s: State) {
 }
 
 export function useAgenda() {
-  const state = useSyncExternalStore(
-    (cb) => {
+  const state = useSyncExternalStore((cb) => {
       listeners.add(cb);
       return () => listeners.delete(cb);
-    },
-    read,
-    () => DEFAULT,
-  );
+    }, read, read);
 
   const add = useCallback((b: Omit<AgendaBlock, "id">) => {
     const cur = read();

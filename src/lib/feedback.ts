@@ -34,7 +34,7 @@ const subscribe = (cb: () => void) => {
 const empty: Store = {};
 
 export function useLessonFeedback(moduleId: string, lessonId: string) {
-  const map = useSyncExternalStore(subscribe, read, () => empty);
+  const map = useSyncExternalStore(subscribe, read, read);
   const key = `${moduleId}/${lessonId}`;
   const entry = map[key] ?? { rating: null, comment: "" };
 

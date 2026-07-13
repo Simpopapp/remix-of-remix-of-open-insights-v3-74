@@ -28,10 +28,7 @@ function makeHook(key: string, set: Set<() => void>) {
     return () => set.delete(cb);
   };
   return function useMap() {
-    const map = useSyncExternalStore(
-      sub,
-      () => read(key),
-      () => ({} as Map1),
+    const map = useSyncExternalStore(sub, () => read(key), () => read(key)),
     );
     useEffect(() => {
       const onStorage = (e: StorageEvent) => {

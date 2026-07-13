@@ -45,7 +45,7 @@ function subscribe(cb: () => void) {
 
 export function useVideoProgress(moduleId: string, lessonId: string) {
   const key = `${moduleId}/${lessonId}`;
-  const store = useSyncExternalStore(subscribe, read, () => EMPTY);
+  const store = useSyncExternalStore(subscribe, read, read);
   const entry = store[key] ?? { t: 0, d: 0 };
 
   const save = useCallback(
@@ -72,7 +72,7 @@ export function useVideoProgress(moduleId: string, lessonId: string) {
 }
 
 export function useVideoStore() {
-  return useSyncExternalStore(subscribe, read, () => EMPTY);
+  return useSyncExternalStore(subscribe, read, read);
 }
 
 export function readLastKey(): string | null {

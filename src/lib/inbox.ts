@@ -95,14 +95,10 @@ export function pushInbox(msg: Omit<InboxMessage, "id" | "at"> & { id?: string }
 }
 
 export function useInbox() {
-  const list = useSyncExternalStore(
-    (cb) => {
+  const list = useSyncExternalStore((cb) => {
       listeners.add(cb);
       return () => listeners.delete(cb);
-    },
-    read,
-    () => SEED,
-  );
+    }, read, read);
   useEffect(() => {
     const onS = (e: StorageEvent) => {
       if (e.key === KEY) notify();

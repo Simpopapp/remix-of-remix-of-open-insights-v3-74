@@ -49,7 +49,7 @@ function subscribe(cb: () => void) {
 }
 
 export function useActivity(daysBack = 84) {
-  const map = useSyncExternalStore(subscribe, read, () => ({}) as ActivityMap);
+  const map = useSyncExternalStore(subscribe, read, read) as ActivityMap);
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {

@@ -91,22 +91,14 @@ export function addWatchSeconds(s: number) {
 }
 
 export function useGamification() {
-  const streak = useSyncExternalStore(
-    (cb) => {
+  const streak = useSyncExternalStore((cb) => {
       listeners.add(cb);
       return () => listeners.delete(cb);
-    },
-    readStreak,
-    () => DEFAULT_STREAK,
-  );
-  const watch = useSyncExternalStore(
-    (cb) => {
+    }, readStreak, readStreak);
+  const watch = useSyncExternalStore((cb) => {
       listeners.add(cb);
       return () => listeners.delete(cb);
-    },
-    readWatch,
-    () => 0,
-  );
+    }, readWatch, readWatch);
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {

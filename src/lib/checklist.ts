@@ -233,7 +233,7 @@ const subscribe = (l: () => void) => {
 };
 
 export function useChecklist() {
-  const state = useSyncExternalStore(subscribe, read, () => ({} as ChecklistState));
+  const state = useSyncExternalStore(subscribe, read, read));
   return {
     state,
     toggle(id: string) {

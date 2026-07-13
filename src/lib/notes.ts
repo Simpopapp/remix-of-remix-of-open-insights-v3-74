@@ -30,11 +30,7 @@ function subscribe(cb: () => void) {
 }
 const empty: NotesMap = {};
 export function useNotes(moduleId: string, lessonId: string) {
-  const map = useSyncExternalStore(
-    subscribe,
-    () => read(),
-    () => empty,
-  );
+  const map = useSyncExternalStore(subscribe, () => read(), () => read());
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
       if (e.key === KEY) listeners.forEach((l) => l());
