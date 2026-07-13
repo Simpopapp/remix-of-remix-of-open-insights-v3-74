@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Play, Pause, PictureInPicture2, RotateCcw, Volume2, VolumeX, Maximize2, Gauge } from "lucide-react";
 import { useVideoProgress } from "@/lib/video-progress";
 import { addWatchSeconds, pingStreak } from "@/lib/gamification";
-import { onSeek, reportTime } from "@/lib/video-bus";
+import { onSeek, onCommand, reportTime } from "@/lib/video-bus";
+
+const RATES = [0.75, 1, 1.25, 1.5, 1.75, 2];
 
 // Public sample video used as placeholder — swap per lesson later.
 const DEFAULT_SRC = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
