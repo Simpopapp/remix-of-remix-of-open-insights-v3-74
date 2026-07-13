@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Award, Bell, BookMarked, Bookmark, BookOpen, CalendarDays, Compass, Home, Keyboard, LifeBuoy, Library, LineChart, Map, NotebookPen, Rocket, Route as RouteIcon, ScrollText, Sparkle, Sparkles, Target, Timer, Trophy, User, Users, Wand2, Layers } from "lucide-react";
+import { Award, Bell, BookMarked, Bookmark, BookOpen, CalendarDays, Compass, Home, Keyboard, LifeBuoy, Library, LineChart, Map, NotebookPen, Rocket, Route as RouteIcon, ScrollText, Sparkle, Sparkles, Sun, Target, Timer, Trophy, User, Users, Wand2, Layers } from "lucide-react";
 import { useInbox } from "@/lib/inbox";
 import { course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
@@ -48,6 +48,14 @@ export function StudentSidebar() {
                   <Link to="/">
                     <Home />
                     <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/hoje"}>
+                  <Link to="/hoje">
+                    <Sun />
+                    <span>Hoje</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
