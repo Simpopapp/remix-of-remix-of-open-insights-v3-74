@@ -240,12 +240,15 @@ function LessonPage() {
 
       {/* Tabs */}
       <Tabs defaultValue="visao" className="mt-10">
-        <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 w-full bg-card border border-border p-1 h-auto">
+        <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 w-full bg-card border border-border p-1 h-auto">
           <TabsTrigger value="visao" className="text-xs">Visão</TabsTrigger>
           <TabsTrigger value="capitulos" className="text-xs">Capítulos</TabsTrigger>
           <TabsTrigger value="transcricao" className="text-xs">Transcrição</TabsTrigger>
           <TabsTrigger value="trechos" className="text-xs">
             Trechos{highlights.list.length > 0 && ` · ${highlights.list.length}`}
+          </TabsTrigger>
+          <TabsTrigger value="marcadores" className="text-xs">
+            Marcadores{markers.list.length > 0 && ` · ${markers.list.length}`}
           </TabsTrigger>
           {lesson.code && <TabsTrigger value="codigo" className="text-xs">Código</TabsTrigger>}
           <TabsTrigger value="exercicio" className="text-xs">Exercício</TabsTrigger>
