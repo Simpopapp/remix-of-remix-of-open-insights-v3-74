@@ -76,7 +76,7 @@ export function useVideoStore() {
 }
 
 export function readLastKey(): string | null {
-  if (typeof window === "undefined") return cachedStore;
+  if (typeof window === "undefined") return null;
   try {
     return window.localStorage.getItem(LAST_KEY);
   } catch {
