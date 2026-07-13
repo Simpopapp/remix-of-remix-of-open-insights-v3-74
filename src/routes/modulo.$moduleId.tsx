@@ -66,7 +66,7 @@ function ModulePage() {
 
       <section className="relative mt-6 overflow-hidden rounded-3xl border border-border">
         <img
-          src="/src/assets/hero-module.jpg"
+          src={heroModule}
           alt=""
           width={1600}
           height={640}
