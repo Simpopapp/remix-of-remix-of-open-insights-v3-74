@@ -21,6 +21,7 @@ import {
 export function StudentSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { isDone } = useProgress();
+  const { unread } = useInbox();
 
   return (
     <Sidebar collapsible="icon">
