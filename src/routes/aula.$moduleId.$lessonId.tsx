@@ -7,25 +7,31 @@ import {
   Check,
   Clock3,
   FileText,
+  Highlighter,
+  Link2,
   ListChecks,
   MessageSquare,
+  Quote,
   Sparkles,
   Target,
   ThumbsDown,
   ThumbsUp,
   Timer,
+  Trash2,
 } from "lucide-react";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { findLesson, type Lesson, type Module } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { useNotes } from "@/lib/notes";
 import { useBookmarks, useExercises, lessonKey } from "@/lib/user-state";
 import { useLessonFeedback } from "@/lib/feedback";
+import { useHighlights } from "@/lib/highlights";
 import { seekTo, parseTimestamp, fmtTimestamp, getCurrentTime } from "@/lib/video-bus";
 import { renderMarkdown, bindTimestamps } from "@/lib/markdown";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/aula/$moduleId/$lessonId")({
   validateSearch: (s: Record<string, unknown>) => ({
