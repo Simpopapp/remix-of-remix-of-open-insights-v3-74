@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { NotebookPen, Search, Download } from "lucide-react";
+import { NotebookPen, Search, Download, Tag, X } from "lucide-react";
 import { course } from "@/lib/course-data";
+import { extractTags } from "@/lib/tags";
 
 const KEY = "aiae:notes:v1";
 
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/notas")({
       { title: "Minhas notas — AI App Empire" },
       {
         name: "description",
-        content: "Todas as suas anotações do curso reunidas, com busca e exportação em Markdown.",
+        content: "Todas as suas anotações do curso reunidas, com busca, tags e exportação em Markdown.",
       },
     ],
   }),
@@ -43,6 +44,7 @@ function NotasPage() {
     () => ({}) as Record<string, string>,
   );
   const [q, setQ] = useState("");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
   void tick;
 
   const entries = useMemo(() => {
@@ -53,6 +55,7 @@ function NotasPage() {
       lessonId: string;
       lessonTitle: string;
       text: string;
+      tags: string[];
     }[] = [];
     for (const m of course.modules) {
       for (const l of m.lessons) {
@@ -65,26 +68,40 @@ function NotasPage() {
             lessonId: l.id,
             lessonTitle: l.title,
             text: t,
+            tags: extractTags(t),
           });
       }
     }
     return rows;
   }, [notes]);
 
-  const filtered = q.trim()
-    ? entries.filter(
+  const tagCounts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const r of entries) for (const t of r.tags) map.set(t, (map.get(t) ?? 0) + 1);
+    return [...map.entries()].sort((a, b) => b[1] - a[1]);
+  }, [entries]);
+
+  const filtered = useMemo(() => {
+    let list = entries;
+    if (activeTag) list = list.filter((r) => r.tags.includes(activeTag));
+    if (q.trim()) {
+      const ql = q.toLowerCase();
+      list = list.filter(
         (r) =>
-          r.text.toLowerCase().includes(q.toLowerCase()) ||
-          r.lessonTitle.toLowerCase().includes(q.toLowerCase()) ||
-          r.moduleTitle.toLowerCase().includes(q.toLowerCase()),
-      )
-    : entries;
+          r.text.toLowerCase().includes(ql) ||
+          r.lessonTitle.toLowerCase().includes(ql) ||
+          r.moduleTitle.toLowerCase().includes(ql),
+      );
+    }
+    return list;
+  }, [entries, q, activeTag]);
 
   const exportMd = () => {
-    const md = entries
+    const src = filtered.length ? filtered : entries;
+    const md = src
       .map(
         (r) =>
-          `## M${String(r.moduleNumber).padStart(2, "0")} — ${r.moduleTitle}\n### ${r.lessonTitle}\n\n${r.text}\n`,
+          `## M${String(r.moduleNumber).padStart(2, "0")} — ${r.moduleTitle}\n### ${r.lessonTitle}\n${r.tags.length ? `\n_Tags: ${r.tags.map((t) => `#${t}`).join(" ")}_\n` : ""}\n${r.text}\n`,
       )
       .join("\n---\n\n");
     const blob = new Blob([`# Minhas notas — AI App Empire\n\n${md}`], {
@@ -103,8 +120,8 @@ function NotasPage() {
       <div className="text-xs uppercase tracking-[0.28em] text-primary">Caderneta</div>
       <h1 className="mt-2 font-serif text-4xl lg:text-5xl tracking-tight">Minhas notas</h1>
       <p className="mt-3 text-muted-foreground max-w-xl">
-        Tudo que você escreveu ao longo do curso, num só lugar. Busca full-text e export
-        Markdown pra levar pro seu segundo cérebro.
+        Tudo que você escreveu no curso, num só lugar. Use <code className="text-primary">#tag</code> nas
+        notas pra organizar por tema — filtre e exporte pro seu segundo cérebro.
       </p>
 
       <div className="mt-8 flex flex-col sm:flex-row gap-3">
@@ -125,6 +142,37 @@ function NotasPage() {
           <Download className="h-4 w-4" /> Exportar Markdown
         </button>
       </div>
+
+      {tagCounts.length > 0 && (
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <Tag className="h-3.5 w-3.5 text-muted-foreground" />
+          {tagCounts.map(([tag, count]) => {
+            const on = activeTag === tag;
+            return (
+              <button
+                key={tag}
+                onClick={() => setActiveTag(on ? null : tag)}
+                className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs transition ${
+                  on
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                }`}
+              >
+                #{tag}
+                <span className="opacity-60">{count}</span>
+              </button>
+            );
+          })}
+          {activeTag && (
+            <button
+              onClick={() => setActiveTag(null)}
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-3 w-3" /> limpar
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="mt-8 space-y-4">
         {entries.length === 0 && (
@@ -150,11 +198,23 @@ function NotasPage() {
             <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground line-clamp-6">
               {r.text}
             </p>
+            {r.tags.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {r.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full border border-primary/30 bg-primary/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-primary"
+                  >
+                    #{t}
+                  </span>
+                ))}
+              </div>
+            )}
           </Link>
         ))}
         {entries.length > 0 && filtered.length === 0 && (
           <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
-            Nenhuma nota bate com "{q}".
+            Nenhuma nota bate com os filtros.
           </div>
         )}
       </div>
