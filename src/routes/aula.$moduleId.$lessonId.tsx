@@ -26,6 +26,7 @@ import { useProgress } from "@/lib/progress";
 import { useNotes } from "@/lib/notes";
 import { useBookmarks, useExercises, lessonKey } from "@/lib/user-state";
 import { useMarkers } from "@/lib/markers";
+import { RelatedLessons } from "@/components/RelatedLessons";
 import { useLessonFeedback } from "@/lib/feedback";
 import { useHighlights } from "@/lib/highlights";
 import { seekTo, parseTimestamp, fmtTimestamp, getCurrentTime } from "@/lib/video-bus";
@@ -709,6 +710,7 @@ function LessonPage() {
         )}
       </div>
 
+      <RelatedLessons moduleId={mod.id} lessonId={lesson.id} />
 
       {/* Prev / Next */}
       <div className="mt-10 grid gap-3 sm:grid-cols-2">
