@@ -202,6 +202,14 @@ function LessonPage() {
 
         <div className="flex gap-2">
           <button
+            onClick={shareLink}
+            aria-label="Copiar link da aula com o tempo atual"
+            title="Copiar link (com timestamp)"
+            className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-border text-muted-foreground hover:border-primary/60 hover:text-foreground transition"
+          >
+            <Link2 className="h-4 w-4" />
+          </button>
+          <button
             onClick={() => bookmarks.toggle(k)}
             aria-label={bookmarked ? "Remover favorito" : "Favoritar"}
             className={
