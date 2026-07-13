@@ -35,14 +35,7 @@ function NotasPage() {
     window.addEventListener("storage", onS);
     return () => window.removeEventListener("storage", onS);
   }, []);
-  const notes = useSyncExternalStore(
-    (cb) => {
-      window.addEventListener("storage", cb);
-      return () => window.removeEventListener("storage", cb);
-    },
-    read,
-    () => ({}) as Record<string, string>,
-  );
+  const notes = useSyncExternalStore(subscribeNotes, read, read);
   const [q, setQ] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   void tick;
