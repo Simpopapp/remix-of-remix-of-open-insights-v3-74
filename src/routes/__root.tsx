@@ -214,6 +214,8 @@ function AppShell() {
       </div>
       <ConciergeChat />
       <ShortcutsOverlay />
+      <LevelUpWatcher />
+      <Toaster position="top-right" theme="dark" />
     </div>
   );
 }
