@@ -253,6 +253,7 @@ html.light .ambient-scene::after {
 }
 
 [data-app-shell] { position: relative; z-index: 2; }
+[data-slot="sidebar-container"], [data-sidebar="sidebar"] { position: relative; z-index: 2; }
 
 /* ========== Utilities ========== */
 @utility text-gold-gradient {
