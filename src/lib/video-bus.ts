@@ -1,18 +1,38 @@
 // Tiny event bus so anywhere in the page can control the active <VideoPlayer>.
 // Chapters, transcript timestamps and notes all use this to seek.
 
-type Listener = (t: number) => void;
-const listeners = new Set<Listener>();
+type SeekListener = (t: number) => void;
+type CommandListener = (cmd: VideoCommand) => void;
+
+export type VideoCommand =
+  | { type: "toggle" }
+  | { type: "play" }
+  | { type: "pause" }
+  | { type: "skip"; delta: number }
+  | { type: "rate"; value: number }
+  | { type: "fullscreen" };
+
+const seekListeners = new Set<SeekListener>();
+const cmdListeners = new Set<CommandListener>();
 let currentTime = 0;
 
-export function onSeek(cb: Listener) {
-  listeners.add(cb);
+export function onSeek(cb: SeekListener) {
+  seekListeners.add(cb);
   return () => {
-    listeners.delete(cb);
+    seekListeners.delete(cb);
   };
 }
 export function seekTo(seconds: number) {
-  listeners.forEach((l) => l(seconds));
+  seekListeners.forEach((l) => l(seconds));
+}
+export function onCommand(cb: CommandListener) {
+  cmdListeners.add(cb);
+  return () => {
+    cmdListeners.delete(cb);
+  };
+}
+export function sendCommand(cmd: VideoCommand) {
+  cmdListeners.forEach((l) => l(cmd));
 }
 export function reportTime(t: number) {
   currentTime = t;
