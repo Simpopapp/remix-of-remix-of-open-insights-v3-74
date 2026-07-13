@@ -14,6 +14,8 @@ import { useProgress } from "@/lib/progress";
 import { Progress } from "@/components/ui/progress";
 import heroImg from "@/assets/hero-midnight.jpg";
 import { QuestsWidget } from "@/components/QuestsWidget";
+import { ContinueWatching } from "@/components/ContinueWatching";
+import { useStreak } from "@/lib/streak";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -54,7 +56,7 @@ function Dashboard() {
     ),
   );
   const xp = completedCount * 120;
-  const streak = Math.min(completedCount + 1, 21); // playful mock streak
+  const { current: streak, longest: longestStreak } = useStreak();
 
   let next: {
     moduleId: string;
@@ -160,8 +162,8 @@ function Dashboard() {
       <section className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Streak"
-          value={`${streak} dias`}
-          hint="Consistência é status."
+          value={`${streak} ${streak === 1 ? "dia" : "dias"}`}
+          hint={longestStreak > streak ? `Recorde: ${longestStreak} dias` : "Consistência é status."}
           icon={<Flame className="h-4 w-4" />}
         />
         <StatCard
