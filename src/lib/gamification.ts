@@ -25,17 +25,34 @@ function daysBetween(a: string, b: string) {
   return Math.round((new Date(b).getTime() - new Date(a).getTime()) / 86400000);
 }
 
+let cachedStreakRaw: string | null | undefined;
+let cachedStreak: StreakData = DEFAULT_STREAK;
+
 function readStreak(): StreakData {
   if (typeof window === "undefined") return DEFAULT_STREAK;
+  let raw: string | null;
   try {
-    return { ...DEFAULT_STREAK, ...JSON.parse(window.localStorage.getItem(STREAK_KEY) ?? "{}") };
+    raw = window.localStorage.getItem(STREAK_KEY);
   } catch {
-    return DEFAULT_STREAK;
+    return cachedStreak;
   }
+  if (raw === cachedStreakRaw) return cachedStreak;
+  cachedStreakRaw = raw;
+  try {
+    cachedStreak = raw
+      ? { ...DEFAULT_STREAK, ...(JSON.parse(raw) as Partial<StreakData>) }
+      : DEFAULT_STREAK;
+  } catch {
+    cachedStreak = DEFAULT_STREAK;
+  }
+  return cachedStreak;
 }
 function writeStreak(s: StreakData) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(STREAK_KEY, JSON.stringify(s));
+  const raw = JSON.stringify(s);
+  window.localStorage.setItem(STREAK_KEY, raw);
+  cachedStreakRaw = raw;
+  cachedStreak = s;
   notify();
 }
 
