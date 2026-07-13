@@ -54,22 +54,36 @@ const SEED: InboxMessage[] = [
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((l) => l());
 
+let cachedRaw: string | null | undefined;
+let cachedList: InboxMessage[] = SEED;
+
 function read(): InboxMessage[] {
   if (typeof window === "undefined") return SEED;
+  let raw: string | null;
   try {
-    const raw = window.localStorage.getItem(KEY);
+    raw = window.localStorage.getItem(KEY);
     if (!raw) {
-      window.localStorage.setItem(KEY, JSON.stringify(SEED));
-      return SEED;
+      raw = JSON.stringify(SEED);
+      window.localStorage.setItem(KEY, raw);
     }
-    return JSON.parse(raw) as InboxMessage[];
   } catch {
-    return SEED;
+    return cachedList;
   }
+  if (raw === cachedRaw) return cachedList;
+  cachedRaw = raw;
+  try {
+    cachedList = JSON.parse(raw) as InboxMessage[];
+  } catch {
+    cachedList = SEED;
+  }
+  return cachedList;
 }
 function write(v: InboxMessage[]) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(v));
+  const raw = JSON.stringify(v);
+  window.localStorage.setItem(KEY, raw);
+  cachedRaw = raw;
+  cachedList = v;
   notify();
 }
 
