@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Play, Pause, RotateCcw, Volume2, VolumeX, Maximize2, Gauge } from "lucide-react";
+import { Play, Pause, PictureInPicture2, RotateCcw, Volume2, VolumeX, Maximize2, Gauge } from "lucide-react";
 import { useVideoProgress } from "@/lib/video-progress";
 import { addWatchSeconds, pingStreak } from "@/lib/gamification";
 import { onSeek, reportTime } from "@/lib/video-bus";
