@@ -13,17 +13,23 @@ type FreezeState = {
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((l) => l());
 
+let __cachedRaw: string | null | undefined;
+let __cachedValue: any = { used: [], banked: 0 };
 function read(): FreezeState {
   if (typeof window === "undefined") return { used: [], banked: 0 };
-  try {
-    return JSON.parse(window.localStorage.getItem(KEY) ?? "") as FreezeState;
-  } catch {
-    return { used: [], banked: 0 };
-  }
+  let raw: string | null;
+  try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
+  if (raw === __cachedRaw) return __cachedValue;
+  __cachedRaw = raw;
+  try { __cachedValue = JSON.parse(raw ?? "") as FreezeState; } catch { __cachedValue = { used: [], banked: 0 }; }
+  return __cachedValue;
 }
+function __invalidateCache(raw: string | null, value: any) { __cachedRaw = raw; __cachedValue = value; }
 function write(next: FreezeState) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(next));
+  const __raw = JSON.stringify(next);
+  window.localStorage.setItem(KEY, __raw);
+  __invalidateCache(__raw, next);
   notify();
 }
 function subscribe(cb: () => void) {

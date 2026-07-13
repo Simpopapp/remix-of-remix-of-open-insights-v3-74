@@ -12,17 +12,23 @@ const notify = () => listeners.forEach((l) => l());
 function today() {
   return new Date().toISOString().slice(0, 10);
 }
+let __cachedRaw: string | null | undefined;
+let __cachedValue: any = {} as ActivityMap;
 function read(): ActivityMap {
-  if (typeof window === "undefined") return {};
-  try {
-    return JSON.parse(window.localStorage.getItem(KEY) ?? "{}") as ActivityMap;
-  } catch {
-    return {};
-  }
+  if (typeof window === "undefined") return {} as ActivityMap;
+  let raw: string | null;
+  try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
+  if (raw === __cachedRaw) return __cachedValue;
+  __cachedRaw = raw;
+  try { __cachedValue = JSON.parse(raw ?? "{}") as ActivityMap; } catch { __cachedValue = {} as ActivityMap; }
+  return __cachedValue;
 }
+function __invalidateCache(raw: string | null, value: any) { __cachedRaw = raw; __cachedValue = value; }
 function write(next: ActivityMap) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(next));
+  const __raw = JSON.stringify(next);
+  window.localStorage.setItem(KEY, __raw);
+  __invalidateCache(__raw, next);
   notify();
 }
 
