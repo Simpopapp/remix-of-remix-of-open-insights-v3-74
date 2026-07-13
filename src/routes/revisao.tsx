@@ -19,35 +19,40 @@ export const Route = createFileRoute("/revisao")({
 });
 
 function RevisaoPage() {
-  const { totals, bars, maxBar, activeDays, topModule } = useWeeklyStats();
-  const { current, longest } = useStreak();
+  const { totals, deltas, bars, maxBar, activeDays, prevActiveDays, topModule } = useWeeklyStats();
+  const { current, longest, freezesLeft, applyFreeze } = useStreak();
 
-  const rows: { icon: React.ReactNode; label: string; value: string; hint: string }[] = [
+  const rows: { icon: React.ReactNode; label: string; value: string; hint: string; delta: number }[] = [
     {
       icon: <BookOpen className="h-4 w-4" />,
       label: "Aulas assistidas",
       value: String(totals.lesson),
       hint: totals.lesson >= 5 ? "Ritmo elite." : "Meta: 5 por semana.",
+      delta: deltas.lesson,
     },
     {
       icon: <Target className="h-4 w-4" />,
       label: "Exercícios entregues",
       value: String(totals.exercise),
       hint: totals.exercise > 0 ? "Prática cria diferença." : "Comece por um só.",
+      delta: deltas.exercise,
     },
     {
       icon: <Timer className="h-4 w-4" />,
       label: "Minutos em foco",
       value: `${totals.focus} min`,
       hint: totals.focus >= 100 ? "Deep work sério." : "Meta: 100 min/semana.",
+      delta: deltas.focus,
     },
     {
       icon: <StickyNote className="h-4 w-4" />,
       label: "Notas escritas",
       value: String(totals.note),
       hint: totals.note > 0 ? "Seu segundo cérebro cresce." : "Escreva pelo menos 1.",
+      delta: deltas.note,
     },
   ];
+
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-10 lg:py-14">
