@@ -217,6 +217,20 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }:
               {rate}x
             </button>
             <button
+              onClick={async () => {
+                const v = ref.current;
+                if (!v) return;
+                try {
+                  if (document.pictureInPictureElement) await document.exitPictureInPicture();
+                  else await v.requestPictureInPicture?.();
+                } catch { /* ignore */ }
+              }}
+              className="rounded p-1.5 hover:bg-white/10"
+              aria-label="Picture-in-picture"
+            >
+              <PictureInPicture2 className="h-4 w-4" />
+            </button>
+            <button
               onClick={() => wrapRef.current?.requestFullscreen?.()}
               className="rounded p-1.5 hover:bg-white/10"
               aria-label="Fullscreen"
