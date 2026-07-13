@@ -709,6 +709,7 @@ function LessonPage() {
         )}
       </div>
 
+      <RelatedLessons moduleId={mod.id} lessonId={lesson.id} />
 
       {/* Prev / Next */}
       <div className="mt-10 grid gap-3 sm:grid-cols-2">
