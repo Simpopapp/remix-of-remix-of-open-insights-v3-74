@@ -6,13 +6,21 @@ import { extractTags } from "@/lib/tags";
 
 const KEY = "aiae:notes:v1";
 
+let __rawCache: string | null | undefined;
+let __valueCache: Record<string, string> = {};
 function read(): Record<string, string> {
-  if (typeof window === "undefined") return {};
-  try {
-    return JSON.parse(window.localStorage.getItem(KEY) ?? "{}");
-  } catch {
-    return {};
-  }
+  if (typeof window === "undefined") return __valueCache;
+  let raw: string | null;
+  try { raw = window.localStorage.getItem(KEY); } catch { return __valueCache; }
+  if (raw === __rawCache) return __valueCache;
+  __rawCache = raw;
+  try { __valueCache = JSON.parse(raw ?? "{}"); } catch { __valueCache = {}; }
+  return __valueCache;
+}
+function subscribeNotes(cb: () => void) {
+  const onStorage = (e: StorageEvent) => { if (e.key === KEY) cb(); };
+  window.addEventListener("storage", onStorage);
+  return () => window.removeEventListener("storage", onStorage);
 }
 
 export const Route = createFileRoute("/notas")({
@@ -35,14 +43,7 @@ function NotasPage() {
     window.addEventListener("storage", onS);
     return () => window.removeEventListener("storage", onS);
   }, []);
-  const notes = useSyncExternalStore(
-    (cb) => {
-      window.addEventListener("storage", cb);
-      return () => window.removeEventListener("storage", cb);
-    },
-    read,
-    () => ({}) as Record<string, string>,
-  );
+  const notes = useSyncExternalStore(subscribeNotes, read, read);
   const [q, setQ] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   void tick;

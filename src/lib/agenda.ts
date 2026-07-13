@@ -27,31 +27,31 @@ const DEFAULT: State = {
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((l) => l());
 
+let __cachedRaw: string | null | undefined;
+let __cachedValue: any = DEFAULT;
 function read(): State {
-  if (typeof window === "undefined") return DEFAULT;
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    if (!raw) return DEFAULT;
-    return JSON.parse(raw);
-  } catch {
-    return DEFAULT;
-  }
+  if (typeof window === "undefined") return __cachedValue;
+  let raw: string | null;
+  try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
+  if (raw === __cachedRaw) return __cachedValue;
+  __cachedRaw = raw;
+  try { __cachedValue = JSON.parse(raw ?? "null") ?? DEFAULT; } catch { __cachedValue = DEFAULT; }
+  return __cachedValue;
 }
+function __invalidateCache(raw: string | null, value: any) { __cachedRaw = raw; __cachedValue = value; }
 function write(s: State) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(s));
+  const __raw = JSON.stringify(s);
+  window.localStorage.setItem(KEY, __raw);
+  __invalidateCache(__raw, s);
   notify();
 }
 
 export function useAgenda() {
-  const state = useSyncExternalStore(
-    (cb) => {
+  const state = useSyncExternalStore((cb) => {
       listeners.add(cb);
       return () => listeners.delete(cb);
-    },
-    read,
-    () => DEFAULT,
-  );
+    }, read, read);
 
   const add = useCallback((b: Omit<AgendaBlock, "id">) => {
     const cur = read();

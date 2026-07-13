@@ -16,17 +16,23 @@ type Store = Record<string, Marker>;
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((l) => l());
 
+let __cachedRaw: string | null | undefined;
+let __cachedValue: any = {};
 function read(): Store {
-  if (typeof window === "undefined") return {};
-  try {
-    return JSON.parse(window.localStorage.getItem(KEY) ?? "{}") as Store;
-  } catch {
-    return {};
-  }
+  if (typeof window === "undefined") return __cachedValue;
+  let raw: string | null;
+  try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
+  if (raw === __cachedRaw) return __cachedValue;
+  __cachedRaw = raw;
+  try { __cachedValue = JSON.parse(raw ?? "{}") as Store; } catch { __cachedValue = {}; }
+  return __cachedValue;
 }
+function __invalidateCache(raw: string | null, value: any) { __cachedRaw = raw; __cachedValue = value; }
 function write(next: Store) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(next));
+  const __raw = JSON.stringify(next);
+  window.localStorage.setItem(KEY, __raw);
+  __invalidateCache(__raw, next);
   notify();
 }
 function subscribe(cb: () => void) {
@@ -37,7 +43,7 @@ function subscribe(cb: () => void) {
 }
 
 export function useMarkers(moduleId?: string, lessonId?: string) {
-  const map = useSyncExternalStore(subscribe, read, () => ({}) as Store);
+  const map = useSyncExternalStore(subscribe, read, read);
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {

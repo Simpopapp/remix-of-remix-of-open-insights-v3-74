@@ -16,17 +16,23 @@ type Store = Record<string, Highlight[]>; // key = moduleId/lessonId
 
 const listeners = new Set<() => void>();
 
+let __cachedRaw: string | null | undefined;
+let __cachedValue: any = {};
 function read(): Store {
-  if (typeof window === "undefined") return {};
-  try {
-    return JSON.parse(window.localStorage.getItem(KEY) ?? "{}");
-  } catch {
-    return {};
-  }
+  if (typeof window === "undefined") return __cachedValue;
+  let raw: string | null;
+  try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
+  if (raw === __cachedRaw) return __cachedValue;
+  __cachedRaw = raw;
+  try { __cachedValue = JSON.parse(raw ?? "{}"); } catch { __cachedValue = {}; }
+  return __cachedValue;
 }
+function __invalidateCache(raw: string | null, value: any) { __cachedRaw = raw; __cachedValue = value; }
 function write(s: Store) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(s));
+  const __raw = JSON.stringify(s);
+  window.localStorage.setItem(KEY, __raw);
+  __invalidateCache(__raw, s);
   listeners.forEach((l) => l());
 }
 function subscribe(cb: () => void) {
@@ -37,7 +43,7 @@ function subscribe(cb: () => void) {
 }
 
 export function useHighlights(moduleId?: string, lessonId?: string) {
-  const store = useSyncExternalStore(subscribe, read, () => ({}) as Store);
+  const store = useSyncExternalStore(subscribe, read, read);
   const key = moduleId && lessonId ? `${moduleId}/${lessonId}` : null;
   const list = key ? (store[key] ?? []) : Object.values(store).flat();
 

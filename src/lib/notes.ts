@@ -5,17 +5,23 @@ const KEY = "aiae:notes:v1";
 type NotesMap = Record<string, string>;
 const listeners = new Set<() => void>();
 
+let __cachedRaw: string | null | undefined;
+let __cachedValue: any = {};
 function read(): NotesMap {
-  if (typeof window === "undefined") return {};
-  try {
-    return JSON.parse(window.localStorage.getItem(KEY) ?? "{}") as NotesMap;
-  } catch {
-    return {};
-  }
+  if (typeof window === "undefined") return __cachedValue;
+  let raw: string | null;
+  try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
+  if (raw === __cachedRaw) return __cachedValue;
+  __cachedRaw = raw;
+  try { __cachedValue = JSON.parse(raw ?? "{}") as NotesMap; } catch { __cachedValue = {}; }
+  return __cachedValue;
 }
+function __invalidateCache(raw: string | null, value: any) { __cachedRaw = raw; __cachedValue = value; }
 function write(next: NotesMap) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(next));
+  const __raw = JSON.stringify(next);
+  window.localStorage.setItem(KEY, __raw);
+  __invalidateCache(__raw, next);
   listeners.forEach((l) => l());
 }
 function subscribe(cb: () => void) {
@@ -24,11 +30,7 @@ function subscribe(cb: () => void) {
 }
 const empty: NotesMap = {};
 export function useNotes(moduleId: string, lessonId: string) {
-  const map = useSyncExternalStore(
-    subscribe,
-    () => read(),
-    () => empty,
-  );
+  const map = useSyncExternalStore(subscribe, () => read(), () => read());
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
       if (e.key === KEY) listeners.forEach((l) => l());

@@ -7,17 +7,32 @@ const EMPTY: Store = {};
 
 const listeners = new Set<() => void>();
 
+let cachedRaw: string | null = null;
+let cachedStore: Store = EMPTY;
+
 function read(): Store {
-  if (typeof window === "undefined") return {};
+  if (typeof window === "undefined") return cachedStore;
+  let raw: string | null;
   try {
-    return JSON.parse(window.localStorage.getItem(KEY) ?? "{}");
+    raw = window.localStorage.getItem(KEY);
   } catch {
-    return {};
+    return cachedStore;
   }
+  if (raw === cachedRaw) return cachedStore;
+  cachedRaw = raw;
+  try {
+    cachedStore = raw ? (JSON.parse(raw) as Store) : EMPTY;
+  } catch {
+    cachedStore = EMPTY;
+  }
+  return cachedStore;
 }
 function write(s: Store) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(s));
+  const raw = JSON.stringify(s);
+  window.localStorage.setItem(KEY, raw);
+  cachedRaw = raw;
+  cachedStore = s;
   listeners.forEach((l) => l());
 }
 
@@ -30,7 +45,7 @@ function subscribe(cb: () => void) {
 
 export function useVideoProgress(moduleId: string, lessonId: string) {
   const key = `${moduleId}/${lessonId}`;
-  const store = useSyncExternalStore(subscribe, read, () => EMPTY);
+  const store = useSyncExternalStore(subscribe, read, read);
   const entry = store[key] ?? { t: 0, d: 0 };
 
   const save = useCallback(
@@ -57,7 +72,7 @@ export function useVideoProgress(moduleId: string, lessonId: string) {
 }
 
 export function useVideoStore() {
-  return useSyncExternalStore(subscribe, read, () => EMPTY);
+  return useSyncExternalStore(subscribe, read, read);
 }
 
 export function readLastKey(): string | null {

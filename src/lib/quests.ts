@@ -21,23 +21,38 @@ function today() {
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((l) => l());
 
+function makeDefault(): QuestState {
+  return { day: today(), claimed: [], lessonsAtStart: 0, exercisesAtStart: 0, focusMinutes: 0, notesWritten: 0 };
+}
+
+let __rawCache: string | null | undefined;
+let __valueCache: QuestState = makeDefault();
+let __dayCache: string = __valueCache.day;
+
 function read(): QuestState {
-  if (typeof window === "undefined") {
-    return { day: today(), claimed: [], lessonsAtStart: 0, exercisesAtStart: 0, focusMinutes: 0, notesWritten: 0 };
-  }
+  if (typeof window === "undefined") return __valueCache;
+  const t = today();
+  let raw: string | null;
+  try { raw = window.localStorage.getItem(KEY); } catch { return __valueCache; }
+  if (raw === __rawCache && __dayCache === t) return __valueCache;
+  __rawCache = raw;
+  __dayCache = t;
   try {
-    const raw = JSON.parse(window.localStorage.getItem(KEY) ?? "null");
-    if (!raw || raw.day !== today()) {
-      return { day: today(), claimed: [], lessonsAtStart: 0, exercisesAtStart: 0, focusMinutes: 0, notesWritten: 0 };
-    }
-    return raw as QuestState;
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (!parsed || parsed.day !== t) __valueCache = makeDefault();
+    else __valueCache = parsed as QuestState;
   } catch {
-    return { day: today(), claimed: [], lessonsAtStart: 0, exercisesAtStart: 0, focusMinutes: 0, notesWritten: 0 };
+    __valueCache = makeDefault();
   }
+  return __valueCache;
 }
 function write(s: QuestState) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(s));
+  const raw = JSON.stringify(s);
+  window.localStorage.setItem(KEY, raw);
+  __rawCache = raw;
+  __valueCache = s;
+  __dayCache = s.day;
   notify();
 }
 
@@ -90,10 +105,12 @@ export function useQuests(): Quest[] {
   const state = useSyncExternalStore(
     (cb) => {
       listeners.add(cb);
-      return () => listeners.delete(cb);
+      return () => {
+        listeners.delete(cb);
+      };
     },
     read,
-    () => ({ day: today(), claimed: [], lessonsAtStart: 0, exercisesAtStart: 0, focusMinutes: 0, notesWritten: 0 }),
+    read,
   );
 
   useEffect(() => {
