@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
+import { pingActivity } from "./activity";
 
 const KEY = "aiae:progress:v1";
 
@@ -66,8 +67,10 @@ export function useProgress() {
   const setDone = useCallback((m: string, l: string, done: boolean) => {
     const cur = read();
     const k = key(m, l);
-    if (done) cur[k] = true;
-    else delete cur[k];
+    if (done) {
+      if (!cur[k]) pingActivity("lesson");
+      cur[k] = true;
+    } else delete cur[k];
     write(cur);
   }, []);
 
