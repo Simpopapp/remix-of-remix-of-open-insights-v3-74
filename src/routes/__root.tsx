@@ -17,6 +17,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { StudentSidebar } from "@/components/StudentSidebar";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ConciergeChat } from "@/components/ConciergeChat";
+import { ShortcutsOverlay } from "@/components/ShortcutsOverlay";
 import { useProfile } from "@/lib/profile";
 import { useGamification } from "@/lib/gamification";
 
@@ -196,6 +197,7 @@ function AppShell() {
         </main>
       </div>
       <ConciergeChat />
+      <ShortcutsOverlay />
     </div>
   );
 }

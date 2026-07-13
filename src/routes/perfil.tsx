@@ -6,6 +6,7 @@ import { useProgress } from "@/lib/progress";
 import { useExercises } from "@/lib/user-state";
 import { course } from "@/lib/course-data";
 import { downloadDump, importDump, wipeAll } from "@/lib/storage";
+import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 import { Download, RefreshCw, Trash2, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/perfil")({
