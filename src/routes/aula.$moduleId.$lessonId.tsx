@@ -317,22 +317,37 @@ function LessonPage() {
         {/* CAPÍTULOS */}
         <TabsContent value="capitulos" className="mt-6">
           <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border">
-            {lesson.chapters.map((c, i) => (
-              <button
-                key={i}
-                onClick={() => seekTo(parseTimestamp(c.time))}
-                aria-label={`Ir para ${c.title} em ${c.time}`}
-                className="flex w-full items-center gap-4 p-4 text-left hover:bg-accent/40 transition min-h-11"
-              >
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-primary/15 text-primary text-xs font-mono">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="flex-1 text-sm">{c.title}</span>
-                <span className="text-xs font-mono tabular-nums text-primary group-hover:underline">
-                  {c.time}
-                </span>
-              </button>
-            ))}
+            {lesson.chapters.map((c, i) => {
+              const active = i === activeChapterIdx;
+              return (
+                <button
+                  key={i}
+                  onClick={() => seekTo(parseTimestamp(c.time))}
+                  aria-label={`Ir para ${c.title} em ${c.time}`}
+                  aria-current={active ? "true" : undefined}
+                  className={
+                    "flex w-full items-center gap-4 p-4 text-left transition min-h-11 " +
+                    (active
+                      ? "bg-primary/10 border-l-2 border-primary"
+                      : "hover:bg-accent/40")
+                  }
+                >
+                  <span
+                    className={
+                      "grid h-8 w-8 place-items-center rounded-full text-xs font-mono " +
+                      (active
+                        ? "bg-primary text-primary-foreground shadow-[0_0_20px_-4px_oklch(0.76_0.09_82/0.8)]"
+                        : "bg-primary/15 text-primary")
+                    }
+                  >
+                    {active ? "▶" : String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className={"flex-1 text-sm " + (active ? "font-medium" : "")}>{c.title}</span>
+                  <span className="text-xs font-mono tabular-nums text-primary">{c.time}</span>
+                </button>
+              );
+            })}
+
           </div>
         </TabsContent>
 
