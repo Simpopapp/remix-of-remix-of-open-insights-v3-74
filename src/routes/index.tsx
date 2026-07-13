@@ -13,6 +13,7 @@ import { course, totalLessons } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { Progress } from "@/components/ui/progress";
 import heroImg from "@/assets/hero-midnight.jpg";
+import { QuestsWidget } from "@/components/QuestsWidget";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -255,6 +256,10 @@ function Dashboard() {
       </section>
 
       {/* Ritual + Community */}
+      <section className="mt-14">
+        <QuestsWidget />
+      </section>
+
       <section className="mt-14 grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2 relative overflow-hidden rounded-2xl border border-border bg-card p-6 lg:p-8">
           <div className="absolute -left-20 -bottom-20 h-56 w-56 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
