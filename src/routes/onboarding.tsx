@@ -707,6 +707,7 @@ function Onboarding() {
                     <select
                       value={draft.timezone}
                       onChange={(e) => setDraft({ ...draft, timezone: e.target.value })}
+                      style={{ colorScheme: "dark" }}
                       className="w-full border-0 border-b border-border bg-transparent px-0 py-3 font-mono text-sm focus:border-primary focus:outline-none focus:ring-0"
                     >
                       {[
@@ -722,7 +723,14 @@ function Onboarding() {
                       ]
                         .filter((v, i, a) => v && a.indexOf(v) === i)
                         .map((tz) => (
-                          <option key={tz} value={tz}>
+                          <option
+                            key={tz}
+                            value={tz}
+                            style={{
+                              background: "oklch(0.14 0.02 280)",
+                              color: "oklch(0.95 0.01 90)",
+                            }}
+                          >
                             {tz}
                           </option>
                         ))}
