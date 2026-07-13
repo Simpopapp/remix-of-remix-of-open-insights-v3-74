@@ -8,6 +8,7 @@ import { useQuizResults } from "@/lib/quiz-data";
 import { Progress } from "@/components/ui/progress";
 import { fireConfetti } from "@/lib/confetti";
 import { toast } from "sonner";
+import heroModule from "@/assets/hero-module.jpg";
 
 export const Route = createFileRoute("/modulo/$moduleId")({
   loader: ({ params }) => {
@@ -63,21 +64,34 @@ function ModulePage() {
         ← Dashboard
       </Link>
 
-      <div className="mt-6 text-xs font-mono text-primary">
-        Módulo {String(mod.number).padStart(2, "0")}
-      </div>
-      <h1 className="mt-2 font-serif text-4xl lg:text-5xl tracking-tight leading-tight">
-        {mod.title}
-      </h1>
-      <p className="mt-4 text-lg text-muted-foreground max-w-2xl">{mod.tagline}</p>
-      <p className="mt-4 text-sm text-muted-foreground max-w-2xl">{mod.summary}</p>
+      <section className="relative mt-6 overflow-hidden rounded-3xl border border-border">
+        <img
+          src={heroModule}
+          alt=""
+          width={1600}
+          height={640}
+          className="absolute inset-0 h-full w-full object-cover opacity-60"
+        />
+        <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/85 to-background/30" />
+        <div className="relative p-8 lg:p-12">
+          <div className="text-xs font-mono tracking-[0.28em] text-primary">
+            MÓDULO {String(mod.number).padStart(2, "0")} · CAPÍTULO DA JORNADA
+          </div>
+          <h1 className="mt-3 font-serif text-4xl lg:text-6xl tracking-tight leading-[1.05] max-w-3xl">
+            {mod.title}
+          </h1>
+          <p className="mt-4 text-lg text-muted-foreground max-w-2xl">{mod.tagline}</p>
+          <p className="mt-3 text-sm text-muted-foreground max-w-2xl leading-relaxed">{mod.summary}</p>
 
-      <div className="mt-8 flex items-center gap-4">
-        <Progress value={pct} className="h-1.5 flex-1 max-w-xs" />
-        <span className="text-sm tabular-nums text-muted-foreground">
-          {done}/{mod.lessons.length} aulas · {pct}%
-        </span>
-      </div>
+          <div className="mt-8 flex items-center gap-4">
+            <Progress value={pct} className="h-1.5 flex-1 max-w-xs" />
+            <span className="text-sm tabular-nums text-muted-foreground">
+              {done}/{mod.lessons.length} aulas · {pct}%
+            </span>
+          </div>
+        </div>
+      </section>
+
 
       <ol className="mt-10 divide-y divide-border rounded-xl border border-border bg-card overflow-hidden">
         {mod.lessons.map((l: Lesson, i: number) => {

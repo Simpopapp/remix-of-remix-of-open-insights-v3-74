@@ -3,6 +3,7 @@
 
 type SeekListener = (t: number) => void;
 type CommandListener = (cmd: VideoCommand) => void;
+type TimeListener = (t: number) => void;
 
 export type VideoCommand =
   | { type: "toggle" }
@@ -14,6 +15,7 @@ export type VideoCommand =
 
 const seekListeners = new Set<SeekListener>();
 const cmdListeners = new Set<CommandListener>();
+const timeListeners = new Set<TimeListener>();
 let currentTime = 0;
 
 export function onSeek(cb: SeekListener) {
@@ -34,12 +36,20 @@ export function onCommand(cb: CommandListener) {
 export function sendCommand(cmd: VideoCommand) {
   cmdListeners.forEach((l) => l(cmd));
 }
+export function onTime(cb: TimeListener) {
+  timeListeners.add(cb);
+  return () => {
+    timeListeners.delete(cb);
+  };
+}
 export function reportTime(t: number) {
   currentTime = t;
+  timeListeners.forEach((l) => l(t));
 }
 export function getCurrentTime() {
   return currentTime;
 }
+
 
 // "01:23" | "1:02:03" -> seconds
 export function parseTimestamp(s: string): number {

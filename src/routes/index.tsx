@@ -12,7 +12,7 @@ import {
 import { course, totalLessons } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { Progress } from "@/components/ui/progress";
-import heroImg from "@/assets/hero-midnight.jpg";
+import heroImg from "@/assets/hero-dashboard.jpg";
 import { QuestsWidget } from "@/components/QuestsWidget";
 import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 import { ContinueWatching } from "@/components/ContinueWatching";

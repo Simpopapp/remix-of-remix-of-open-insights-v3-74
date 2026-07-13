@@ -5,6 +5,7 @@ import { pingActivity } from "@/lib/activity";
 import { addWatchSeconds } from "@/lib/gamification";
 import { addFocusMinutes } from "@/lib/quests";
 import { notify as notifyBrowser } from "@/lib/notifications";
+import heroFocus from "@/assets/hero-focus.jpg";
 
 export const Route = createFileRoute("/foco")({
   head: () => ({
@@ -141,14 +142,28 @@ function FocoPage() {
   }, [running, mm, ss, phase]);
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-10">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
-        <Timer className="h-3 w-3" /> Modo Foco
-      </div>
-      <h1 className="mt-2 font-serif text-4xl">Deep work do construtor</h1>
-      <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-        25 min de foco, 5 min de pausa, repetir 4x, então 15 min de pausa longa. Cada sessão soma minutos ao seu ritual.
-      </p>
+    <div className="mx-auto max-w-5xl px-6 py-10">
+      <section className="relative overflow-hidden rounded-3xl border border-border">
+        <img
+          src={heroFocus}
+          alt=""
+          width={1600}
+          height={640}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover opacity-55"
+        />
+        <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/85 to-background/20" />
+        <div className="relative p-8 lg:p-12">
+          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-primary">
+            <Timer className="h-3 w-3" /> Modo Foco · Ritual do construtor
+          </div>
+          <h1 className="mt-3 font-serif text-4xl lg:text-6xl tracking-tight leading-[1.05]">Deep work</h1>
+          <p className="mt-3 max-w-xl text-base text-muted-foreground">
+            25 min de foco, 5 min de pausa, repetir 4x, então 15 min de pausa longa. Cada sessão soma minutos ao seu ritual.
+          </p>
+        </div>
+      </section>
+
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
         <div className="rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-8">

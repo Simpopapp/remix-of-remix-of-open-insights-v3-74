@@ -29,7 +29,8 @@ import { useMarkers } from "@/lib/markers";
 import { RelatedLessons } from "@/components/RelatedLessons";
 import { useLessonFeedback } from "@/lib/feedback";
 import { useHighlights } from "@/lib/highlights";
-import { seekTo, parseTimestamp, fmtTimestamp, getCurrentTime } from "@/lib/video-bus";
+import { seekTo, parseTimestamp, fmtTimestamp, getCurrentTime, onTime } from "@/lib/video-bus";
+import heroLesson from "@/assets/hero-lesson.jpg";
 import { renderMarkdown, bindTimestamps } from "@/lib/markdown";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -89,7 +90,17 @@ function LessonPage() {
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [preview, setPreview] = useState(false);
+  const [playhead, setPlayhead] = useState(0);
   useEffect(() => bindTimestamps(previewRef.current), [preview, notes]);
+  useEffect(() => onTime((t) => setPlayhead(t)), []);
+  const activeChapterIdx = (() => {
+    let idx = -1;
+    for (let i = 0; i < lesson.chapters.length; i++) {
+      if (parseTimestamp(lesson.chapters[i].time) <= playhead) idx = i;
+    }
+    return idx;
+  })();
+
 
   const onTranscriptSelect = useCallback(() => {
     const sel = window.getSelection?.();
@@ -175,7 +186,18 @@ function LessonPage() {
       </Link>
 
       {/* Player */}
-      <div className="mt-6">
+      <div className="relative mt-6">
+        <div
+          aria-hidden
+          className="absolute -inset-6 sm:-inset-10 -z-10 opacity-60 blur-3xl pointer-events-none"
+          style={{
+            backgroundImage: `url(${heroLesson})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            maskImage: "radial-gradient(ellipse at center, black 40%, transparent 75%)",
+            WebkitMaskImage: "radial-gradient(ellipse at center, black 40%, transparent 75%)",
+          }}
+        />
         <VideoPlayer
           moduleId={mod.id}
           lessonId={lesson.id}
@@ -183,6 +205,7 @@ function LessonPage() {
           onNearComplete={() => setDone(mod.id, lesson.id, true)}
         />
       </div>
+
 
       {/* Meta */}
       <div className="mt-8 flex items-start justify-between gap-6 flex-wrap">
@@ -294,22 +317,37 @@ function LessonPage() {
         {/* CAPÍTULOS */}
         <TabsContent value="capitulos" className="mt-6">
           <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border">
-            {lesson.chapters.map((c, i) => (
-              <button
-                key={i}
-                onClick={() => seekTo(parseTimestamp(c.time))}
-                aria-label={`Ir para ${c.title} em ${c.time}`}
-                className="flex w-full items-center gap-4 p-4 text-left hover:bg-accent/40 transition min-h-11"
-              >
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-primary/15 text-primary text-xs font-mono">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="flex-1 text-sm">{c.title}</span>
-                <span className="text-xs font-mono tabular-nums text-primary group-hover:underline">
-                  {c.time}
-                </span>
-              </button>
-            ))}
+            {lesson.chapters.map((c, i) => {
+              const active = i === activeChapterIdx;
+              return (
+                <button
+                  key={i}
+                  onClick={() => seekTo(parseTimestamp(c.time))}
+                  aria-label={`Ir para ${c.title} em ${c.time}`}
+                  aria-current={active ? "true" : undefined}
+                  className={
+                    "flex w-full items-center gap-4 p-4 text-left transition min-h-11 " +
+                    (active
+                      ? "bg-primary/10 border-l-2 border-primary"
+                      : "hover:bg-accent/40")
+                  }
+                >
+                  <span
+                    className={
+                      "grid h-8 w-8 place-items-center rounded-full text-xs font-mono " +
+                      (active
+                        ? "bg-primary text-primary-foreground shadow-[0_0_20px_-4px_oklch(0.76_0.09_82/0.8)]"
+                        : "bg-primary/15 text-primary")
+                    }
+                  >
+                    {active ? "▶" : String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className={"flex-1 text-sm " + (active ? "font-medium" : "")}>{c.title}</span>
+                  <span className="text-xs font-mono tabular-nums text-primary">{c.time}</span>
+                </button>
+              );
+            })}
+
           </div>
         </TabsContent>
 
