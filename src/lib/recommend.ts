@@ -8,7 +8,7 @@ import { useProgress } from "./progress";
  * then first incomplete lessons of subsequent modules.
  */
 export function useRelated(moduleId: string, lessonId: string, limit = 3) {
-  const { done } = useProgress();
+  const { isDone } = useProgress();
   return useMemo(() => {
     const result: { module: Module; lesson: Lesson; reason: string }[] = [];
     const mod = course.modules.find((m) => m.id === moduleId);
