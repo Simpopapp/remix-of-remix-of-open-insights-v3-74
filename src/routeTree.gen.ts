@@ -21,6 +21,7 @@ import { Route as NotasRouteImport } from './routes/notas'
 import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as LancamentoRouteImport } from './routes/lancamento'
 import { Route as InboxRouteImport } from './routes/inbox'
+import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as FocoRouteImport } from './routes/foco'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as ExerciciosRouteImport } from './routes/exercicios'
@@ -94,6 +95,11 @@ const InboxRoute = InboxRouteImport.update({
   path: '/inbox',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GlossarioRoute = GlossarioRouteImport.update({
+  id: '/glossario',
+  path: '/glossario',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FocoRoute = FocoRouteImport.update({
   id: '/foco',
   path: '/foco',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
+  '/glossario': typeof GlossarioRoute
   '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
   '/mapa': typeof MapaRoute
@@ -191,6 +198,7 @@ export interface FileRoutesByTo {
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
+  '/glossario': typeof GlossarioRoute
   '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
   '/mapa': typeof MapaRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
+  '/glossario': typeof GlossarioRoute
   '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
   '/mapa': typeof MapaRoute
@@ -246,6 +255,7 @@ export interface FileRouteTypes {
     | '/exercicios'
     | '/favoritos'
     | '/foco'
+    | '/glossario'
     | '/inbox'
     | '/lancamento'
     | '/mapa'
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/exercicios'
     | '/favoritos'
     | '/foco'
+    | '/glossario'
     | '/inbox'
     | '/lancamento'
     | '/mapa'
@@ -298,6 +309,7 @@ export interface FileRouteTypes {
     | '/exercicios'
     | '/favoritos'
     | '/foco'
+    | '/glossario'
     | '/inbox'
     | '/lancamento'
     | '/mapa'
@@ -325,6 +337,7 @@ export interface RootRouteChildren {
   ExerciciosRoute: typeof ExerciciosRoute
   FavoritosRoute: typeof FavoritosRoute
   FocoRoute: typeof FocoRoute
+  GlossarioRoute: typeof GlossarioRoute
   InboxRoute: typeof InboxRoute
   LancamentoRoute: typeof LancamentoRoute
   MapaRoute: typeof MapaRoute
@@ -428,6 +441,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InboxRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/glossario': {
+      id: '/glossario'
+      path: '/glossario'
+      fullPath: '/glossario'
+      preLoaderRoute: typeof GlossarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/foco': {
       id: '/foco'
       path: '/foco'
@@ -525,6 +545,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExerciciosRoute: ExerciciosRoute,
   FavoritosRoute: FavoritosRoute,
   FocoRoute: FocoRoute,
+  GlossarioRoute: GlossarioRoute,
   InboxRoute: InboxRoute,
   LancamentoRoute: LancamentoRoute,
   MapaRoute: MapaRoute,
