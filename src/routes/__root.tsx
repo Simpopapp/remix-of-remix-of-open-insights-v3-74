@@ -9,7 +9,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { Flame } from "lucide-react";
+import { Bell, Flame } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -20,6 +20,7 @@ import { ConciergeChat } from "@/components/ConciergeChat";
 import { ShortcutsOverlay } from "@/components/ShortcutsOverlay";
 import { useProfile } from "@/lib/profile";
 import { useGamification } from "@/lib/gamification";
+import { useInbox } from "@/lib/inbox";
 
 function NotFoundComponent() {
   return (
