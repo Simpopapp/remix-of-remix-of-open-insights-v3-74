@@ -192,6 +192,7 @@ function AppShell() {
             </span>
             <CommandPalette />
             <ThemeToggle />
+            <Link
               to="/inbox"
               aria-label={`Inbox${unread ? ` (${unread} não lidas)` : ""}`}
               className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border text-muted-foreground hover:border-primary/60 hover:text-primary"
@@ -219,7 +220,8 @@ function AppShell() {
       <ConciergeChat />
       <ShortcutsOverlay />
       <LevelUpWatcher />
-      <Toaster position="top-right" theme="dark" />
+      <MiniPlayer />
+      <Toaster position="top-right" theme={resolved} />
     </div>
   );
 }
