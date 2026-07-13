@@ -186,7 +186,18 @@ function LessonPage() {
       </Link>
 
       {/* Player */}
-      <div className="mt-6">
+      <div className="relative mt-6">
+        <div
+          aria-hidden
+          className="absolute -inset-6 sm:-inset-10 -z-10 opacity-60 blur-3xl pointer-events-none"
+          style={{
+            backgroundImage: `url(${heroLesson})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            maskImage: "radial-gradient(ellipse at center, black 40%, transparent 75%)",
+            WebkitMaskImage: "radial-gradient(ellipse at center, black 40%, transparent 75%)",
+          }}
+        />
         <VideoPlayer
           moduleId={mod.id}
           lessonId={lesson.id}
@@ -194,6 +205,7 @@ function LessonPage() {
           onNearComplete={() => setDone(mod.id, lesson.id, true)}
         />
       </div>
+
 
       {/* Meta */}
       <div className="mt-8 flex items-start justify-between gap-6 flex-wrap">
