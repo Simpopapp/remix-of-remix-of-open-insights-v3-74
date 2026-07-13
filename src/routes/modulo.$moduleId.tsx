@@ -8,6 +8,7 @@ import { useQuizResults } from "@/lib/quiz-data";
 import { Progress } from "@/components/ui/progress";
 import { fireConfetti } from "@/lib/confetti";
 import { toast } from "sonner";
+import heroModule from "@/assets/hero-module.jpg";
 
 export const Route = createFileRoute("/modulo/$moduleId")({
   loader: ({ params }) => {
