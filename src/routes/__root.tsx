@@ -225,7 +225,9 @@ function AppShell() {
       <ShortcutsOverlay />
       <LevelUpWatcher />
       <MiniPlayer />
+      <OfflineBanner />
       <Toaster position="top-right" theme={resolved} />
+
     </div>
   );
 }
