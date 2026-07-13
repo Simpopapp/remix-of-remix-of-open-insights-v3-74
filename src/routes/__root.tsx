@@ -26,6 +26,7 @@ import { useTheme } from "@/lib/theme";
 import { useProfile } from "@/lib/profile";
 import { useGamification } from "@/lib/gamification";
 import { useInbox } from "@/lib/inbox";
+import { useAutoFreeze } from "@/lib/auto-freeze";
 
 function NotFoundComponent() {
   return (
@@ -155,6 +156,7 @@ function AppShell() {
   const { unread } = useInbox();
   const { resolved } = useTheme();
   const nav = useRouter();
+  useAutoFreeze();
 
   useEffect(() => {
     if (!profile.onboarded && pathname !== "/onboarding") {
