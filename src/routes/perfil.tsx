@@ -64,6 +64,10 @@ function PerfilPage() {
             </div>
           </div>
 
+          <ActivityHeatmap />
+
+
+
           <div className="rounded-2xl border border-primary/25 bg-card/50 p-6">
             <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Editar dados</div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
