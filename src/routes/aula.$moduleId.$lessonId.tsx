@@ -90,7 +90,17 @@ function LessonPage() {
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [preview, setPreview] = useState(false);
+  const [playhead, setPlayhead] = useState(0);
   useEffect(() => bindTimestamps(previewRef.current), [preview, notes]);
+  useEffect(() => onTime((t) => setPlayhead(t)), []);
+  const activeChapterIdx = (() => {
+    let idx = -1;
+    for (let i = 0; i < lesson.chapters.length; i++) {
+      if (parseTimestamp(lesson.chapters[i].time) <= playhead) idx = i;
+    }
+    return idx;
+  })();
+
 
   const onTranscriptSelect = useCallback(() => {
     const sel = window.getSelection?.();
