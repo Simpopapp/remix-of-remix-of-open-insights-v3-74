@@ -147,6 +147,7 @@ function AppShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { profile } = useProfile();
   const { xp, level, streak } = useGamification();
+  const { unread } = useInbox();
   const nav = useRouter();
 
   useEffect(() => {
@@ -184,6 +185,18 @@ function AppShell() {
               <Flame className="h-3 w-3" /> {streak.current}
             </span>
             <CommandPalette />
+            <Link
+              to="/inbox"
+              aria-label={`Inbox${unread ? ` (${unread} não lidas)` : ""}`}
+              className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border text-muted-foreground hover:border-primary/60 hover:text-primary"
+            >
+              <Bell className="h-4 w-4" />
+              {unread > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+                  {unread > 9 ? "9+" : unread}
+                </span>
+              )}
+            </Link>
             <Link
               to="/perfil"
               aria-label="Abrir perfil"
