@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { BookOpen, Download, FileCode2, FileText, Search, Wrench } from "lucide-react";
+import { HeroBanner } from "@/components/HeroBanner";
+import heroBiblioteca from "@/assets/hero-biblioteca.jpg";
+
 
 export const Route = createFileRoute("/biblioteca")({
   head: () => ({
@@ -54,13 +57,15 @@ function LibraryPage() {
   const types: (Item["type"] | "Tudo")[] = ["Tudo", "Playbook", "Template", "Prompt", "Checklist", "Repo"];
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10 lg:py-14">
-      <div className="text-xs uppercase tracking-[0.28em] text-primary">Arsenal</div>
-      <h1 className="mt-2 font-serif text-4xl lg:text-5xl tracking-tight">Biblioteca</h1>
-      <p className="mt-3 text-muted-foreground max-w-xl">
-        Playbooks, templates, prompts e repositórios. Tudo pronto para você
-        colar e executar hoje.
-      </p>
+    <div className="mx-auto max-w-5xl px-6 py-10 lg:py-14 space-y-8">
+      <HeroBanner
+        image={heroBiblioteca}
+        eyebrow="Arsenal"
+        title={<>Biblioteca</>}
+        subtitle="Playbooks, templates, prompts e repositórios. Tudo pronto para você colar e executar hoje."
+      />
+
+
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-[240px]">

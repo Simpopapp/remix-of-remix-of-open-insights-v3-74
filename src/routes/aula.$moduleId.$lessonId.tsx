@@ -85,7 +85,7 @@ function LessonPage() {
   const feedback = useLessonFeedback(mod.id, lesson.id);
   const highlights = useHighlights(mod.id, lesson.id);
   const markers = useMarkers(mod.id, lesson.id);
-  const transcriptRef = useRef<HTMLParagraphElement>(null);
+  const transcriptRef = useRef<HTMLDivElement>(null);
   const [selectedText, setSelectedText] = useState("");
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -164,7 +164,36 @@ function LessonPage() {
       ta.setSelectionRange(pos, pos);
     });
   };
+
+  const wrapSelection = (before: string, after: string = before, block = false) => {
+    const ta = notesRef.current;
+    if (!ta) return;
+    const start = ta.selectionStart ?? 0;
+    const end = ta.selectionEnd ?? 0;
+    const selected = notes.slice(start, end) || (block ? "" : "texto");
+    const prefix = block ? (start > 0 && notes[start - 1] !== "\n" ? "\n" : "") : "";
+    const next = notes.slice(0, start) + prefix + before + selected + after + notes.slice(end);
+    setNotes(next);
+    requestAnimationFrame(() => {
+      ta.focus();
+      const pos = start + prefix.length + before.length + selected.length;
+      ta.setSelectionRange(pos, pos);
+    });
+  };
+  const prependLines = (marker: string) => {
+    const ta = notesRef.current;
+    if (!ta) return;
+    const start = ta.selectionStart ?? 0;
+    const end = ta.selectionEnd ?? 0;
+    const lineStart = notes.lastIndexOf("\n", start - 1) + 1;
+    const region = notes.slice(lineStart, end || start);
+    const lines = (region || "item").split("\n").map((l) => (l.startsWith(marker) ? l : marker + l));
+    const next = notes.slice(0, lineStart) + lines.join("\n") + notes.slice(end || start);
+    setNotes(next);
+    requestAnimationFrame(() => ta.focus());
+  };
   const noteStamps = Array.from(notes.matchAll(/\[(\d{1,2}:\d{2}(?::\d{2})?)\]/g)).map((m) => m[1]);
+
 
   const difficultyColors: Record<Lesson["exercise"]["difficulty"], string> = {
     Fácil: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30",
@@ -370,15 +399,70 @@ function LessonPage() {
                 ))}
               </div>
             </div>
-            <p
-              ref={transcriptRef}
-              onMouseUp={onTranscriptSelect}
-              onKeyUp={onTranscriptSelect}
-              onTouchEnd={onTranscriptSelect}
-              className="mt-4 text-sm leading-loose text-foreground/90 whitespace-pre-wrap select-text"
-            >
-              {lesson.transcript}
-            </p>
+            {(() => {
+              // Split transcript into segments roughly proportional to chapters
+              const raw = lesson.transcript.trim();
+              const paras = raw.split(/\n\n+/).filter(Boolean);
+              const nCh = lesson.chapters.length;
+              const segments: string[] = [];
+              if (paras.length >= nCh && nCh > 0) {
+                const per = Math.ceil(paras.length / nCh);
+                for (let i = 0; i < nCh; i++) {
+                  segments.push(paras.slice(i * per, (i + 1) * per).join("\n\n"));
+                }
+              } else {
+                // Fall back to slicing the string in equal parts
+                const len = raw.length;
+                const per = Math.ceil(len / Math.max(1, nCh));
+                for (let i = 0; i < Math.max(1, nCh); i++) {
+                  segments.push(raw.slice(i * per, (i + 1) * per));
+                }
+              }
+              return (
+                <div
+                  ref={transcriptRef}
+                  onMouseUp={onTranscriptSelect}
+                  onKeyUp={onTranscriptSelect}
+                  onTouchEnd={onTranscriptSelect}
+                  className="mt-4 space-y-4 select-text"
+                >
+                  {segments.map((seg, i) => {
+                    const active = i === activeChapterIdx;
+                    const ch = lesson.chapters[i];
+                    return (
+                      <div
+                        key={i}
+                        className={
+                          "group rounded-xl border p-4 transition " +
+                          (active
+                            ? "border-primary/60 bg-primary/10 shadow-[0_0_40px_-16px_oklch(0.76_0.09_82/0.7)]"
+                            : "border-transparent hover:border-border hover:bg-accent/20")
+                        }
+                      >
+                        {ch && (
+                          <button
+                            onClick={() => seekTo(parseTimestamp(ch.time))}
+                            className="mb-2 inline-flex items-center gap-2 text-[11px] font-mono tabular-nums text-primary hover:underline"
+                          >
+                            <span
+                              className={
+                                "inline-block h-1.5 w-1.5 rounded-full " +
+                                (active ? "bg-primary animate-pulse" : "bg-primary/40")
+                              }
+                            />
+                            {ch.time} · {ch.title}
+                          </button>
+                        )}
+                        <p className="text-sm leading-loose text-foreground/90 whitespace-pre-wrap">
+                          {seg}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
             {selectedText && (
               <div
                 role="region"
@@ -653,6 +737,21 @@ function LessonPage() {
             </span>
           </div>
         </div>
+        {!preview && (
+          <div className="mt-3 flex flex-wrap items-center gap-1 rounded-xl border border-border bg-background/50 p-1.5">
+            <ToolbarBtn onClick={() => wrapSelection("**")} label="Negrito"><strong>B</strong></ToolbarBtn>
+            <ToolbarBtn onClick={() => wrapSelection("*")} label="Itálico"><em>I</em></ToolbarBtn>
+            <ToolbarBtn onClick={() => wrapSelection("`")} label="Código monoespaçado"><code className="text-xs">{"</>"}</code></ToolbarBtn>
+            <span className="mx-1 h-4 w-px bg-border" />
+            <ToolbarBtn onClick={() => prependLines("- ")} label="Lista">•</ToolbarBtn>
+            <ToolbarBtn onClick={() => prependLines("1. ")} label="Numerada">1.</ToolbarBtn>
+            <ToolbarBtn onClick={() => prependLines("> ")} label="Citação">"</ToolbarBtn>
+            <ToolbarBtn onClick={() => prependLines("# ")} label="Título">H</ToolbarBtn>
+            <span className="mx-1 h-4 w-px bg-border" />
+            <ToolbarBtn onClick={() => wrapSelection("[", "](https://)")} label="Link">🔗</ToolbarBtn>
+          </div>
+        )}
+
         {preview ? (
           <div
             ref={previewRef}
@@ -791,5 +890,27 @@ function LessonPage() {
         )}
       </div>
     </div>
+  );
+}
+
+function ToolbarBtn({
+  onClick,
+  label,
+  children,
+}: {
+  onClick: () => void;
+  label: string;
+  children: import("react").ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      title={label}
+      className="grid h-8 min-w-8 place-items-center rounded-md px-2 text-xs text-muted-foreground hover:bg-accent/40 hover:text-foreground transition"
+    >
+      {children}
+    </button>
   );
 }

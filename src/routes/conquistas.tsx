@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Lock } from "lucide-react";
+import { Award, Lock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useBadges, tierColor, type BadgeTier } from "@/lib/badges";
+import { HeroBanner } from "@/components/HeroBanner";
+import heroConquistas from "@/assets/hero-conquistas.jpg";
 
 export const Route = createFileRoute("/conquistas")({
   head: () => ({
@@ -34,15 +36,15 @@ function AchievementsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10 lg:py-14">
-      <div className="text-xs uppercase tracking-[0.28em] text-primary">Vitrine</div>
-      <h1 className="mt-2 font-serif text-4xl lg:text-5xl tracking-tight">Conquistas</h1>
-      <p className="mt-3 text-muted-foreground max-w-xl">
-        {unlocked} de {total} selos desbloqueados · {pct}% da coleção.
-      </p>
+      <HeroBanner
+        image={heroConquistas}
+        eyebrow={<><Award className="inline h-3 w-3 mr-1" /> Vitrine</>}
+        title={<><span className="text-gold-gradient">Conquistas</span></>}
+        subtitle={`${unlocked} de ${total} selos desbloqueados · ${pct}% da coleção. Cada selo é o registro de um hábito construído.`}
+        meta={<div className="w-full max-w-md"><Progress value={pct} className="h-1.5" /></div>}
+      />
 
-      <div className="mt-6 max-w-md">
-        <Progress value={pct} className="h-1.5" />
-      </div>
+
 
       {Object.entries(byCategory).map(([cat, list]) => (
         <section key={cat} className="mt-10">
