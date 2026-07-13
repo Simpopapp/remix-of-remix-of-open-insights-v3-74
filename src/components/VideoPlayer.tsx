@@ -240,7 +240,7 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }:
           </div>
         </div>
         <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/50">
-          espaço · ←/→ 10s · m mudo · f tela cheia
+          espaço · ←/→ 10s · m mudo · f tela cheia · clique na barra
         </div>
       </div>
     </div>
