@@ -105,6 +105,14 @@ export function StudentSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/agenda"}>
+                  <Link to="/agenda">
+                    <CalendarDays />
+                    <span>Agenda</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/trilhas"}>
                   <Link to="/trilhas">
                     <RouteIcon />
