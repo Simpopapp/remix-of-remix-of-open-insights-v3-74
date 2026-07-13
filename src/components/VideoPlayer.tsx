@@ -96,31 +96,37 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, chapters, onNearC
 
 
 
-  // Keyboard shortcuts
+  // Global command bus (keyboard shortcuts, external buttons)
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName)) return;
+    return onCommand((cmd) => {
       const v = ref.current;
       if (!v) return;
-      if (e.key === " " || e.key === "k") {
-        e.preventDefault();
-        v.paused ? v.play() : v.pause();
-      } else if (e.key === "ArrowRight" || e.key === "l") {
-        v.currentTime = Math.min((v.duration || 0), v.currentTime + 10);
-      } else if (e.key === "ArrowLeft" || e.key === "j") {
-        v.currentTime = Math.max(0, v.currentTime - 10);
-      } else if (e.key === "m") {
-        v.muted = !v.muted;
-        setMuted(v.muted);
-      } else if (e.key === "f") {
-        wrapRef.current?.requestFullscreen?.();
+      switch (cmd.type) {
+        case "toggle":
+          v.paused ? v.play() : v.pause();
+          break;
+        case "play":
+          v.play();
+          break;
+        case "pause":
+          v.pause();
+          break;
+        case "skip":
+          v.currentTime = Math.max(0, Math.min(v.duration || 0, v.currentTime + cmd.delta));
+          break;
+        case "rate": {
+          const idx = RATES.indexOf(rate);
+          const next = RATES[Math.max(0, Math.min(RATES.length - 1, idx + cmd.value))];
+          setRate(next);
+          v.playbackRate = next;
+          break;
+        }
+        case "fullscreen":
+          wrapRef.current?.requestFullscreen?.();
+          break;
       }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  const toggle = () => {
+    });
+  }, [rate]);
     const v = ref.current;
     if (!v) return;
     v.paused ? v.play() : v.pause();
