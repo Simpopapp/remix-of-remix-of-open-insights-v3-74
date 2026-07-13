@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, CheckCircle2, Flame, Printer, StickyNote, Target, Timer } from "lucide-react";
+import { BookOpen, CheckCircle2, Flame, Printer, Shield, StickyNote, Target, Timer, TrendingDown, TrendingUp } from "lucide-react";
+import { toast } from "sonner";
 import { useWeeklyStats } from "@/lib/weekly-stats";
 import { useStreak } from "@/lib/streak";
 import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
