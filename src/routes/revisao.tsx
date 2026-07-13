@@ -142,21 +142,44 @@ function RevisaoPage() {
 
       {/* Totals grid */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {rows.map((r) => (
-          <div key={r.label} className="rounded-2xl border border-border bg-card p-5">
-            <div className="flex items-center justify-between">
-              <div className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                {r.label}
+        {rows.map((r) => {
+          const up = r.delta > 0;
+          const down = r.delta < 0;
+          return (
+            <div key={r.label} className="rounded-2xl border border-border bg-card p-5">
+              <div className="flex items-center justify-between">
+                <div className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                  {r.label}
+                </div>
+                <div className="grid h-7 w-7 place-items-center rounded-full bg-primary/15 text-primary">
+                  {r.icon}
+                </div>
               </div>
-              <div className="grid h-7 w-7 place-items-center rounded-full bg-primary/15 text-primary">
-                {r.icon}
+              <div className="mt-3 flex items-baseline gap-3">
+                <div className="font-serif text-3xl">{r.value}</div>
+                {r.delta !== 0 && (
+                  <span
+                    className={
+                      "inline-flex items-center gap-1 text-[11px] tabular-nums " +
+                      (up ? "text-primary" : "text-muted-foreground")
+                    }
+                    title="Comparado com a semana anterior"
+                  >
+                    {up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                    {up ? "+" : ""}
+                    {r.delta} vs semana anterior
+                  </span>
+                )}
+                {r.delta === 0 && (
+                  <span className="text-[11px] text-muted-foreground">= semana anterior</span>
+                )}
               </div>
+              <div className="mt-1 text-xs text-muted-foreground">{r.hint}</div>
             </div>
-            <div className="mt-3 font-serif text-3xl">{r.value}</div>
-            <div className="mt-1 text-xs text-muted-foreground">{r.hint}</div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
 
       {/* Top module */}
       {topModule && topModule.done > 0 && (
