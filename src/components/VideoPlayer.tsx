@@ -185,19 +185,33 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, chapters, onNearC
 
       {/* Controls */}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-        <button
-          type="button"
-          aria-label="Buscar no vídeo"
-          onClick={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const ratio = (e.clientX - rect.left) / rect.width;
-            const v = ref.current;
-            if (v && dur) v.currentTime = Math.max(0, Math.min(dur, ratio * dur));
-          }}
-          className="mb-2 h-2 w-full overflow-hidden rounded-full bg-white/15 cursor-pointer"
-        >
-          <div className="h-full bg-primary pointer-events-none" style={{ width: `${pct}%` }} />
-        </button>
+        <div className="relative mb-2">
+          <button
+            type="button"
+            aria-label="Buscar no vídeo"
+            onClick={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const ratio = (e.clientX - rect.left) / rect.width;
+              const v = ref.current;
+              if (v && dur) v.currentTime = Math.max(0, Math.min(dur, ratio * dur));
+            }}
+            className="h-2 w-full overflow-hidden rounded-full bg-white/15 cursor-pointer block"
+          >
+            <div className="h-full bg-primary pointer-events-none" style={{ width: `${pct}%` }} />
+          </button>
+          {chapters && dur > 0 && chapters.map((c, i) => {
+            const t = parseTs(c.time);
+            if (t <= 0 || t >= dur) return null;
+            return (
+              <span
+                key={i}
+                title={`${c.time} · ${c.title}`}
+                className="absolute top-0 h-2 w-0.5 bg-white/70 pointer-events-none"
+                style={{ left: `${(t / dur) * 100}%` }}
+              />
+            );
+          })}
+        </div>
         <div className="flex items-center gap-2 text-white">
           <button onClick={toggle} className="rounded p-1.5 hover:bg-white/10" aria-label="Play/Pause">
             {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
