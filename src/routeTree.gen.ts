@@ -28,6 +28,7 @@ import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as FocoRouteImport } from './routes/foco'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as ExerciciosRouteImport } from './routes/exercicios'
+import { Route as EstatisticasRouteImport } from './routes/estatisticas'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as CertificadoRouteImport } from './routes/certificado'
@@ -135,6 +136,11 @@ const ExerciciosRoute = ExerciciosRouteImport.update({
   path: '/exercicios',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EstatisticasRoute = EstatisticasRouteImport.update({
+  id: '/estatisticas',
+  path: '/estatisticas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConquistasRoute = ConquistasRouteImport.update({
   id: '/conquistas',
   path: '/conquistas',
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/certificado': typeof CertificadoRoute
   '/comunidade': typeof ComunidadeRoute
   '/conquistas': typeof ConquistasRoute
+  '/estatisticas': typeof EstatisticasRoute
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/certificado': typeof CertificadoRoute
   '/comunidade': typeof ComunidadeRoute
   '/conquistas': typeof ConquistasRoute
+  '/estatisticas': typeof EstatisticasRoute
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
@@ -265,6 +273,7 @@ export interface FileRoutesById {
   '/certificado': typeof CertificadoRoute
   '/comunidade': typeof ComunidadeRoute
   '/conquistas': typeof ConquistasRoute
+  '/estatisticas': typeof EstatisticasRoute
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
@@ -299,6 +308,7 @@ export interface FileRouteTypes {
     | '/certificado'
     | '/comunidade'
     | '/conquistas'
+    | '/estatisticas'
     | '/exercicios'
     | '/favoritos'
     | '/foco'
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/certificado'
     | '/comunidade'
     | '/conquistas'
+    | '/estatisticas'
     | '/exercicios'
     | '/favoritos'
     | '/foco'
@@ -363,6 +374,7 @@ export interface FileRouteTypes {
     | '/certificado'
     | '/comunidade'
     | '/conquistas'
+    | '/estatisticas'
     | '/exercicios'
     | '/favoritos'
     | '/foco'
@@ -396,6 +408,7 @@ export interface RootRouteChildren {
   CertificadoRoute: typeof CertificadoRoute
   ComunidadeRoute: typeof ComunidadeRoute
   ConquistasRoute: typeof ConquistasRoute
+  EstatisticasRoute: typeof EstatisticasRoute
   ExerciciosRoute: typeof ExerciciosRoute
   FavoritosRoute: typeof FavoritosRoute
   FocoRoute: typeof FocoRoute
@@ -555,6 +568,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExerciciosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/estatisticas': {
+      id: '/estatisticas'
+      path: '/estatisticas'
+      fullPath: '/estatisticas'
+      preLoaderRoute: typeof EstatisticasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/conquistas': {
       id: '/conquistas'
       path: '/conquistas'
@@ -644,6 +664,7 @@ const rootRouteChildren: RootRouteChildren = {
   CertificadoRoute: CertificadoRoute,
   ComunidadeRoute: ComunidadeRoute,
   ConquistasRoute: ConquistasRoute,
+  EstatisticasRoute: EstatisticasRoute,
   ExerciciosRoute: ExerciciosRoute,
   FavoritosRoute: FavoritosRoute,
   FocoRoute: FocoRoute,
