@@ -18,8 +18,11 @@ import { StudentSidebar } from "@/components/StudentSidebar";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ConciergeChat } from "@/components/ConciergeChat";
 import { ShortcutsOverlay } from "@/components/ShortcutsOverlay";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { MiniPlayer } from "@/components/MiniPlayer";
 import { Toaster } from "@/components/ui/sonner";
 import { LevelUpWatcher } from "@/lib/level-toast";
+import { useTheme } from "@/lib/theme";
 import { useProfile } from "@/lib/profile";
 import { useGamification } from "@/lib/gamification";
 import { useInbox } from "@/lib/inbox";
@@ -150,6 +153,7 @@ function AppShell() {
   const { profile } = useProfile();
   const { xp, level, streak } = useGamification();
   const { unread } = useInbox();
+  const { resolved } = useTheme();
   const nav = useRouter();
 
   useEffect(() => {
@@ -187,7 +191,7 @@ function AppShell() {
               <Flame className="h-3 w-3" /> {streak.current}
             </span>
             <CommandPalette />
-            <Link
+            <ThemeToggle />
               to="/inbox"
               aria-label={`Inbox${unread ? ` (${unread} não lidas)` : ""}`}
               className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border text-muted-foreground hover:border-primary/60 hover:text-primary"
