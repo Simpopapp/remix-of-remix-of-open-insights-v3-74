@@ -326,11 +326,94 @@ function LessonPage() {
                 ))}
               </div>
             </div>
-            <p className="mt-4 text-sm leading-loose text-foreground/90 whitespace-pre-wrap">
+            <p
+              ref={transcriptRef}
+              onMouseUp={onTranscriptSelect}
+              onKeyUp={onTranscriptSelect}
+              onTouchEnd={onTranscriptSelect}
+              className="mt-4 text-sm leading-loose text-foreground/90 whitespace-pre-wrap select-text"
+            >
               {lesson.transcript}
             </p>
+            {selectedText && (
+              <div
+                role="region"
+                aria-label="Ação sobre trecho selecionado"
+                className="sticky bottom-4 mt-4 flex items-center gap-3 rounded-full border border-primary/40 bg-primary/10 backdrop-blur px-4 py-2 shadow-lg"
+              >
+                <Quote className="h-4 w-4 text-primary shrink-0" />
+                <span className="text-xs text-muted-foreground truncate flex-1">
+                  "{selectedText.slice(0, 80)}
+                  {selectedText.length > 80 ? "…" : ""}"
+                </span>
+                <button
+                  onClick={saveHighlight}
+                  className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-95 shrink-0"
+                >
+                  <Highlighter className="h-3 w-3" /> Destacar
+                </button>
+              </div>
+            )}
           </div>
         </TabsContent>
+
+        {/* TRECHOS */}
+        <TabsContent value="trechos" className="mt-6">
+          <div className="rounded-2xl border border-border bg-card p-6 lg:p-8">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
+                <Highlighter className="h-3 w-3" /> Trechos destacados
+              </div>
+              <div className="text-[11px] text-muted-foreground">
+                Selecione texto na aba Transcrição para destacar.
+              </div>
+            </div>
+            {highlights.list.length === 0 ? (
+              <div className="mt-6 rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+                Nenhum trecho ainda. Vá para <em>Transcrição</em>, selecione uma frase e toque em <em>Destacar</em>.
+              </div>
+            ) : (
+              <ul className="mt-4 space-y-3">
+                {highlights.list.map((h) => (
+                  <li
+                    key={h.id}
+                    className="group relative rounded-xl border-l-2 border-primary bg-primary/5 p-4"
+                  >
+                    <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
+                      "{h.text}"
+                    </p>
+                    <div className="mt-2 flex items-center gap-3 text-[11px] text-muted-foreground">
+                      {typeof h.t === "number" && h.t > 0 && (
+                        <button
+                          onClick={() => seekTo(h.t!)}
+                          className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 font-mono tabular-nums text-primary hover:bg-primary/20"
+                        >
+                          ▶ {fmtTimestamp(h.t)}
+                        </button>
+                      )}
+                      <span>
+                        {new Date(h.createdAt).toLocaleString("pt-BR", {
+                          day: "2-digit",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      <button
+                        onClick={() => highlights.remove(h.id)}
+                        aria-label="Remover trecho"
+                        className="ml-auto inline-flex items-center gap-1 text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive transition"
+                      >
+                        <Trash2 className="h-3 w-3" /> Remover
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </TabsContent>
+
 
 
         {/* CÓDIGO */}
