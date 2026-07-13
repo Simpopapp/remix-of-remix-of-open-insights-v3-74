@@ -1,12 +1,31 @@
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "@tanstack/react-router";
-import { Award, BookOpen, Home, Layers, Library, PlayCircle, Rocket, Search, Target, Trophy, Users, Wand2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Award, BookOpen, FileText, Home, Layers, Library, PlayCircle, Rocket, Search, Target, Trophy, Users, Wand2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { course } from "@/lib/course-data";
+import { buildIndex, resetIndex, searchContent, snippet } from "@/lib/search-index";
+
+const SECTION_LABEL: Record<string, string> = {
+  aula: "Aula",
+  transcricao: "Transcrição",
+  capitulos: "Capítulo",
+  exercicio: "Exercício",
+  nota: "Nota",
+};
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (open) {
+      resetIndex();
+      buildIndex();
+    }
+  }, [open]);
+
+  const contentHits = useMemo(() => (q.trim().length >= 2 ? searchContent(q, 12) : []), [q]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -38,9 +57,41 @@ export function CommandPalette() {
 
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Buscar aulas, módulos, seções…" />
+        <CommandInput placeholder="Buscar aulas, transcrições, notas…" value={q} onValueChange={setQ} />
         <CommandList>
           <CommandEmpty>Nada encontrado.</CommandEmpty>
+          {contentHits.length > 0 && (
+            <CommandGroup heading="Conteúdo">
+              {contentHits.map((h) => (
+                <CommandItem
+                  key={h.id}
+                  value={`${h.id} ${h.body.slice(0, 60)}`}
+                  onSelect={() =>
+                    go(() =>
+                      navigate({
+                        to: "/aula/$moduleId/$lessonId",
+                        params: { moduleId: h.moduleId, lessonId: h.lessonId },
+                        search: h.t ? { t: h.t } : undefined,
+                      }),
+                    )
+                  }
+                >
+                  <FileText className="mr-2 mt-0.5 h-4 w-4 shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="rounded bg-primary/15 px-1.5 py-0.5 font-mono uppercase tracking-wider text-primary text-[10px]">
+                        {SECTION_LABEL[h.section]}
+                      </span>
+                      <span className="truncate text-foreground">{h.lessonTitle}</span>
+                    </div>
+                    <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                      {snippet(h.body, q)}
+                    </div>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
           <CommandGroup heading="Navegação">
             <CommandItem onSelect={() => go(() => navigate({ to: "/" }))}>
               <Home className="mr-2 h-4 w-4" /> Dashboard

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Play, Pause, RotateCcw, Volume2, VolumeX, Maximize2, Gauge } from "lucide-react";
+import { Play, Pause, PictureInPicture2, RotateCcw, Volume2, VolumeX, Maximize2, Gauge } from "lucide-react";
 import { useVideoProgress } from "@/lib/video-progress";
 import { addWatchSeconds, pingStreak } from "@/lib/gamification";
 import { onSeek, reportTime } from "@/lib/video-bus";
@@ -176,9 +176,19 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }:
 
       {/* Controls */}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-        <div className="mb-2 h-1 w-full overflow-hidden rounded-full bg-white/15">
-          <div className="h-full bg-primary" style={{ width: `${pct}%` }} />
-        </div>
+        <button
+          type="button"
+          aria-label="Buscar no vídeo"
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const ratio = (e.clientX - rect.left) / rect.width;
+            const v = ref.current;
+            if (v && dur) v.currentTime = Math.max(0, Math.min(dur, ratio * dur));
+          }}
+          className="mb-2 h-2 w-full overflow-hidden rounded-full bg-white/15 cursor-pointer"
+        >
+          <div className="h-full bg-primary pointer-events-none" style={{ width: `${pct}%` }} />
+        </button>
         <div className="flex items-center gap-2 text-white">
           <button onClick={toggle} className="rounded p-1.5 hover:bg-white/10" aria-label="Play/Pause">
             {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -207,6 +217,20 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }:
               {rate}x
             </button>
             <button
+              onClick={async () => {
+                const v = ref.current;
+                if (!v) return;
+                try {
+                  if (document.pictureInPictureElement) await document.exitPictureInPicture();
+                  else await v.requestPictureInPicture?.();
+                } catch { /* ignore */ }
+              }}
+              className="rounded p-1.5 hover:bg-white/10"
+              aria-label="Picture-in-picture"
+            >
+              <PictureInPicture2 className="h-4 w-4" />
+            </button>
+            <button
               onClick={() => wrapRef.current?.requestFullscreen?.()}
               className="rounded p-1.5 hover:bg-white/10"
               aria-label="Fullscreen"
@@ -216,7 +240,7 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }:
           </div>
         </div>
         <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/50">
-          espaço · ←/→ 10s · m mudo · f tela cheia
+          espaço · ←/→ 10s · m mudo · f tela cheia · clique na barra
         </div>
       </div>
     </div>
