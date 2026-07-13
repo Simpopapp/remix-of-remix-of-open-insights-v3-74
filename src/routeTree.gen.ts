@@ -17,6 +17,7 @@ import { Route as PromptsRouteImport } from './routes/prompts'
 import { Route as ProjetosRouteImport } from './routes/projetos'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NovidadesRouteImport } from './routes/novidades'
 import { Route as NotasRouteImport } from './routes/notas'
 import { Route as MarcadoresRouteImport } from './routes/marcadores'
 import { Route as MapaRouteImport } from './routes/mapa'
@@ -31,6 +32,7 @@ import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as CertificadoRouteImport } from './routes/certificado'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as AtalhosRouteImport } from './routes/atalhos'
+import { Route as AjudaRouteImport } from './routes/ajuda'
 import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuizModuleIdRouteImport } from './routes/quiz.$moduleId'
@@ -75,6 +77,11 @@ const PerfilRoute = PerfilRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NovidadesRoute = NovidadesRouteImport.update({
+  id: '/novidades',
+  path: '/novidades',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotasRoute = NotasRouteImport.update({
@@ -147,6 +154,11 @@ const AtalhosRoute = AtalhosRouteImport.update({
   path: '/atalhos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AjudaRoute = AjudaRouteImport.update({
+  id: '/ajuda',
+  path: '/ajuda',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgendaRoute = AgendaRouteImport.update({
   id: '/agenda',
   path: '/agenda',
@@ -176,6 +188,7 @@ const AulaModuleIdLessonIdRoute = AulaModuleIdLessonIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/ajuda': typeof AjudaRoute
   '/atalhos': typeof AtalhosRoute
   '/biblioteca': typeof BibliotecaRoute
   '/certificado': typeof CertificadoRoute
@@ -190,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/mapa': typeof MapaRoute
   '/marcadores': typeof MarcadoresRoute
   '/notas': typeof NotasRoute
+  '/novidades': typeof NovidadesRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
   '/projetos': typeof ProjetosRoute
@@ -205,6 +219,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/ajuda': typeof AjudaRoute
   '/atalhos': typeof AtalhosRoute
   '/biblioteca': typeof BibliotecaRoute
   '/certificado': typeof CertificadoRoute
@@ -219,6 +234,7 @@ export interface FileRoutesByTo {
   '/mapa': typeof MapaRoute
   '/marcadores': typeof MarcadoresRoute
   '/notas': typeof NotasRoute
+  '/novidades': typeof NovidadesRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
   '/projetos': typeof ProjetosRoute
@@ -235,6 +251,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/ajuda': typeof AjudaRoute
   '/atalhos': typeof AtalhosRoute
   '/biblioteca': typeof BibliotecaRoute
   '/certificado': typeof CertificadoRoute
@@ -249,6 +266,7 @@ export interface FileRoutesById {
   '/mapa': typeof MapaRoute
   '/marcadores': typeof MarcadoresRoute
   '/notas': typeof NotasRoute
+  '/novidades': typeof NovidadesRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
   '/projetos': typeof ProjetosRoute
@@ -266,6 +284,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/agenda'
+    | '/ajuda'
     | '/atalhos'
     | '/biblioteca'
     | '/certificado'
@@ -280,6 +299,7 @@ export interface FileRouteTypes {
     | '/mapa'
     | '/marcadores'
     | '/notas'
+    | '/novidades'
     | '/onboarding'
     | '/perfil'
     | '/projetos'
@@ -295,6 +315,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/agenda'
+    | '/ajuda'
     | '/atalhos'
     | '/biblioteca'
     | '/certificado'
@@ -309,6 +330,7 @@ export interface FileRouteTypes {
     | '/mapa'
     | '/marcadores'
     | '/notas'
+    | '/novidades'
     | '/onboarding'
     | '/perfil'
     | '/projetos'
@@ -324,6 +346,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/agenda'
+    | '/ajuda'
     | '/atalhos'
     | '/biblioteca'
     | '/certificado'
@@ -338,6 +361,7 @@ export interface FileRouteTypes {
     | '/mapa'
     | '/marcadores'
     | '/notas'
+    | '/novidades'
     | '/onboarding'
     | '/perfil'
     | '/projetos'
@@ -354,6 +378,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgendaRoute: typeof AgendaRoute
+  AjudaRoute: typeof AjudaRoute
   AtalhosRoute: typeof AtalhosRoute
   BibliotecaRoute: typeof BibliotecaRoute
   CertificadoRoute: typeof CertificadoRoute
@@ -368,6 +393,7 @@ export interface RootRouteChildren {
   MapaRoute: typeof MapaRoute
   MarcadoresRoute: typeof MarcadoresRoute
   NotasRoute: typeof NotasRoute
+  NovidadesRoute: typeof NovidadesRoute
   OnboardingRoute: typeof OnboardingRoute
   PerfilRoute: typeof PerfilRoute
   ProjetosRoute: typeof ProjetosRoute
@@ -437,6 +463,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/novidades': {
+      id: '/novidades'
+      path: '/novidades'
+      fullPath: '/novidades'
+      preLoaderRoute: typeof NovidadesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notas': {
@@ -537,6 +570,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AtalhosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ajuda': {
+      id: '/ajuda'
+      path: '/ajuda'
+      fullPath: '/ajuda'
+      preLoaderRoute: typeof AjudaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agenda': {
       id: '/agenda'
       path: '/agenda'
@@ -578,6 +618,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgendaRoute: AgendaRoute,
+  AjudaRoute: AjudaRoute,
   AtalhosRoute: AtalhosRoute,
   BibliotecaRoute: BibliotecaRoute,
   CertificadoRoute: CertificadoRoute,
@@ -592,6 +633,7 @@ const rootRouteChildren: RootRouteChildren = {
   MapaRoute: MapaRoute,
   MarcadoresRoute: MarcadoresRoute,
   NotasRoute: NotasRoute,
+  NovidadesRoute: NovidadesRoute,
   OnboardingRoute: OnboardingRoute,
   PerfilRoute: PerfilRoute,
   ProjetosRoute: ProjetosRoute,
@@ -607,13 +649,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
