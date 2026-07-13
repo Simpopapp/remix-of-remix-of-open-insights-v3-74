@@ -31,7 +31,7 @@ function fmt(t: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export function VideoPlayer({ moduleId, lessonId, poster, src, onNearComplete }: Props) {
+export function VideoPlayer({ moduleId, lessonId, poster, src, chapters, onNearComplete }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const { time, save } = useVideoProgress(moduleId, lessonId);
