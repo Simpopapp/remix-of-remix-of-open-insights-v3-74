@@ -262,6 +262,8 @@ function Dashboard() {
         </div>
       </section>
 
+      <RecentLessons />
+
       {/* Ritual + Community */}
       <section className="mt-14">
         <QuestsWidget />
