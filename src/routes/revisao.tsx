@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, CheckCircle2, Flame, Printer, StickyNote, Target, Timer } from "lucide-react";
+import { BookOpen, CheckCircle2, Flame, Printer, Shield, StickyNote, Target, Timer, TrendingDown, TrendingUp } from "lucide-react";
+import { toast } from "sonner";
 import { useWeeklyStats } from "@/lib/weekly-stats";
 import { useStreak } from "@/lib/streak";
 import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
@@ -18,35 +19,40 @@ export const Route = createFileRoute("/revisao")({
 });
 
 function RevisaoPage() {
-  const { totals, bars, maxBar, activeDays, topModule } = useWeeklyStats();
-  const { current, longest } = useStreak();
+  const { totals, deltas, bars, maxBar, activeDays, prevActiveDays, topModule } = useWeeklyStats();
+  const { current, longest, freezesLeft, applyFreeze } = useStreak();
 
-  const rows: { icon: React.ReactNode; label: string; value: string; hint: string }[] = [
+  const rows: { icon: React.ReactNode; label: string; value: string; hint: string; delta: number }[] = [
     {
       icon: <BookOpen className="h-4 w-4" />,
       label: "Aulas assistidas",
       value: String(totals.lesson),
       hint: totals.lesson >= 5 ? "Ritmo elite." : "Meta: 5 por semana.",
+      delta: deltas.lesson,
     },
     {
       icon: <Target className="h-4 w-4" />,
       label: "Exercícios entregues",
       value: String(totals.exercise),
       hint: totals.exercise > 0 ? "Prática cria diferença." : "Comece por um só.",
+      delta: deltas.exercise,
     },
     {
       icon: <Timer className="h-4 w-4" />,
       label: "Minutos em foco",
       value: `${totals.focus} min`,
       hint: totals.focus >= 100 ? "Deep work sério." : "Meta: 100 min/semana.",
+      delta: deltas.focus,
     },
     {
       icon: <StickyNote className="h-4 w-4" />,
       label: "Notas escritas",
       value: String(totals.note),
       hint: totals.note > 0 ? "Seu segundo cérebro cresce." : "Escreva pelo menos 1.",
+      delta: deltas.note,
     },
   ];
+
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-10 lg:py-14">
@@ -83,11 +89,29 @@ function RevisaoPage() {
               {current} {current === 1 ? "dia" : "dias"} seguidos
             </div>
             <div className="mt-1 text-xs text-muted-foreground">
-              {activeDays}/7 dias ativos · recorde {longest} dias
+              {activeDays}/7 dias ativos · recorde {longest} dias · semana anterior {prevActiveDays}/7
             </div>
+          </div>
+          <div className="flex flex-col items-end gap-2 shrink-0 print:hidden">
+            <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Shield className="h-3.5 w-3.5 text-primary" />
+              {freezesLeft} freeze{freezesLeft === 1 ? "" : "s"} disponível{freezesLeft === 1 ? "" : "eis"}
+            </div>
+            <button
+              onClick={() => {
+                const ok = applyFreeze();
+                if (ok) toast.success("Freeze aplicado no dia anterior. Streak preservada.");
+                else toast.error("Sem freezes disponíveis ou dia já protegido.");
+              }}
+              disabled={freezesLeft === 0}
+              className="rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs text-primary hover:bg-primary/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Proteger ontem
+            </button>
           </div>
         </div>
       </div>
+
 
       {/* Weekly bars */}
       <div className="mt-6 rounded-2xl border border-border bg-card p-6">
@@ -118,21 +142,44 @@ function RevisaoPage() {
 
       {/* Totals grid */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {rows.map((r) => (
-          <div key={r.label} className="rounded-2xl border border-border bg-card p-5">
-            <div className="flex items-center justify-between">
-              <div className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                {r.label}
+        {rows.map((r) => {
+          const up = r.delta > 0;
+          const down = r.delta < 0;
+          return (
+            <div key={r.label} className="rounded-2xl border border-border bg-card p-5">
+              <div className="flex items-center justify-between">
+                <div className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                  {r.label}
+                </div>
+                <div className="grid h-7 w-7 place-items-center rounded-full bg-primary/15 text-primary">
+                  {r.icon}
+                </div>
               </div>
-              <div className="grid h-7 w-7 place-items-center rounded-full bg-primary/15 text-primary">
-                {r.icon}
+              <div className="mt-3 flex items-baseline gap-3">
+                <div className="font-serif text-3xl">{r.value}</div>
+                {r.delta !== 0 && (
+                  <span
+                    className={
+                      "inline-flex items-center gap-1 text-[11px] tabular-nums " +
+                      (up ? "text-primary" : "text-muted-foreground")
+                    }
+                    title="Comparado com a semana anterior"
+                  >
+                    {up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                    {up ? "+" : ""}
+                    {r.delta} vs semana anterior
+                  </span>
+                )}
+                {r.delta === 0 && (
+                  <span className="text-[11px] text-muted-foreground">= semana anterior</span>
+                )}
               </div>
+              <div className="mt-1 text-xs text-muted-foreground">{r.hint}</div>
             </div>
-            <div className="mt-3 font-serif text-3xl">{r.value}</div>
-            <div className="mt-1 text-xs text-muted-foreground">{r.hint}</div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
 
       {/* Top module */}
       {topModule && topModule.done > 0 && (

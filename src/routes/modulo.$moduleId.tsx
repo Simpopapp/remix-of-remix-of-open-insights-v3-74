@@ -1,10 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { CheckCircle2, Circle, PlayCircle, ScrollText } from "lucide-react";
 import type { Lesson } from "@/lib/course-data";
 import { findModule, course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { useQuizResults } from "@/lib/quiz-data";
 import { Progress } from "@/components/ui/progress";
+import { fireConfetti } from "@/lib/confetti";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/modulo/$moduleId")({
   loader: ({ params }) => {
@@ -38,6 +41,21 @@ function ModulePage() {
   const done = mod.lessons.filter((l: Lesson) => isDone(mod.id, l.id)).length;
   const pct = Math.round((done / mod.lessons.length) * 100);
   const nextModule = course.modules[course.modules.indexOf(mod) + 1];
+
+  const celebratedKey = `aiae:module-celebrated:${mod.id}`;
+  const firedRef = useRef(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (pct !== 100 || firedRef.current) return;
+    if (window.localStorage.getItem(celebratedKey)) return;
+    firedRef.current = true;
+    window.localStorage.setItem(celebratedKey, "1");
+    fireConfetti("epic");
+    toast.success(`Módulo ${String(mod.number).padStart(2, "0")} finalizado 🎉`, {
+      description: `Você concluiu "${mod.title}". Próximo passo: quiz e sair para a prática.`,
+    });
+  }, [pct, celebratedKey, mod.number, mod.title]);
+
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-10 lg:py-14">

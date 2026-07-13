@@ -18,6 +18,7 @@ import { Route as ProjetosRouteImport } from './routes/projetos'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotasRouteImport } from './routes/notas'
+import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as LancamentoRouteImport } from './routes/lancamento'
 import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as FocoRouteImport } from './routes/foco'
@@ -76,6 +77,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const NotasRoute = NotasRouteImport.update({
   id: '/notas',
   path: '/notas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapaRoute = MapaRouteImport.update({
+  id: '/mapa',
+  path: '/mapa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LancamentoRoute = LancamentoRouteImport.update({
@@ -161,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/foco': typeof FocoRoute
   '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
+  '/mapa': typeof MapaRoute
   '/notas': typeof NotasRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/foco': typeof FocoRoute
   '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
+  '/mapa': typeof MapaRoute
   '/notas': typeof NotasRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/foco': typeof FocoRoute
   '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
+  '/mapa': typeof MapaRoute
   '/notas': typeof NotasRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/foco'
     | '/inbox'
     | '/lancamento'
+    | '/mapa'
     | '/notas'
     | '/onboarding'
     | '/perfil'
@@ -264,6 +274,7 @@ export interface FileRouteTypes {
     | '/foco'
     | '/inbox'
     | '/lancamento'
+    | '/mapa'
     | '/notas'
     | '/onboarding'
     | '/perfil'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/foco'
     | '/inbox'
     | '/lancamento'
+    | '/mapa'
     | '/notas'
     | '/onboarding'
     | '/perfil'
@@ -315,6 +327,7 @@ export interface RootRouteChildren {
   FocoRoute: typeof FocoRoute
   InboxRoute: typeof InboxRoute
   LancamentoRoute: typeof LancamentoRoute
+  MapaRoute: typeof MapaRoute
   NotasRoute: typeof NotasRoute
   OnboardingRoute: typeof OnboardingRoute
   PerfilRoute: typeof PerfilRoute
@@ -392,6 +405,13 @@ declare module '@tanstack/react-router' {
       path: '/notas'
       fullPath: '/notas'
       preLoaderRoute: typeof NotasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mapa': {
+      id: '/mapa'
+      path: '/mapa'
+      fullPath: '/mapa'
+      preLoaderRoute: typeof MapaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lancamento': {
@@ -507,6 +527,7 @@ const rootRouteChildren: RootRouteChildren = {
   FocoRoute: FocoRoute,
   InboxRoute: InboxRoute,
   LancamentoRoute: LancamentoRoute,
+  MapaRoute: MapaRoute,
   NotasRoute: NotasRoute,
   OnboardingRoute: OnboardingRoute,
   PerfilRoute: PerfilRoute,
