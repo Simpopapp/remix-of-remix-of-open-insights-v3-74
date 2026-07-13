@@ -109,6 +109,80 @@ function PerfilPage() {
             <BigStat n={String(exDone)} label="Exercícios" />
             <BigStat n={`${Math.floor(watch / 3600)}h`} label="Assistido" />
           </div>
+
+          <DataSection />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DataSection() {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const onImport = async (f: File) => {
+    const text = await f.text();
+    const res = importDump(text);
+    setMsg(res.ok ? `Importado: ${res.count} chaves restauradas.` : `Erro: ${res.error}`);
+    setTimeout(() => setMsg(null), 4000);
+  };
+
+  return (
+    <div className="rounded-2xl border border-primary/25 bg-card/50 p-6">
+      <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        Seus dados
+      </div>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Tudo é salvo neste navegador. Exporte para levar entre dispositivos ou fazer backup.
+      </p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          onClick={() => downloadDump()}
+          className="inline-flex items-center gap-2 rounded-md border border-primary/40 bg-primary/10 px-3 py-2 text-sm text-primary hover:bg-primary/20 min-h-11"
+        >
+          <Download className="h-4 w-4" /> Exportar tudo
+        </button>
+        <button
+          onClick={() => fileRef.current?.click()}
+          className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-sm hover:bg-accent min-h-11"
+        >
+          <Upload className="h-4 w-4" /> Importar backup
+        </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="application/json"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) onImport(f);
+            e.currentTarget.value = "";
+          }}
+        />
+        <button
+          onClick={() => {
+            if (confirm("Apagar TODO seu progresso, notas, XP e favoritos deste dispositivo?"))
+              wipeAll();
+          }}
+          className="inline-flex items-center gap-2 rounded-md border border-destructive/40 px-3 py-2 text-sm text-destructive hover:bg-destructive/10 min-h-11"
+        >
+          <Trash2 className="h-4 w-4" /> Apagar tudo
+        </button>
+      </div>
+      {msg && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="mt-3 rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-xs text-primary"
+        >
+          {msg}
+        </div>
+      )}
+    </div>
+  );
+}
+
         </div>
       </div>
     </div>
