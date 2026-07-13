@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, CheckCircle2, Flame, StickyNote, Target, Timer } from "lucide-react";
+import { BookOpen, CheckCircle2, Flame, Printer, StickyNote, Target, Timer } from "lucide-react";
 import { useWeeklyStats } from "@/lib/weekly-stats";
 import { useStreak } from "@/lib/streak";
+import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 
 export const Route = createFileRoute("/revisao")({
   head: () => ({
@@ -49,11 +50,26 @@ function RevisaoPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-10 lg:py-14">
-      <div className="text-xs uppercase tracking-[0.28em] text-primary">Últimos 7 dias</div>
-      <h1 className="mt-2 font-serif text-4xl lg:text-5xl tracking-tight">Revisão semanal</h1>
-      <p className="mt-3 max-w-xl text-muted-foreground">
-        Uma leitura honesta do seu ritmo. Sem vaidade, sem punição — só o dado.
-      </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.28em] text-primary">Últimos 7 dias</div>
+          <h1 className="mt-2 font-serif text-4xl lg:text-5xl tracking-tight">Revisão semanal</h1>
+          <p className="mt-3 max-w-xl text-muted-foreground">
+            Uma leitura honesta do seu ritmo. Sem vaidade, sem punição — só o dado.
+          </p>
+        </div>
+        <button
+          onClick={() => window.print()}
+          className="print:hidden inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground hover:border-primary/60 hover:text-primary transition shrink-0"
+          aria-label="Imprimir revisão"
+        >
+          <Printer className="h-3.5 w-3.5" /> Imprimir
+        </button>
+      </div>
+
+      <div className="mt-8">
+        <WeeklyGoalCard />
+      </div>
 
       {/* Streak headline */}
       <div className="mt-8 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-6">

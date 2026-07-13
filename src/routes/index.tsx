@@ -14,6 +14,7 @@ import { useProgress } from "@/lib/progress";
 import { Progress } from "@/components/ui/progress";
 import heroImg from "@/assets/hero-midnight.jpg";
 import { QuestsWidget } from "@/components/QuestsWidget";
+import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 import { ContinueWatching } from "@/components/ContinueWatching";
 import { RecentLessons } from "@/components/RecentLessons";
 import { useStreak } from "@/lib/streak";
@@ -265,8 +266,11 @@ function Dashboard() {
       <RecentLessons />
 
       {/* Ritual + Community */}
-      <section className="mt-14">
-        <QuestsWidget />
+      <section className="mt-14 grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <QuestsWidget />
+        </div>
+        <WeeklyGoalCard />
       </section>
 
       <section className="mt-14 grid gap-4 lg:grid-cols-3">
