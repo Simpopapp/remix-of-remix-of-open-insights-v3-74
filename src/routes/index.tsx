@@ -63,6 +63,10 @@ function Dashboard() {
   );
   const xp = completedCount * 120;
   const { current: streak, longest: longestStreak } = useStreak();
+  const { isReserved, toggle: toggleReservation } = useReservations();
+  const liveId = "evt-build-session-mcp-na-pratica";
+  const liveReserved = isReserved(liveId);
+
 
   let next: {
     moduleId: string;
