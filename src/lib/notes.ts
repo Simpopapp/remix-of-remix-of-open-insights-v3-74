@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
+import { addNoteWritten } from "./quests";
 
 const KEY = "aiae:notes:v1";
 type NotesMap = Record<string, string>;
@@ -40,9 +41,11 @@ export function useNotes(moduleId: string, lessonId: string) {
   const setValue = useCallback(
     (v: string) => {
       const cur = read();
+      const wasEmpty = !cur[key];
       if (v) cur[key] = v;
       else delete cur[key];
       write(cur);
+      if (wasEmpty && v.trim().length > 3) addNoteWritten();
     },
     [key],
   );
