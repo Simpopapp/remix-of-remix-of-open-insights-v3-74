@@ -794,11 +794,18 @@ function Onboarding() {
                   <ChevronLeft className="h-3.5 w-3.5" /> Voltar
                 </button>
                 {step < totalSteps - 1 ? (
-                  <button
-                    type="button"
-                    onClick={advance}
-                    disabled={!canAdvance}
-                    className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-8 py-3.5 text-sm font-semibold text-primary-foreground transition disabled:cursor-not-allowed disabled:opacity-40"
+                  <div className="flex flex-col items-end gap-2">
+                    {blockReason && (
+                      <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/80">
+                        {blockReason}
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={advance}
+                      aria-disabled={!canAdvance}
+                      title={blockReason ?? "Continuar"}
+                      className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-8 py-3.5 text-sm font-semibold text-primary-foreground transition aria-disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:grayscale"
                     style={{
                       background:
                         "linear-gradient(135deg, oklch(0.88 0.08 82), oklch(0.72 0.11 78) 55%, oklch(0.6 0.09 78))",
