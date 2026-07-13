@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useGamification, useLeaderboard } from "@/lib/gamification";
 import { useProfile } from "@/lib/profile";
 import { Crown, Flame, Trophy } from "lucide-react";
+import { HeroBanner } from "@/components/HeroBanner";
+import heroRanking from "@/assets/hero-ranking.jpg";
 
 export const Route = createFileRoute("/ranking")({
   head: () => ({ meta: [{ title: "Ranking — AI App Empire" }] }),
@@ -14,17 +16,27 @@ function RankingPage() {
   const { rows, myRank } = useLeaderboard(xp, streak.current, profile.name, profile.avatar);
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-10">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="font-serif text-4xl">Ranking da Cohort</h1>
-          <p className="text-sm text-muted-foreground">Semana em curso · atualiza em tempo real</p>
-        </div>
-        <div className="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-center">
-          <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Sua posição</div>
-          <div className="font-serif text-3xl text-primary">#{myRank}</div>
-        </div>
-      </div>
+    <div className="mx-auto max-w-5xl px-6 py-10">
+      <HeroBanner
+        image={heroRanking}
+        eyebrow={<><Trophy className="inline h-3 w-3 mr-1" /> Cohort · Semana em curso</>}
+        title={<>Ranking da <span className="text-gold-gradient">Cohort</span></>}
+        subtitle="Cada aula, exercício e sessão de foco vira XP. O topo é reservado para quem constrói."
+        meta={
+          <div className="inline-flex items-center gap-4 rounded-2xl border border-primary/40 bg-primary/10 px-5 py-3 backdrop-blur">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Sua posição</div>
+              <div className="font-serif text-3xl text-primary">#{myRank}</div>
+            </div>
+            <div className="h-10 w-px bg-primary/30" />
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Seu XP</div>
+              <div className="font-serif text-2xl">{xp.toLocaleString("pt-BR")}</div>
+            </div>
+          </div>
+        }
+      />
+
 
       <div className="mt-8 grid grid-cols-3 gap-4">
         {rows.slice(0, 3).map((r, i) => (

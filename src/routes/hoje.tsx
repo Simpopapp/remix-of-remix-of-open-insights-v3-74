@@ -6,6 +6,8 @@ import { useProgress } from "@/lib/progress";
 import { useStreak } from "@/lib/streak";
 import { useWeeklyGoal } from "@/lib/weekly-goal";
 import { Progress } from "@/components/ui/progress";
+import { HeroBanner } from "@/components/HeroBanner";
+import heroHoje from "@/assets/hero-hoje.jpg";
 
 export const Route = createFileRoute("/hoje")({
   head: () => ({
@@ -54,13 +56,14 @@ function TodayPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8 lg:py-12">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
-        <Sun className="h-3.5 w-3.5" /> {DAYS_FULL[today]}
-      </div>
-      <h1 className="mt-2 font-serif text-3xl sm:text-4xl">
-        {greeting(now.getHours())}. Foco no que importa hoje.
-      </h1>
-      <p className="mt-1 text-sm text-muted-foreground capitalize">{dateLabel}</p>
+      <HeroBanner
+        image={heroHoje}
+        eyebrow={<><Sun className="inline h-3 w-3 mr-1" /> {DAYS_FULL[today]} · <span className="capitalize">{dateLabel}</span></>}
+        title={<>{greeting(now.getHours())}. <span className="text-gold-gradient">Foco no que importa hoje.</span></>}
+        subtitle="Um dia por vez, no ritmo do construtor. Aqui está seu ritual, sua meta e o próximo passo."
+      />
+
+
 
       <section className="mt-8 grid gap-4 sm:grid-cols-3">
         <Metric icon={<Flame className="h-4 w-4" />} label="Ofensiva" value={`${streak}d`} hint="Volte amanhã." />

@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Heart, TrendingUp, Users } from "lucide-react";
 import { projects, type ShowcaseProject } from "@/lib/showcase-data";
+import { HeroBanner } from "@/components/HeroBanner";
+import heroProjetos from "@/assets/hero-projetos.jpg";
+
 
 export const Route = createFileRoute("/projetos")({
   head: () => ({
@@ -28,35 +31,27 @@ function ProjectsPage() {
   const shipping = projects.filter((p) => p.mrr > 0).length;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 md:px-10">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="text-[10px] uppercase tracking-[0.24em] text-primary/70">
-            Cohort 01
-          </div>
-          <h1 className="mt-2 font-serif text-3xl md:text-4xl">Vitrine de projetos</h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            O que os outros alunos estão construindo agora. Inspire-se, dê like, mande DM. Publique
-            o seu quando estiver no ar.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-3 text-right">
-          <div className="rounded-xl border border-primary/40 bg-primary/5 px-4 py-2">
-            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              MRR agregado
+    <div className="mx-auto max-w-6xl px-4 py-10 md:px-10 space-y-8">
+      <HeroBanner
+        image={heroProjetos}
+        eyebrow="Cohort 01"
+        title={<>Vitrine de projetos</>}
+        subtitle="O que os outros alunos estão construindo agora. Inspire-se, dê like, mande DM. Publique o seu quando estiver no ar."
+        meta={
+          <div className="flex flex-wrap gap-3">
+            <div className="rounded-xl border border-primary/40 bg-primary/5 px-4 py-2">
+              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">MRR agregado</div>
+              <div className="font-serif text-2xl text-primary">R$ {totalMRR.toLocaleString("pt-BR")}</div>
             </div>
-            <div className="font-serif text-2xl text-primary">
-              R$ {totalMRR.toLocaleString("pt-BR")}
+            <div className="rounded-xl border border-border bg-card px-4 py-2">
+              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">apps pagando</div>
+              <div className="font-serif text-2xl">{shipping}</div>
             </div>
           </div>
-          <div className="rounded-xl border border-border bg-card px-4 py-2">
-            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              apps pagando
-            </div>
-            <div className="font-serif text-2xl">{shipping}</div>
-          </div>
-        </div>
-      </div>
+        }
+      />
+
+
 
       <div className="mt-6 flex flex-wrap gap-2">
         {(["Todos", ...STAGES] as const).map((s) => (

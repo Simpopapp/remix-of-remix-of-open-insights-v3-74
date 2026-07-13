@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Calendar, MessageCircle, Users, Video } from "lucide-react";
+import { HeroBanner } from "@/components/HeroBanner";
+import heroComunidade from "@/assets/hero-comunidade.jpg";
 
 export const Route = createFileRoute("/comunidade")({
   head: () => ({
@@ -51,14 +53,13 @@ const channels = [
 function CommunityPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 lg:py-14">
-      <div className="text-xs uppercase tracking-[0.28em] text-primary">Círculo privado</div>
-      <h1 className="mt-2 font-serif text-4xl lg:text-5xl tracking-tight">
-        Comunidade
-      </h1>
-      <p className="mt-3 text-muted-foreground max-w-xl">
-        A cohort é o produto. Encontros semanais ao vivo, canais privados e uma
-        mesa de builders sênior.
-      </p>
+      <HeroBanner
+        image={heroComunidade}
+        eyebrow={<><Users className="inline h-3 w-3 mr-1" /> Círculo privado</>}
+        title={<><span className="text-gold-gradient">Comunidade</span></>}
+        subtitle="A cohort é o produto. Encontros semanais ao vivo, canais privados e uma mesa de builders sênior."
+      />
+
 
       <section className="mt-10 grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2 rounded-2xl border border-border bg-card p-6 lg:p-8">
