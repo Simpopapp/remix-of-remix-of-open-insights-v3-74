@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, MessageCircle, Users, Video } from "lucide-react";
+import { Calendar, Check, MessageCircle, Users, Video } from "lucide-react";
+import { toast } from "sonner";
 import { HeroBanner } from "@/components/HeroBanner";
+import { useReservations } from "@/lib/reservations";
+import { slugify } from "@/lib/download";
 import heroComunidade from "@/assets/hero-comunidade.jpg";
+
 
 export const Route = createFileRoute("/comunidade")({
   head: () => ({
@@ -51,6 +55,7 @@ const channels = [
 ];
 
 function CommunityPage() {
+  const { isReserved, toggle } = useReservations();
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 lg:py-14">
       <HeroBanner
@@ -67,26 +72,49 @@ function CommunityPage() {
             <Calendar className="h-3 w-3" /> Próximos encontros
           </div>
           <div className="mt-6 divide-y divide-border">
-            {upcoming.map((u) => (
-              <div key={u.title} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
-                <div className="grid h-11 w-11 place-items-center rounded-full bg-primary/15 text-primary">
-                  <Video className="h-4 w-4" />
+            {upcoming.map((u) => {
+              const id = `evt-${slugify(u.title)}`;
+              const reserved = isReserved(id);
+              return (
+                <div key={u.title} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+                  <div className="grid h-11 w-11 place-items-center rounded-full bg-primary/15 text-primary">
+                    <Video className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs text-primary font-mono">{u.date}</div>
+                    <div className="font-medium truncate">{u.title}</div>
+                    <div className="text-xs text-muted-foreground">com {u.host}</div>
+                  </div>
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground border border-border rounded-full px-2 py-1">
+                    {u.tag}
+                  </div>
+                  <button
+                    onClick={() => {
+                      const r = toggle({ id, title: u.title, when: u.date, href: "/comunidade" });
+                      if (r.reserved) {
+                        toast.success("Assento reservado", {
+                          description: `${u.title} — ${u.date}. Confirmação no seu inbox.`,
+                        });
+                      } else {
+                        toast("Reserva cancelada", { description: u.title });
+                      }
+                    }}
+                    aria-pressed={reserved}
+                    className={
+                      "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition " +
+                      (reserved
+                        ? "border border-primary/60 bg-primary/10 text-primary hover:bg-primary/20"
+                        : "bg-primary text-primary-foreground hover:opacity-95")
+                    }
+                  >
+                    {reserved ? (<><Check className="h-3 w-3" /> Reservado</>) : "Reservar"}
+                  </button>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-primary font-mono">{u.date}</div>
-                  <div className="font-medium truncate">{u.title}</div>
-                  <div className="text-xs text-muted-foreground">com {u.host}</div>
-                </div>
-                <div className="text-[10px] uppercase tracking-widest text-muted-foreground border border-border rounded-full px-2 py-1">
-                  {u.tag}
-                </div>
-                <button className="rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-95">
-                  Reservar
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
+
 
         <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-card p-6 lg:p-8">
           <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
