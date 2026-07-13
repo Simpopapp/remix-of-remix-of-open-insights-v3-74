@@ -209,6 +209,46 @@ function RevisaoPage() {
         </div>
       )}
 
+      {/* Monthly comparison */}
+      <div className="mt-8 rounded-2xl border border-border bg-card p-6">
+        <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-primary">
+          <CalendarRange className="h-3.5 w-3.5" /> Últimos 30 dias
+        </div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { label: "Aulas", value: monthly.totals.lesson, delta: monthly.deltas.lesson },
+            { label: "Exercícios", value: monthly.totals.exercise, delta: monthly.deltas.exercise },
+            { label: "Min. em foco", value: monthly.totals.focus, delta: monthly.deltas.focus },
+            { label: "Notas", value: monthly.totals.note, delta: monthly.deltas.note },
+          ].map((s) => {
+            const up = s.delta > 0;
+            const down = s.delta < 0;
+            return (
+              <div key={s.label} className="rounded-xl border border-border/60 bg-background/40 p-4">
+                <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{s.label}</div>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <div className="font-serif text-2xl">{s.value}</div>
+                  {s.delta !== 0 && (
+                    <span className={"inline-flex items-center gap-1 text-[11px] tabular-nums " + (up ? "text-primary" : "text-muted-foreground")}>
+                      {up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                      {up ? "+" : ""}{s.delta}
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+          <span>{monthly.activeDays}/30 dias ativos</span>
+          <span>· mês anterior {monthly.prevActiveDays}/30</span>
+          {monthly.bestDay && monthly.bestDay.total > 0 && (
+            <span>· melhor dia {new Date(monthly.bestDay.date + "T00:00:00").toLocaleDateString("pt-BR")} ({monthly.bestDay.total} eventos)</span>
+          )}
+        </div>
+      </div>
+
+
       {/* Intention CTA */}
       <div className="mt-6 rounded-2xl border border-dashed border-border p-6 text-center">
         <CheckCircle2 className="mx-auto h-6 w-6 text-primary" />
