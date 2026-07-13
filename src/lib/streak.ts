@@ -16,7 +16,7 @@ const notify = () => listeners.forEach((l) => l());
 let __cachedRaw: string | null | undefined;
 let __cachedValue: any = { used: [], banked: 0 };
 function read(): FreezeState {
-  if (typeof window === "undefined") return { used: [], banked: 0 };
+  if (typeof window === "undefined") return __cachedValue;
   let raw: string | null;
   try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
   if (raw === __cachedRaw) return __cachedValue;

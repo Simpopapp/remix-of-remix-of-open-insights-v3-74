@@ -11,7 +11,7 @@ let cachedRaw: string | null = null;
 let cachedStore: Store = EMPTY;
 
 function read(): Store {
-  if (typeof window === "undefined") return EMPTY;
+  if (typeof window === "undefined") return __cachedValue;
   let raw: string | null;
   try {
     raw = window.localStorage.getItem(KEY);
@@ -76,7 +76,7 @@ export function useVideoStore() {
 }
 
 export function readLastKey(): string | null {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined") return __cachedValue;
   try {
     return window.localStorage.getItem(LAST_KEY);
   } catch {

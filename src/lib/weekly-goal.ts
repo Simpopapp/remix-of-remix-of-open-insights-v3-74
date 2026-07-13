@@ -7,7 +7,7 @@ const FOCUS_MIN = 25; // one focus event = one pomodoro
 const listeners = new Set<() => void>();
 
 function read(): number {
-  if (typeof window === "undefined") return DEFAULT;
+  if (typeof window === "undefined") return __cachedValue;
   const v = Number(localStorage.getItem(KEY));
   return Number.isFinite(v) && v > 0 ? v : DEFAULT;
 }

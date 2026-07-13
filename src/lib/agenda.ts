@@ -30,7 +30,7 @@ const notify = () => listeners.forEach((l) => l());
 let __cachedRaw: string | null | undefined;
 let __cachedValue: any = DEFAULT;
 function read(): State {
-  if (typeof window === "undefined") return DEFAULT;
+  if (typeof window === "undefined") return __cachedValue;
   let raw: string | null;
   try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
   if (raw === __cachedRaw) return __cachedValue;

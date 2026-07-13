@@ -15,7 +15,7 @@ function today() {
 let __cachedRaw: string | null | undefined;
 let __cachedValue: any = {} as ActivityMap;
 function read(): ActivityMap {
-  if (typeof window === "undefined") return {} as ActivityMap;
+  if (typeof window === "undefined") return __cachedValue;
   let raw: string | null;
   try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
   if (raw === __cachedRaw) return __cachedValue;

@@ -9,7 +9,7 @@ const bookListeners = new Set<() => void>();
 const exListeners = new Set<() => void>();
 
 function read(k: string): Map1 {
-  if (typeof window === "undefined") return {};
+  if (typeof window === "undefined") return __cachedValue;
   try {
     return JSON.parse(window.localStorage.getItem(k) ?? "{}") as Map1;
   } catch {

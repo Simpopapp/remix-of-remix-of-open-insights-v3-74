@@ -8,7 +8,7 @@ const listeners = new Set<() => void>();
 let __cachedRaw: string | null | undefined;
 let __cachedValue: any = {};
 function read(): NotesMap {
-  if (typeof window === "undefined") return {};
+  if (typeof window === "undefined") return __cachedValue;
   let raw: string | null;
   try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
   if (raw === __cachedRaw) return __cachedValue;

@@ -58,7 +58,7 @@ let cachedRaw: string | null | undefined;
 let cachedList: InboxMessage[] = SEED;
 
 function read(): InboxMessage[] {
-  if (typeof window === "undefined") return SEED;
+  if (typeof window === "undefined") return __cachedValue;
   let raw: string | null;
   try {
     raw = window.localStorage.getItem(KEY);

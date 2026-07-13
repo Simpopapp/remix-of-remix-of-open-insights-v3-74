@@ -30,7 +30,7 @@ let cachedRaw: string | null | undefined;
 let cachedProfile: Profile = DEFAULT;
 
 function read(): Profile {
-  if (typeof window === "undefined") return DEFAULT;
+  if (typeof window === "undefined") return __cachedValue;
   let raw: string | null;
   try {
     raw = window.localStorage.getItem(KEY);
