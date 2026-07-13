@@ -160,6 +160,7 @@ function AppShell() {
   const { resolved } = useTheme();
   const nav = useRouter();
   useAutoFreeze();
+  useGlobalPlaybackShortcuts();
 
   useEffect(() => {
     if (!profile.onboarded && pathname !== "/onboarding") {
