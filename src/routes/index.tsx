@@ -323,9 +323,37 @@ function Dashboard() {
             Traga seu app. Revisão ao vivo com o Concierge e a mesa de senior
             builders da cohort.
           </p>
-          <button className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-95">
-            Reservar assento <ArrowUpRight className="h-4 w-4" />
+          <button
+            onClick={() => {
+              const r = toggleReservation({
+                id: liveId,
+                title: "Build session — MCP na prática",
+                when: "Quarta · 20h",
+                href: "/comunidade",
+              });
+              if (r.reserved) {
+                toast.success("Assento reservado", {
+                  description: "Build session — Quarta · 20h. Confirmação no seu inbox.",
+                });
+              } else {
+                toast("Reserva cancelada");
+              }
+            }}
+            aria-pressed={liveReserved}
+            className={
+              "mt-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition " +
+              (liveReserved
+                ? "border border-primary/60 bg-primary/10 text-primary hover:bg-primary/20"
+                : "bg-primary text-primary-foreground hover:opacity-95")
+            }
+          >
+            {liveReserved ? (
+              <>Reservado <Check className="h-4 w-4" /></>
+            ) : (
+              <>Reservar assento <ArrowUpRight className="h-4 w-4" /></>
+            )}
           </button>
+
         </div>
       </section>
 
