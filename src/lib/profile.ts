@@ -26,20 +26,33 @@ const DEFAULT: Profile = {
 
 const listeners = new Set<() => void>();
 
+let cachedRaw: string | null | undefined;
+let cachedProfile: Profile = DEFAULT;
+
 function read(): Profile {
   if (typeof window === "undefined") return DEFAULT;
+  let raw: string | null;
   try {
-    const raw = window.localStorage.getItem(KEY);
-    if (!raw) return DEFAULT;
-    return { ...DEFAULT, ...JSON.parse(raw) } as Profile;
+    raw = window.localStorage.getItem(KEY);
   } catch {
-    return DEFAULT;
+    return cachedProfile;
   }
+  if (raw === cachedRaw) return cachedProfile;
+  cachedRaw = raw;
+  try {
+    cachedProfile = raw ? ({ ...DEFAULT, ...JSON.parse(raw) } as Profile) : DEFAULT;
+  } catch {
+    cachedProfile = DEFAULT;
+  }
+  return cachedProfile;
 }
 
 function write(p: Profile) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(p));
+  const raw = JSON.stringify(p);
+  window.localStorage.setItem(KEY, raw);
+  cachedRaw = raw;
+  cachedProfile = p;
   listeners.forEach((l) => l());
 }
 
