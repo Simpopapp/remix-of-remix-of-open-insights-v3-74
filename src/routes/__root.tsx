@@ -29,6 +29,7 @@ import { useProfile } from "@/lib/profile";
 import { useGamification } from "@/lib/gamification";
 import { useInbox } from "@/lib/inbox";
 import { useAutoFreeze } from "@/lib/auto-freeze";
+import { useGlobalPlaybackShortcuts } from "@/lib/global-shortcuts";
 
 function NotFoundComponent() {
   return (
