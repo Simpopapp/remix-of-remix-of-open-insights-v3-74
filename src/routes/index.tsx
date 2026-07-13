@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,
   Award,
+  Check,
   Clock3,
   Flame,
   PlayCircle,
@@ -9,6 +10,7 @@ import {
   Trophy,
   Users,
 } from "lucide-react";
+import { toast } from "sonner";
 import { course, totalLessons } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { Progress } from "@/components/ui/progress";
@@ -18,6 +20,8 @@ import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 import { ContinueWatching } from "@/components/ContinueWatching";
 import { RecentLessons } from "@/components/RecentLessons";
 import { useStreak } from "@/lib/streak";
+import { useReservations } from "@/lib/reservations";
+
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
