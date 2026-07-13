@@ -16,6 +16,7 @@ import { Route as PromptsRouteImport } from './routes/prompts'
 import { Route as ProjetosRouteImport } from './routes/projetos'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NotasRouteImport } from './routes/notas'
 import { Route as LancamentoRouteImport } from './routes/lancamento'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as ExerciciosRouteImport } from './routes/exercicios'
@@ -61,6 +62,11 @@ const PerfilRoute = PerfilRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotasRoute = NotasRouteImport.update({
+  id: '/notas',
+  path: '/notas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LancamentoRoute = LancamentoRouteImport.update({
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/lancamento': typeof LancamentoRoute
+  '/notas': typeof NotasRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
   '/projetos': typeof ProjetosRoute
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/lancamento': typeof LancamentoRoute
+  '/notas': typeof NotasRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
   '/projetos': typeof ProjetosRoute
@@ -169,6 +177,7 @@ export interface FileRoutesById {
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/lancamento': typeof LancamentoRoute
+  '/notas': typeof NotasRoute
   '/onboarding': typeof OnboardingRoute
   '/perfil': typeof PerfilRoute
   '/projetos': typeof ProjetosRoute
@@ -191,6 +200,7 @@ export interface FileRouteTypes {
     | '/exercicios'
     | '/favoritos'
     | '/lancamento'
+    | '/notas'
     | '/onboarding'
     | '/perfil'
     | '/projetos'
@@ -211,6 +221,7 @@ export interface FileRouteTypes {
     | '/exercicios'
     | '/favoritos'
     | '/lancamento'
+    | '/notas'
     | '/onboarding'
     | '/perfil'
     | '/projetos'
@@ -231,6 +242,7 @@ export interface FileRouteTypes {
     | '/exercicios'
     | '/favoritos'
     | '/lancamento'
+    | '/notas'
     | '/onboarding'
     | '/perfil'
     | '/projetos'
@@ -252,6 +264,7 @@ export interface RootRouteChildren {
   ExerciciosRoute: typeof ExerciciosRoute
   FavoritosRoute: typeof FavoritosRoute
   LancamentoRoute: typeof LancamentoRoute
+  NotasRoute: typeof NotasRoute
   OnboardingRoute: typeof OnboardingRoute
   PerfilRoute: typeof PerfilRoute
   ProjetosRoute: typeof ProjetosRoute
@@ -313,6 +326,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notas': {
+      id: '/notas'
+      path: '/notas'
+      fullPath: '/notas'
+      preLoaderRoute: typeof NotasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lancamento': {
@@ -404,6 +424,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExerciciosRoute: ExerciciosRoute,
   FavoritosRoute: FavoritosRoute,
   LancamentoRoute: LancamentoRoute,
+  NotasRoute: NotasRoute,
   OnboardingRoute: OnboardingRoute,
   PerfilRoute: PerfilRoute,
   ProjetosRoute: ProjetosRoute,
@@ -418,13 +439,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
