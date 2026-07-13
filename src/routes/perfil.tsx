@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useRef, useState } from "react";
 import { useProfile, GOALS } from "@/lib/profile";
 import { useGamification } from "@/lib/gamification";
 import { useProgress } from "@/lib/progress";
 import { useExercises } from "@/lib/user-state";
 import { course } from "@/lib/course-data";
-import { RefreshCw } from "lucide-react";
+import { downloadDump, importDump, wipeAll } from "@/lib/storage";
+import { Download, RefreshCw, Trash2, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/perfil")({
   head: () => ({ meta: [{ title: "Perfil — AI App Empire" }] }),
