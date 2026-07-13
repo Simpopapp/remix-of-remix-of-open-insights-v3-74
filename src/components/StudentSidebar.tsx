@@ -52,6 +52,19 @@ export function StudentSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/inbox"}>
+                  <Link to="/inbox">
+                    <Bell />
+                    <span>Inbox</span>
+                    {unread > 0 && (
+                      <span className="ml-auto grid h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+                        {unread > 9 ? "9+" : unread}
+                      </span>
+                    )}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/conquistas"}>
                   <Link to="/conquistas">
                     <Trophy />
