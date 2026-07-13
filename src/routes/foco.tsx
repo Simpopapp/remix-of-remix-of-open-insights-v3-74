@@ -3,6 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Coffee, Pause, Play, RotateCcw, SkipForward, Timer } from "lucide-react";
 import { pingActivity } from "@/lib/activity";
 import { addWatchSeconds } from "@/lib/gamification";
+import { addFocusMinutes } from "@/lib/quests";
+import { notify as notifyBrowser } from "@/lib/notifications";
 
 export const Route = createFileRoute("/foco")({
   head: () => ({
@@ -91,6 +93,10 @@ function FocoPage() {
       writeLog(next);
       pingActivity("focus");
       addWatchSeconds(minutes * 60);
+      addFocusMinutes(minutes);
+      notifyBrowser("Sessão de foco concluída", `+${minutes} min. Hora da pausa.`);
+    } else if (phase !== "focus") {
+      notifyBrowser("Pausa terminada", "Volta pro deep work.");
     }
     if (phase === "focus") {
       const nextCycles = cycles + 1;
