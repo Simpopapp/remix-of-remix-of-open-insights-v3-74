@@ -1,12 +1,31 @@
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "@tanstack/react-router";
-import { Award, BookOpen, Home, Layers, Library, PlayCircle, Rocket, Search, Target, Trophy, Users, Wand2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Award, BookOpen, FileText, Home, Layers, Library, PlayCircle, Rocket, Search, Target, Trophy, Users, Wand2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { course } from "@/lib/course-data";
+import { buildIndex, resetIndex, searchContent, snippet } from "@/lib/search-index";
+
+const SECTION_LABEL: Record<string, string> = {
+  aula: "Aula",
+  transcricao: "Transcrição",
+  capitulos: "Capítulo",
+  exercicio: "Exercício",
+  nota: "Nota",
+};
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (open) {
+      resetIndex();
+      buildIndex();
+    }
+  }, [open]);
+
+  const contentHits = useMemo(() => (q.trim().length >= 2 ? searchContent(q, 12) : []), [q]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
