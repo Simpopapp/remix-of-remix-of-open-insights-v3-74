@@ -25,6 +25,7 @@ import { findLesson, type Lesson, type Module } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { useNotes } from "@/lib/notes";
 import { useBookmarks, useExercises, lessonKey } from "@/lib/user-state";
+import { useMarkers } from "@/lib/markers";
 import { useLessonFeedback } from "@/lib/feedback";
 import { useHighlights } from "@/lib/highlights";
 import { seekTo, parseTimestamp, fmtTimestamp, getCurrentTime } from "@/lib/video-bus";
