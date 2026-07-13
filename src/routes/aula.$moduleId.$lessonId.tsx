@@ -23,6 +23,7 @@ import { useNotes } from "@/lib/notes";
 import { useBookmarks, useExercises, lessonKey } from "@/lib/user-state";
 import { useLessonFeedback } from "@/lib/feedback";
 import { seekTo, parseTimestamp, fmtTimestamp, getCurrentTime } from "@/lib/video-bus";
+import { renderMarkdown, bindTimestamps } from "@/lib/markdown";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 
@@ -74,6 +75,9 @@ function LessonPage() {
   const [copied, setCopied] = useState(false);
   const feedback = useLessonFeedback(mod.id, lesson.id);
   const notesRef = useRef<HTMLTextAreaElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [preview, setPreview] = useState(false);
+  useEffect(() => bindTimestamps(previewRef.current), [preview, notes]);
 
   const insertTimestamp = () => {
     const stamp = `[${fmtTimestamp(getCurrentTime())}] `;
@@ -377,6 +381,14 @@ function LessonPage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
+              onClick={() => setPreview((v) => !v)}
+              className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-[11px] hover:border-primary/60 hover:text-primary transition min-h-9"
+              aria-pressed={preview}
+            >
+              {preview ? "Editar" : "Prévia"}
+            </button>
+            <button
+              type="button"
               onClick={insertTimestamp}
               className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-[11px] hover:border-primary/60 hover:text-primary transition min-h-9"
             >
@@ -387,14 +399,26 @@ function LessonPage() {
             </span>
           </div>
         </div>
-        <textarea
-          ref={notesRef}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="Capture insights. Use [Inserir tempo] para marcar um trecho — depois clique nos chips para voltar exatamente ali."
-          rows={5}
-          className="mt-3 w-full resize-y rounded-xl border border-border bg-background/60 p-4 text-sm leading-relaxed placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40"
-        />
+        {preview ? (
+          <div
+            ref={previewRef}
+            className="mt-3 min-h-[9rem] rounded-xl border border-border bg-background/60 p-4 text-sm text-foreground/90 space-y-2 [&_p]:m-0"
+            dangerouslySetInnerHTML={{
+              __html: notes.trim()
+                ? renderMarkdown(notes)
+                : '<p class="text-muted-foreground/70">Sem notas ainda. Toque em Editar para começar. Suporta **negrito**, *itálico*, `código`, listas, # títulos e [mm:ss].</p>',
+            }}
+          />
+        ) : (
+          <textarea
+            ref={notesRef}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Capture insights. Markdown suportado (**negrito**, *itálico*, - listas, # títulos). Use [Inserir tempo] para marcar um trecho."
+            rows={5}
+            className="mt-3 w-full resize-y rounded-xl border border-border bg-background/60 p-4 text-sm leading-relaxed placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        )}
         {noteStamps.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {noteStamps.map((t, i) => (

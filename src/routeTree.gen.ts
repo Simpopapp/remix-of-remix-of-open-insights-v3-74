@@ -18,6 +18,7 @@ import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotasRouteImport } from './routes/notas'
 import { Route as LancamentoRouteImport } from './routes/lancamento'
+import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as FocoRouteImport } from './routes/foco'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as ExerciciosRouteImport } from './routes/exercicios'
@@ -73,6 +74,11 @@ const NotasRoute = NotasRouteImport.update({
 const LancamentoRoute = LancamentoRouteImport.update({
   id: '/lancamento',
   path: '/lancamento',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InboxRoute = InboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FocoRoute = FocoRouteImport.update({
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
+  '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
   '/notas': typeof NotasRoute
   '/onboarding': typeof OnboardingRoute
@@ -162,6 +169,7 @@ export interface FileRoutesByTo {
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
+  '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
   '/notas': typeof NotasRoute
   '/onboarding': typeof OnboardingRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/exercicios': typeof ExerciciosRoute
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
+  '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
   '/notas': typeof NotasRoute
   '/onboarding': typeof OnboardingRoute
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/exercicios'
     | '/favoritos'
     | '/foco'
+    | '/inbox'
     | '/lancamento'
     | '/notas'
     | '/onboarding'
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/exercicios'
     | '/favoritos'
     | '/foco'
+    | '/inbox'
     | '/lancamento'
     | '/notas'
     | '/onboarding'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/exercicios'
     | '/favoritos'
     | '/foco'
+    | '/inbox'
     | '/lancamento'
     | '/notas'
     | '/onboarding'
@@ -276,6 +288,7 @@ export interface RootRouteChildren {
   ExerciciosRoute: typeof ExerciciosRoute
   FavoritosRoute: typeof FavoritosRoute
   FocoRoute: typeof FocoRoute
+  InboxRoute: typeof InboxRoute
   LancamentoRoute: typeof LancamentoRoute
   NotasRoute: typeof NotasRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -353,6 +366,13 @@ declare module '@tanstack/react-router' {
       path: '/lancamento'
       fullPath: '/lancamento'
       preLoaderRoute: typeof LancamentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbox': {
+      id: '/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof InboxRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/foco': {
@@ -444,6 +464,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExerciciosRoute: ExerciciosRoute,
   FavoritosRoute: FavoritosRoute,
   FocoRoute: FocoRoute,
+  InboxRoute: InboxRoute,
   LancamentoRoute: LancamentoRoute,
   NotasRoute: NotasRoute,
   OnboardingRoute: OnboardingRoute,

@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Award, Bookmark, BookOpen, Compass, Home, Library, NotebookPen, Rocket, Route as RouteIcon, ScrollText, Sparkles, Target, Timer, Trophy, User, Users, Wand2, Layers } from "lucide-react";
+import { Award, Bell, Bookmark, BookOpen, Compass, Home, Library, NotebookPen, Rocket, Route as RouteIcon, ScrollText, Sparkles, Target, Timer, Trophy, User, Users, Wand2, Layers } from "lucide-react";
+import { useInbox } from "@/lib/inbox";
 import { course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import {
@@ -20,6 +21,7 @@ import {
 export function StudentSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { isDone } = useProgress();
+  const { unread } = useInbox();
 
   return (
     <Sidebar collapsible="icon">
@@ -46,6 +48,19 @@ export function StudentSidebar() {
                   <Link to="/">
                     <Home />
                     <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/inbox"}>
+                  <Link to="/inbox">
+                    <Bell />
+                    <span>Inbox</span>
+                    {unread > 0 && (
+                      <span className="ml-auto grid h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+                        {unread > 9 ? "9+" : unread}
+                      </span>
+                    )}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
