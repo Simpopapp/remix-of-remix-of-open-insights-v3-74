@@ -80,10 +80,58 @@ function LessonPage() {
   const exerciseDone = exercises.has(k);
   const [copied, setCopied] = useState(false);
   const feedback = useLessonFeedback(mod.id, lesson.id);
+  const highlights = useHighlights(mod.id, lesson.id);
+  const transcriptRef = useRef<HTMLParagraphElement>(null);
+  const [selectedText, setSelectedText] = useState("");
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [preview, setPreview] = useState(false);
   useEffect(() => bindTimestamps(previewRef.current), [preview, notes]);
+
+  const onTranscriptSelect = useCallback(() => {
+    const sel = window.getSelection?.();
+    if (!sel) return;
+    const text = sel.toString().trim();
+    if (!text) {
+      setSelectedText("");
+      return;
+    }
+    // Only accept selection if fully inside the transcript node
+    if (transcriptRef.current && sel.rangeCount > 0) {
+      const range = sel.getRangeAt(0);
+      if (transcriptRef.current.contains(range.commonAncestorContainer)) {
+        setSelectedText(text.slice(0, 500));
+        return;
+      }
+    }
+    setSelectedText("");
+  }, []);
+
+  const saveHighlight = () => {
+    if (!selectedText) return;
+    highlights.add({
+      moduleId: mod.id,
+      lessonId: lesson.id,
+      text: selectedText,
+      t: Math.floor(getCurrentTime()) || undefined,
+    });
+    toast.success("Trecho destacado", { description: selectedText.slice(0, 80) + (selectedText.length > 80 ? "…" : "") });
+    setSelectedText("");
+    window.getSelection?.()?.removeAllRanges();
+  };
+
+  const shareLink = async () => {
+    const t = Math.floor(getCurrentTime());
+    const base = `${window.location.origin}/aula/${mod.id}/${lesson.id}`;
+    const url = t > 0 ? `${base}?t=${t}` : base;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copiado", { description: t > 0 ? `Aponta para ${fmtTimestamp(t)}` : "Link da aula" });
+    } catch {
+      toast.error("Não consegui copiar", { description: url });
+    }
+  };
+
 
   const insertTimestamp = () => {
     const stamp = `[${fmtTimestamp(getCurrentTime())}] `;
