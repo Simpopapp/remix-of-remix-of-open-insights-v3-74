@@ -80,6 +80,8 @@ export function useProfile() {
 
   const reset = useCallback(() => {
     if (typeof window !== "undefined") window.localStorage.removeItem(KEY);
+    cachedRaw = null;
+    cachedProfile = DEFAULT;
     listeners.forEach((l) => l());
   }, []);
 
