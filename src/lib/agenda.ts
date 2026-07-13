@@ -35,7 +35,7 @@ function read(): State {
   try { raw = window.localStorage.getItem(KEY); } catch { return __cachedValue; }
   if (raw === __cachedRaw) return __cachedValue;
   __cachedRaw = raw;
-  try { __cachedValue = JSON.parse(raw); } catch { __cachedValue = DEFAULT; }
+  try { __cachedValue = JSON.parse(raw ?? "null") ?? DEFAULT; } catch { __cachedValue = DEFAULT; }
   return __cachedValue;
 }
 function __invalidateCache(raw: string | null, value: any) { __cachedRaw = raw; __cachedValue = value; }
