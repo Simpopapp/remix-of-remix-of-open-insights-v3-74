@@ -18,6 +18,8 @@ import { StudentSidebar } from "@/components/StudentSidebar";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ConciergeChat } from "@/components/ConciergeChat";
 import { ShortcutsOverlay } from "@/components/ShortcutsOverlay";
+import { Toaster } from "@/components/ui/sonner";
+import { LevelUpWatcher } from "@/lib/level-toast";
 import { useProfile } from "@/lib/profile";
 import { useGamification } from "@/lib/gamification";
 import { useInbox } from "@/lib/inbox";
