@@ -43,7 +43,7 @@ function subscribe(cb: () => void) {
 }
 
 export function useMarkers(moduleId?: string, lessonId?: string) {
-  const map = useSyncExternalStore(subscribe, read, read) as Store);
+  const map = useSyncExternalStore(subscribe, read, read);
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {

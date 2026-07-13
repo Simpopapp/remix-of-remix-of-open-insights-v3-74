@@ -41,7 +41,7 @@ function subscribe(cb: () => void) {
 
 export function useStreak() {
   const { days } = useActivity(84);
-  const freezeState = useSyncExternalStore(subscribe, read, read) as FreezeState);
+  const freezeState = useSyncExternalStore(subscribe, read, read);
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
