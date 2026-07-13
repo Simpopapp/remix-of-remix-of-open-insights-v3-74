@@ -16,7 +16,7 @@ import {
   Timer,
 } from "lucide-react";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { findLesson, type Lesson, type Module } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { useNotes } from "@/lib/notes";
