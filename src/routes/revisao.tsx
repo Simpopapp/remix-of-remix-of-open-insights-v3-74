@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, CheckCircle2, Flame, Printer, Shield, StickyNote, Target, Timer, TrendingDown, TrendingUp } from "lucide-react";
+import { BookOpen, CalendarRange, CheckCircle2, Flame, Printer, Shield, StickyNote, Target, Timer, TrendingDown, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { useWeeklyStats } from "@/lib/weekly-stats";
+import { useMonthlyStats } from "@/lib/monthly-stats";
 import { useStreak } from "@/lib/streak";
 import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
+
 
 export const Route = createFileRoute("/revisao")({
   head: () => ({
