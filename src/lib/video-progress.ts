@@ -7,17 +7,32 @@ const EMPTY: Store = {};
 
 const listeners = new Set<() => void>();
 
+let cachedRaw: string | null = null;
+let cachedStore: Store = EMPTY;
+
 function read(): Store {
-  if (typeof window === "undefined") return {};
+  if (typeof window === "undefined") return EMPTY;
+  let raw: string | null;
   try {
-    return JSON.parse(window.localStorage.getItem(KEY) ?? "{}");
+    raw = window.localStorage.getItem(KEY);
   } catch {
-    return {};
+    return cachedStore;
   }
+  if (raw === cachedRaw) return cachedStore;
+  cachedRaw = raw;
+  try {
+    cachedStore = raw ? (JSON.parse(raw) as Store) : EMPTY;
+  } catch {
+    cachedStore = EMPTY;
+  }
+  return cachedStore;
 }
 function write(s: Store) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(s));
+  const raw = JSON.stringify(s);
+  window.localStorage.setItem(KEY, raw);
+  cachedRaw = raw;
+  cachedStore = s;
   listeners.forEach((l) => l());
 }
 
