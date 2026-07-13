@@ -297,10 +297,11 @@ function Onboarding() {
   const StepIcon = meta.icon;
   const totalSteps = STEP_META.length;
 
-  const canAdvance = useMemo(() => {
-    if (step === 0) return draft.name.trim().length > 1;
-    return true;
+  const blockReason = useMemo(() => {
+    if (step === 0 && draft.name.trim().length < 2) return "Informe seu nome para continuar";
+    return null;
   }, [step, draft.name]);
+  const canAdvance = !blockReason;
 
   const finish = () => {
     update({ ...draft, onboarded: true, createdAt: new Date().toISOString() });
@@ -793,22 +794,30 @@ function Onboarding() {
                   <ChevronLeft className="h-3.5 w-3.5" /> Voltar
                 </button>
                 {step < totalSteps - 1 ? (
-                  <button
-                    type="button"
-                    onClick={advance}
-                    disabled={!canAdvance}
-                    className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-8 py-3.5 text-sm font-semibold text-primary-foreground transition disabled:cursor-not-allowed disabled:opacity-40"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, oklch(0.88 0.08 82), oklch(0.72 0.11 78) 55%, oklch(0.6 0.09 78))",
-                      boxShadow:
-                        "0 20px 50px -14px oklch(0.76 0.09 82 / 0.7), inset 0 1px 0 oklch(1 0 0 / 0.35), inset 0 -1px 0 oklch(0 0 0 / 0.15)",
-                    }}
-                  >
-                    <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-                    <span className="relative">Continuar</span>
-                    <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  </button>
+                  <div className="flex flex-col items-end gap-2">
+                    {blockReason && (
+                      <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/80">
+                        {blockReason}
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={advance}
+                      aria-disabled={!canAdvance}
+                      title={blockReason ?? "Continuar"}
+                      className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-8 py-3.5 text-sm font-semibold text-primary-foreground transition aria-disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:grayscale"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, oklch(0.88 0.08 82), oklch(0.72 0.11 78) 55%, oklch(0.6 0.09 78))",
+                        boxShadow:
+                          "0 20px 50px -14px oklch(0.76 0.09 82 / 0.7), inset 0 1px 0 oklch(1 0 0 / 0.35), inset 0 -1px 0 oklch(0 0 0 / 0.15)",
+                      }}
+                    >
+                      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                      <span className="relative">Continuar</span>
+                      <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </button>
+                  </div>
                 ) : (
                   <button
                     type="button"
