@@ -56,6 +56,13 @@ export const Route = createFileRoute("/aula/$moduleId/$lessonId")({
 function LessonPage() {
   const data = Route.useLoaderData() as { module: Module; lesson: Lesson; prev?: Lesson; next?: Lesson };
   const { module: mod, lesson, prev, next } = data;
+  const search = Route.useSearch();
+  useEffect(() => {
+    if (search.t && search.t > 0) {
+      const id = window.setTimeout(() => seekTo(search.t!), 400);
+      return () => window.clearTimeout(id);
+    }
+  }, [search.t, mod.id, lesson.id]);
   const { isDone, setDone } = useProgress();
   const done = isDone(mod.id, lesson.id);
   const [notes, setNotes] = useNotes(mod.id, lesson.id);
