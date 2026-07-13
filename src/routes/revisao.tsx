@@ -22,7 +22,9 @@ export const Route = createFileRoute("/revisao")({
 
 function RevisaoPage() {
   const { totals, deltas, bars, maxBar, activeDays, prevActiveDays, topModule } = useWeeklyStats();
+  const monthly = useMonthlyStats();
   const { current, longest, freezesLeft, applyFreeze } = useStreak();
+
 
   const rows: { icon: React.ReactNode; label: string; value: string; hint: string; delta: number }[] = [
     {
