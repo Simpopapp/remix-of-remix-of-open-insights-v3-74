@@ -1,8 +1,9 @@
 import { useSyncExternalStore } from "react";
-import { readActivity } from "@/lib/activity";
+import { useActivity } from "@/lib/activity";
 
 const KEY = "aiae:weekly-goal:v1";
 const DEFAULT = 300; // minutes/week
+const FOCUS_MIN = 25; // one focus event = one pomodoro
 const listeners = new Set<() => void>();
 
 function read(): number {
@@ -25,23 +26,11 @@ export function setWeeklyGoal(minutes: number) {
   listeners.forEach((l) => l());
 }
 
-function weekMinutes(): number {
-  const a = readActivity();
-  const now = new Date();
-  let total = 0;
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(now);
-    d.setDate(now.getDate() - i);
-    const key = d.toISOString().slice(0, 10);
-    const day = a[key];
-    if (day?.focusMinutes) total += day.focusMinutes;
-  }
-  return total;
-}
-
 export function useWeeklyGoal() {
   const goal = useSyncExternalStore(subscribe, read, () => DEFAULT);
-  const current = weekMinutes();
+  const { days } = useActivity(7);
+  const focusEvents = days.reduce((a, d) => a + (d.kinds.focus ?? 0), 0);
+  const current = focusEvents * FOCUS_MIN;
   const pct = Math.min(100, Math.round((current / goal) * 100));
   return { goal, current, pct, setGoal: setWeeklyGoal };
 }
