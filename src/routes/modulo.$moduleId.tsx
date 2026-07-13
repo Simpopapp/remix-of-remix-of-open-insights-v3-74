@@ -42,6 +42,21 @@ function ModulePage() {
   const pct = Math.round((done / mod.lessons.length) * 100);
   const nextModule = course.modules[course.modules.indexOf(mod) + 1];
 
+  const celebratedKey = `aiae:module-celebrated:${mod.id}`;
+  const firedRef = useRef(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (pct !== 100 || firedRef.current) return;
+    if (window.localStorage.getItem(celebratedKey)) return;
+    firedRef.current = true;
+    window.localStorage.setItem(celebratedKey, "1");
+    fireConfetti("epic");
+    toast.success(`Módulo ${String(mod.number).padStart(2, "0")} finalizado 🎉`, {
+      description: `Você concluiu "${mod.title}". Próximo passo: quiz e sair para a prática.`,
+    });
+  }, [pct, celebratedKey, mod.number, mod.title]);
+
+
   return (
     <div className="mx-auto max-w-4xl px-6 py-10 lg:py-14">
       <Link to="/" className="text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground">
