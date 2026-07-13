@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrilhasRouteImport } from './routes/trilhas'
+import { Route as RevisaoRouteImport } from './routes/revisao'
 import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as ProvaRouteImport } from './routes/prova'
 import { Route as PromptsRouteImport } from './routes/prompts'
@@ -35,6 +36,11 @@ import { Route as AulaModuleIdLessonIdRouteImport } from './routes/aula.$moduleI
 const TrilhasRoute = TrilhasRouteImport.update({
   id: '/trilhas',
   path: '/trilhas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevisaoRoute = RevisaoRouteImport.update({
+  id: '/revisao',
+  path: '/revisao',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RankingRoute = RankingRouteImport.update({
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/prompts': typeof PromptsRoute
   '/prova': typeof ProvaRoute
   '/ranking': typeof RankingRoute
+  '/revisao': typeof RevisaoRoute
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/quiz/$moduleId': typeof QuizModuleIdRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/prompts': typeof PromptsRoute
   '/prova': typeof ProvaRoute
   '/ranking': typeof RankingRoute
+  '/revisao': typeof RevisaoRoute
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/quiz/$moduleId': typeof QuizModuleIdRoute
@@ -211,6 +219,7 @@ export interface FileRoutesById {
   '/prompts': typeof PromptsRoute
   '/prova': typeof ProvaRoute
   '/ranking': typeof RankingRoute
+  '/revisao': typeof RevisaoRoute
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/quiz/$moduleId': typeof QuizModuleIdRoute
@@ -237,6 +246,7 @@ export interface FileRouteTypes {
     | '/prompts'
     | '/prova'
     | '/ranking'
+    | '/revisao'
     | '/trilhas'
     | '/modulo/$moduleId'
     | '/quiz/$moduleId'
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/prompts'
     | '/prova'
     | '/ranking'
+    | '/revisao'
     | '/trilhas'
     | '/modulo/$moduleId'
     | '/quiz/$moduleId'
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/prompts'
     | '/prova'
     | '/ranking'
+    | '/revisao'
     | '/trilhas'
     | '/modulo/$moduleId'
     | '/quiz/$moduleId'
@@ -310,6 +322,7 @@ export interface RootRouteChildren {
   PromptsRoute: typeof PromptsRoute
   ProvaRoute: typeof ProvaRoute
   RankingRoute: typeof RankingRoute
+  RevisaoRoute: typeof RevisaoRoute
   TrilhasRoute: typeof TrilhasRoute
   ModuloModuleIdRoute: typeof ModuloModuleIdRoute
   QuizModuleIdRoute: typeof QuizModuleIdRoute
@@ -323,6 +336,13 @@ declare module '@tanstack/react-router' {
       path: '/trilhas'
       fullPath: '/trilhas'
       preLoaderRoute: typeof TrilhasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revisao': {
+      id: '/revisao'
+      path: '/revisao'
+      fullPath: '/revisao'
+      preLoaderRoute: typeof RevisaoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ranking': {
@@ -494,6 +514,7 @@ const rootRouteChildren: RootRouteChildren = {
   PromptsRoute: PromptsRoute,
   ProvaRoute: ProvaRoute,
   RankingRoute: RankingRoute,
+  RevisaoRoute: RevisaoRoute,
   TrilhasRoute: TrilhasRoute,
   ModuloModuleIdRoute: ModuloModuleIdRoute,
   QuizModuleIdRoute: QuizModuleIdRoute,
