@@ -23,6 +23,7 @@ import { Route as MarcadoresRouteImport } from './routes/marcadores'
 import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as LancamentoRouteImport } from './routes/lancamento'
 import { Route as InboxRouteImport } from './routes/inbox'
+import { Route as HojeRouteImport } from './routes/hoje'
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as FocoRouteImport } from './routes/foco'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
@@ -107,6 +108,11 @@ const LancamentoRoute = LancamentoRouteImport.update({
 const InboxRoute = InboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HojeRoute = HojeRouteImport.update({
+  id: '/hoje',
+  path: '/hoje',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GlossarioRoute = GlossarioRouteImport.update({
@@ -198,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
   '/glossario': typeof GlossarioRoute
+  '/hoje': typeof HojeRoute
   '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
   '/mapa': typeof MapaRoute
@@ -229,6 +236,7 @@ export interface FileRoutesByTo {
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
   '/glossario': typeof GlossarioRoute
+  '/hoje': typeof HojeRoute
   '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
   '/mapa': typeof MapaRoute
@@ -261,6 +269,7 @@ export interface FileRoutesById {
   '/favoritos': typeof FavoritosRoute
   '/foco': typeof FocoRoute
   '/glossario': typeof GlossarioRoute
+  '/hoje': typeof HojeRoute
   '/inbox': typeof InboxRoute
   '/lancamento': typeof LancamentoRoute
   '/mapa': typeof MapaRoute
@@ -294,6 +303,7 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/foco'
     | '/glossario'
+    | '/hoje'
     | '/inbox'
     | '/lancamento'
     | '/mapa'
@@ -325,6 +335,7 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/foco'
     | '/glossario'
+    | '/hoje'
     | '/inbox'
     | '/lancamento'
     | '/mapa'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/foco'
     | '/glossario'
+    | '/hoje'
     | '/inbox'
     | '/lancamento'
     | '/mapa'
@@ -388,6 +400,7 @@ export interface RootRouteChildren {
   FavoritosRoute: typeof FavoritosRoute
   FocoRoute: typeof FocoRoute
   GlossarioRoute: typeof GlossarioRoute
+  HojeRoute: typeof HojeRoute
   InboxRoute: typeof InboxRoute
   LancamentoRoute: typeof LancamentoRoute
   MapaRoute: typeof MapaRoute
@@ -505,6 +518,13 @@ declare module '@tanstack/react-router' {
       path: '/inbox'
       fullPath: '/inbox'
       preLoaderRoute: typeof InboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hoje': {
+      id: '/hoje'
+      path: '/hoje'
+      fullPath: '/hoje'
+      preLoaderRoute: typeof HojeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/glossario': {
@@ -628,6 +648,7 @@ const rootRouteChildren: RootRouteChildren = {
   FavoritosRoute: FavoritosRoute,
   FocoRoute: FocoRoute,
   GlossarioRoute: GlossarioRoute,
+  HojeRoute: HojeRoute,
   InboxRoute: InboxRoute,
   LancamentoRoute: LancamentoRoute,
   MapaRoute: MapaRoute,
