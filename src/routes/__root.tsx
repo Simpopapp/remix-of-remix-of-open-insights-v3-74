@@ -174,14 +174,16 @@ function AppShell() {
 
   return (
     <div className="min-h-dvh flex w-full bg-background text-foreground">
+      <div className="ambient-scene" aria-hidden />
+      <div className="grain-overlay" aria-hidden />
       <a href="#main-content" className="skip-link">Pular para o conteúdo</a>
       <StudentSidebar />
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-14 flex items-center gap-2 sm:gap-3 border-b border-border px-3 sm:px-4 sticky top-0 z-30 backdrop-blur bg-background/70">
+      <div data-app-shell className="flex-1 flex flex-col min-w-0">
+        <header className="h-14 flex items-center gap-2 sm:gap-3 border-b border-border/60 px-3 sm:px-4 sticky top-0 z-30 backdrop-blur-xl bg-background/60 supports-[backdrop-filter]:bg-background/40">
           <SidebarTrigger />
-          <div className="hidden sm:flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            Concierge de Elite
+          <div className="hidden sm:flex items-center gap-2 eyebrow">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_12px_2px_oklch(0.76_0.09_82/0.6)]" />
+            <span className="text-gold-gradient font-medium">Concierge de Elite</span>
           </div>
           <div className="ml-auto flex items-center gap-2 sm:gap-3 min-w-0">
             <div className="hidden md:flex items-center gap-3 text-xs">
