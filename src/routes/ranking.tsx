@@ -51,7 +51,7 @@ function RankingPage() {
         ))}
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-2xl border border-primary/25 bg-card/50">
+      <div className="mt-8 overflow-x-auto rounded-2xl border border-primary/25 bg-card/50">
         <table className="w-full text-sm">
           <thead className="border-b border-border bg-background/40 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
             <tr>
