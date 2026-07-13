@@ -27,6 +27,9 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/aula/$moduleId/$lessonId")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    t: typeof s.t === "number" ? s.t : s.t ? Number(s.t) || undefined : undefined,
+  }),
   loader: ({ params }) => {
     const data = findLesson(params.moduleId, params.lessonId);
     if (!data) throw notFound();
