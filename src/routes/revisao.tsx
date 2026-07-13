@@ -89,11 +89,29 @@ function RevisaoPage() {
               {current} {current === 1 ? "dia" : "dias"} seguidos
             </div>
             <div className="mt-1 text-xs text-muted-foreground">
-              {activeDays}/7 dias ativos · recorde {longest} dias
+              {activeDays}/7 dias ativos · recorde {longest} dias · semana anterior {prevActiveDays}/7
             </div>
+          </div>
+          <div className="flex flex-col items-end gap-2 shrink-0 print:hidden">
+            <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Shield className="h-3.5 w-3.5 text-primary" />
+              {freezesLeft} freeze{freezesLeft === 1 ? "" : "s"} disponível{freezesLeft === 1 ? "" : "eis"}
+            </div>
+            <button
+              onClick={() => {
+                const ok = applyFreeze();
+                if (ok) toast.success("Freeze aplicado no dia anterior. Streak preservada.");
+                else toast.error("Sem freezes disponíveis ou dia já protegido.");
+              }}
+              disabled={freezesLeft === 0}
+              className="rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs text-primary hover:bg-primary/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Proteger ontem
+            </button>
           </div>
         </div>
       </div>
+
 
       {/* Weekly bars */}
       <div className="mt-6 rounded-2xl border border-border bg-card p-6">
