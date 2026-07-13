@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,
   Award,
+  Check,
   Clock3,
   Flame,
   PlayCircle,
@@ -9,6 +10,7 @@ import {
   Trophy,
   Users,
 } from "lucide-react";
+import { toast } from "sonner";
 import { course, totalLessons } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
 import { Progress } from "@/components/ui/progress";
@@ -18,6 +20,8 @@ import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 import { ContinueWatching } from "@/components/ContinueWatching";
 import { RecentLessons } from "@/components/RecentLessons";
 import { useStreak } from "@/lib/streak";
+import { useReservations } from "@/lib/reservations";
+
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -59,6 +63,10 @@ function Dashboard() {
   );
   const xp = completedCount * 120;
   const { current: streak, longest: longestStreak } = useStreak();
+  const { isReserved, toggle: toggleReservation } = useReservations();
+  const liveId = "evt-build-session-mcp-na-pratica";
+  const liveReserved = isReserved(liveId);
+
 
   let next: {
     moduleId: string;
@@ -315,9 +323,37 @@ function Dashboard() {
             Traga seu app. Revisão ao vivo com o Concierge e a mesa de senior
             builders da cohort.
           </p>
-          <button className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-95">
-            Reservar assento <ArrowUpRight className="h-4 w-4" />
+          <button
+            onClick={() => {
+              const r = toggleReservation({
+                id: liveId,
+                title: "Build session — MCP na prática",
+                when: "Quarta · 20h",
+                href: "/comunidade",
+              });
+              if (r.reserved) {
+                toast.success("Assento reservado", {
+                  description: "Build session — Quarta · 20h. Confirmação no seu inbox.",
+                });
+              } else {
+                toast("Reserva cancelada");
+              }
+            }}
+            aria-pressed={liveReserved}
+            className={
+              "mt-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition " +
+              (liveReserved
+                ? "border border-primary/60 bg-primary/10 text-primary hover:bg-primary/20"
+                : "bg-primary text-primary-foreground hover:opacity-95")
+            }
+          >
+            {liveReserved ? (
+              <>Reservado <Check className="h-4 w-4" /></>
+            ) : (
+              <>Reservar assento <ArrowUpRight className="h-4 w-4" /></>
+            )}
           </button>
+
         </div>
       </section>
 
