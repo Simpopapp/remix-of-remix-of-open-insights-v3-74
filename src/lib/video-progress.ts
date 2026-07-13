@@ -1,7 +1,8 @@
 import { useCallback, useSyncExternalStore } from "react";
 
 const KEY = "aiae:video:v1";
-type Store = Record<string, { t: number; d: number }>;
+const LAST_KEY = "aiae:video:last";
+type Store = Record<string, { t: number; d: number; u?: number }>;
 const EMPTY: Store = {};
 
 const listeners = new Set<() => void>();
@@ -20,26 +21,50 @@ function write(s: Store) {
   listeners.forEach((l) => l());
 }
 
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  return () => {
+    listeners.delete(cb);
+  };
+}
+
 export function useVideoProgress(moduleId: string, lessonId: string) {
   const key = `${moduleId}/${lessonId}`;
-  const store = useSyncExternalStore(
-    (cb) => {
-      listeners.add(cb);
-      return () => listeners.delete(cb);
-    },
-    read,
-    () => EMPTY,
-  );
+  const store = useSyncExternalStore(subscribe, read, () => EMPTY);
   const entry = store[key] ?? { t: 0, d: 0 };
 
   const save = useCallback(
     (t: number, d: number) => {
       const cur = read();
-      cur[key] = { t: Math.max(0, Math.floor(t)), d: Math.max(0, Math.floor(d)) };
+      cur[key] = {
+        t: Math.max(0, Math.floor(t)),
+        d: Math.max(0, Math.floor(d)),
+        u: Date.now(),
+      };
       write(cur);
+      if (typeof window !== "undefined") {
+        try {
+          window.localStorage.setItem(LAST_KEY, key);
+        } catch {
+          // ignore
+        }
+      }
     },
     [key],
   );
 
   return { time: entry.t, duration: entry.d, save };
+}
+
+export function useVideoStore() {
+  return useSyncExternalStore(subscribe, read, () => EMPTY);
+}
+
+export function readLastKey(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem(LAST_KEY);
+  } catch {
+    return null;
+  }
 }
