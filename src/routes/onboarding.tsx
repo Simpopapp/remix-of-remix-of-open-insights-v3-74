@@ -297,10 +297,11 @@ function Onboarding() {
   const StepIcon = meta.icon;
   const totalSteps = STEP_META.length;
 
-  const canAdvance = useMemo(() => {
-    if (step === 0) return draft.name.trim().length > 1;
-    return true;
+  const blockReason = useMemo(() => {
+    if (step === 0 && draft.name.trim().length < 2) return "Informe seu nome para continuar";
+    return null;
   }, [step, draft.name]);
+  const canAdvance = !blockReason;
 
   const finish = () => {
     update({ ...draft, onboarded: true, createdAt: new Date().toISOString() });
