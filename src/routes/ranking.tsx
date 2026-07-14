@@ -37,6 +37,11 @@ function RankingPage() {
         }
       />
 
+      <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="h-1.5 w-1.5 rounded-full bg-primary" /> Cohort simulada · dados de referência
+      </div>
+
+
 
       <div className="mt-8 grid grid-cols-3 gap-4">
         {rows.slice(0, 3).map((r, i) => (

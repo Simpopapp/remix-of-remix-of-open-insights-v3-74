@@ -1,12 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
-import { ArrowRight, Rocket, Users, Building, Compass } from "lucide-react";
+import { useProfile } from "@/lib/profile";
+import { ArrowRight, Rocket, Users, Building, Compass, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/trilhas")({
   head: () => ({ meta: [{ title: "Trilhas — AI App Empire" }] }),
   component: TrilhasPage,
 });
+
+const GOAL_TO_TRACK: Record<string, string> = {
+  "launch-mvp": "mvp",
+  "acquire-clients": "clients",
+  "scale-agency": "agency",
+  explore: "master",
+};
 
 type Track = {
   id: string;

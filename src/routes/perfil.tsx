@@ -106,6 +106,26 @@ function PerfilPage() {
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 />
               </Field>
+              <Field label="Timezone">
+                <input
+                  value={profile.timezone}
+                  onChange={(e) => update({ timezone: e.target.value })}
+                  placeholder="America/Sao_Paulo"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                />
+              </Field>
+              <Field label="Avatar">
+                <div className="flex flex-wrap gap-1.5">
+                  {["◆","★","▲","●","♛","⚡","☾","✦","♞","☰"].map((a) => (
+                    <button
+                      key={a}
+                      type="button"
+                      onClick={() => update({ avatar: a })}
+                      className={"grid h-9 w-9 place-items-center rounded-md border text-lg " + (profile.avatar === a ? "border-primary bg-primary/15 text-primary" : "border-input hover:border-primary/50")}
+                    >{a}</button>
+                  ))}
+                </div>
+              </Field>
             </div>
           </div>
 
