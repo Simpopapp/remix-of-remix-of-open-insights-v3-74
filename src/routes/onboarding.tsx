@@ -772,6 +772,12 @@ function LivePreview({
     pace: step >= 2,
   };
   const pct = Math.round(((step + 1) / totalSteps) * 100);
+  const hoursMv = useMotionValue(0);
+  const hoursSpring = useSpring(hoursMv, { stiffness: 90, damping: 18 });
+  const hoursDisplay = useTransform(hoursSpring, (v) => Math.round(v).toString());
+  useEffect(() => {
+    hoursMv.set(filled.pace ? draft.weeklyHours : 0);
+  }, [draft.weeklyHours, filled.pace, hoursMv]);
   return (
     <aside
       className={
