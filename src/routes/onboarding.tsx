@@ -176,7 +176,10 @@ function Onboarding() {
         />
       </div>
 
-      <div className="mx-auto grid min-h-dvh max-w-[1440px] grid-cols-1 items-stretch lg:grid-cols-[minmax(420px,520px)_minmax(0,1fr)] xl:grid-cols-[minmax(420px,500px)_minmax(0,1fr)_minmax(320px,380px)]">
+      <div
+        data-onboarding-shell
+        className="grid min-h-dvh w-full grid-cols-1 items-stretch lg:grid-cols-[minmax(360px,34vw)_minmax(0,1fr)] xl:grid-cols-[minmax(340px,30vw)_minmax(500px,42vw)_minmax(360px,1fr)] 2xl:grid-cols-[minmax(360px,28vw)_minmax(560px,38vw)_minmax(420px,1fr)]"
+      >
         {/* Left: editorial art */}
         <aside className="relative hidden overflow-hidden lg:block">
           <img
@@ -210,7 +213,7 @@ function Onboarding() {
           <span className="pointer-events-none absolute bottom-8 right-8 h-6 w-6 border-b border-r border-primary/70" />
 
           <div
-            className="relative flex h-full flex-col justify-between p-10 xl:p-14 text-white"
+            className="relative flex h-full flex-col justify-between p-8 xl:p-10 2xl:p-14 text-white"
             style={{ textShadow: "0 2px 24px oklch(0.06 0.02 280 / 0.9)" }}
           >
             <header className="flex items-center justify-between">
@@ -296,7 +299,7 @@ function Onboarding() {
         </aside>
 
         {/* Right: form */}
-        <main className="relative flex items-center justify-center px-6 py-10 lg:px-12 lg:py-14 xl:px-14 xl:py-16">
+        <main className="relative flex items-center justify-center px-6 py-10 lg:px-10 lg:py-14 xl:px-12 xl:py-16 2xl:px-16">
           <div className="w-full max-w-[560px]">
             {/* Mobile mini-hero */}
             <div className="mb-8 flex items-center justify-between lg:hidden">
