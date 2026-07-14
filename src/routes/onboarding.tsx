@@ -915,7 +915,7 @@ function LivePreview({
   );
 }
 
-function MiniMetric({ label, value, active }: { label: string; value: string; active: boolean }) {
+function MiniMetric({ label, value, active }: { label: string; value: ReactNode; active: boolean }) {
   return (
     <div
       className={
