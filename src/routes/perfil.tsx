@@ -16,6 +16,7 @@ export const Route = createFileRoute("/perfil")({
 
 function PerfilPage() {
   const { profile, update, reset } = useProfile();
+  const isSigil = SIGILS.some((s) => s.id === profile.avatar);
   const { xp, level, levelProgress, rank, streak, watch } = useGamification();
   const { completedCount } = useProgress();
   const { count: exDone } = useExercises();
