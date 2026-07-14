@@ -92,6 +92,7 @@ function Onboarding() {
   const { profile, update } = useProfile();
   const nav = useNavigate();
   const [step, setStep] = useState(0);
+  const [focused, setFocused] = useState(false);
   const [draft, setDraft] = useState<Profile>(() => ({
     ...profile,
     avatar: SIGILS.some((s) => s.id === profile.avatar) ? profile.avatar : "diamond",
@@ -181,7 +182,12 @@ function Onboarding() {
         className="grid min-h-dvh w-full grid-cols-1 items-stretch lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)] xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.25fr)_minmax(0,1fr)] 2xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.15fr)_minmax(0,1.05fr)]"
       >
         {/* Left: editorial art */}
-        <aside className="relative hidden overflow-hidden lg:block">
+        <aside
+          className={
+            "relative hidden overflow-hidden lg:block transition-all duration-500 ease-out " +
+            (focused ? "opacity-40 blur-[1px]" : "opacity-100")
+          }
+        >
           <img
             src={heroOnboarding}
             alt=""
@@ -226,20 +232,11 @@ function Onboarding() {
               </div>
             </header>
 
-            <div className="max-w-[440px]">
+            <div className="max-w-[360px]">
               <div className="font-mono text-[10px] uppercase tracking-[0.36em] text-primary">
-                {meta.kicker} — {String(step + 1).padStart(2, "0")} / {String(totalSteps).padStart(2, "0")}
+                Ritual — {String(step + 1).padStart(2, "0")} / {String(totalSteps).padStart(2, "0")}
               </div>
-              <h2 className="mt-5 font-serif text-[2.6rem] leading-[1.02] tracking-[-0.02em] text-balance xl:text-[3rem]">
-                Antes de entrar,
-                <br />
-                <span className="italic text-gold-gradient">um breve ritual.</span>
-              </h2>
-              <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/75">
-                Quatro portas. Cada uma calibra o que a plataforma faz por você.
-              </p>
-
-              <ol className="relative mt-10 space-y-1.5">
+              <ol className="relative mt-8 space-y-1.5">
                 <span
                   aria-hidden
                   className="pointer-events-none absolute left-[15px] top-4 bottom-4 w-px bg-white/10"
@@ -255,14 +252,14 @@ function Onboarding() {
                           ? "bg-primary/[0.08] text-white"
                           : state === "done"
                           ? "text-primary/90"
-                          : "text-white/45")
+                          : "text-white/35")
                       }
                     >
                       <span
                         className={
                           "relative z-10 grid h-8 w-8 place-items-center rounded-full font-mono text-[11px] tabular-nums transition-all " +
                           (state === "active"
-                            ? "bg-primary text-primary-foreground shadow-[0_0_0_4px_oklch(0.76_0.09_82/0.18),0_10px_30px_-8px_oklch(0.76_0.09_82/0.7)]"
+                            ? "bg-primary text-primary-foreground shadow-[0_0_0_4px_oklch(0.76_0.09_82/0.18),0_10px_30px_-8px_oklch(0.76_0.09_82/0.7)] animate-[pulse_2.4s_ease-in-out_infinite]"
                             : state === "done"
                             ? "border border-primary/40 bg-primary/15 text-primary"
                             : "border border-white/20 bg-[oklch(0.08_0.02_280/0.6)]")
@@ -272,6 +269,11 @@ function Onboarding() {
                       </span>
                       <div className="min-w-0 flex-1">
                         <div className="font-mono text-[11px] uppercase tracking-[0.28em]">{s.key}</div>
+                        {state === "active" && (
+                          <div className="mt-1 font-serif text-[13px] italic leading-snug text-white/70 animate-fade-in">
+                            {s.kicker}
+                          </div>
+                        )}
                       </div>
                       <span
                         className={
@@ -283,10 +285,6 @@ function Onboarding() {
                   );
                 })}
               </ol>
-
-              <blockquote className="mt-10 border-l border-primary/70 pl-5 font-serif text-[15px] italic leading-relaxed text-white/85">
-                {meta.epigraph}
-              </blockquote>
             </div>
 
             <footer className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.32em] text-white/55">
@@ -299,7 +297,25 @@ function Onboarding() {
         </aside>
 
         {/* Right: form */}
-        <main className="relative flex items-center justify-center px-6 py-10 lg:px-[8%] lg:py-14 xl:px-[9%] xl:py-16 2xl:px-[10%]">
+        <main
+          onFocusCapture={() => setFocused(true)}
+          onBlurCapture={() => setFocused(false)}
+          onPointerEnter={() => setFocused(true)}
+          onPointerLeave={() => setFocused(false)}
+          className="relative flex items-center justify-center px-6 py-10 lg:px-[8%] lg:py-14 xl:px-[9%] xl:py-16 2xl:px-[10%]"
+        >
+          {/* Spotlight vignette when focused */}
+          <div
+            aria-hidden
+            className={
+              "pointer-events-none absolute inset-0 -z-0 transition-opacity duration-500 " +
+              (focused ? "opacity-100" : "opacity-0")
+            }
+            style={{
+              background:
+                "radial-gradient(ellipse at 50% 45%, oklch(0.76 0.09 82 / 0.06) 0%, transparent 55%)",
+            }}
+          />
           <div className="w-full">
             {/* Mobile mini-hero */}
             <div className="mb-8 flex items-center justify-between lg:hidden">
