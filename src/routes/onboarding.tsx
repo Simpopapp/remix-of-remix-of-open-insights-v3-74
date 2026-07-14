@@ -357,7 +357,7 @@ function Onboarding() {
                 <span className="h-px w-6 bg-primary/50" />
                 <span className="text-muted-foreground">{String(step + 1).padStart(2, "0")} de {String(totalSteps).padStart(2, "0")}</span>
               </div>
-              <h1 className="mt-4 font-serif text-[2.75rem] leading-[1.02] tracking-[-0.02em] lg:text-[3.25rem]">
+              <h1 className="mt-4 font-serif leading-[1.02] tracking-[-0.02em]" style={{ fontSize: "clamp(2.25rem, 3.6vw, 3.75rem)" }}>
                 {step === totalSteps - 1 ? (
                   <>
                     Tudo pronto,
@@ -368,9 +368,17 @@ function Onboarding() {
                   meta.title
                 )}
               </h1>
-              <p className="mt-4 max-w-md text-[15px] leading-relaxed text-muted-foreground">
+              <p className="mt-3 max-w-md text-[14px] leading-relaxed text-muted-foreground">
                 {meta.sub}
               </p>
+              <details className="group mt-3 max-w-md">
+                <summary className="cursor-pointer list-none font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/60 transition hover:text-primary/70">
+                  por que perguntamos?
+                </summary>
+                <blockquote className="mt-2 border-l border-primary/50 pl-3 font-serif text-[13px] italic leading-relaxed text-muted-foreground/85 animate-fade-in">
+                  {meta.epigraph}
+                </blockquote>
+              </details>
             </div>
 
             {/* Body (no card chrome — editorial breathing) */}
