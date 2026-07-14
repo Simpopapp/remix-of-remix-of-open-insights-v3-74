@@ -37,6 +37,7 @@ import { Route as AtalhosRouteImport } from './routes/atalhos'
 import { Route as AjudaRouteImport } from './routes/ajuda'
 import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VerificarIdRouteImport } from './routes/verificar.$id'
 import { Route as QuizModuleIdRouteImport } from './routes/quiz.$moduleId'
 import { Route as ModuloModuleIdRouteImport } from './routes/modulo.$moduleId'
 import { Route as AulaModuleIdLessonIdRouteImport } from './routes/aula.$moduleId.$lessonId'
@@ -181,6 +182,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerificarIdRoute = VerificarIdRouteImport.update({
+  id: '/verificar/$id',
+  path: '/verificar/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuizModuleIdRoute = QuizModuleIdRouteImport.update({
   id: '/quiz/$moduleId',
   path: '/quiz/$moduleId',
@@ -228,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/quiz/$moduleId': typeof QuizModuleIdRoute
+  '/verificar/$id': typeof VerificarIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRoutesByTo {
@@ -261,6 +268,7 @@ export interface FileRoutesByTo {
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/quiz/$moduleId': typeof QuizModuleIdRoute
+  '/verificar/$id': typeof VerificarIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRoutesById {
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/trilhas': typeof TrilhasRoute
   '/modulo/$moduleId': typeof ModuloModuleIdRoute
   '/quiz/$moduleId': typeof QuizModuleIdRoute
+  '/verificar/$id': typeof VerificarIdRoute
   '/aula/$moduleId/$lessonId': typeof AulaModuleIdLessonIdRoute
 }
 export interface FileRouteTypes {
@@ -330,6 +339,7 @@ export interface FileRouteTypes {
     | '/trilhas'
     | '/modulo/$moduleId'
     | '/quiz/$moduleId'
+    | '/verificar/$id'
     | '/aula/$moduleId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
     | '/trilhas'
     | '/modulo/$moduleId'
     | '/quiz/$moduleId'
+    | '/verificar/$id'
     | '/aula/$moduleId/$lessonId'
   id:
     | '__root__'
@@ -396,6 +407,7 @@ export interface FileRouteTypes {
     | '/trilhas'
     | '/modulo/$moduleId'
     | '/quiz/$moduleId'
+    | '/verificar/$id'
     | '/aula/$moduleId/$lessonId'
   fileRoutesById: FileRoutesById
 }
@@ -430,6 +442,7 @@ export interface RootRouteChildren {
   TrilhasRoute: typeof TrilhasRoute
   ModuloModuleIdRoute: typeof ModuloModuleIdRoute
   QuizModuleIdRoute: typeof QuizModuleIdRoute
+  VerificarIdRoute: typeof VerificarIdRoute
   AulaModuleIdLessonIdRoute: typeof AulaModuleIdLessonIdRoute
 }
 
@@ -631,6 +644,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verificar/$id': {
+      id: '/verificar/$id'
+      path: '/verificar/$id'
+      fullPath: '/verificar/$id'
+      preLoaderRoute: typeof VerificarIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quiz/$moduleId': {
       id: '/quiz/$moduleId'
       path: '/quiz/$moduleId'
@@ -686,18 +706,9 @@ const rootRouteChildren: RootRouteChildren = {
   TrilhasRoute: TrilhasRoute,
   ModuloModuleIdRoute: ModuloModuleIdRoute,
   QuizModuleIdRoute: QuizModuleIdRoute,
+  VerificarIdRoute: VerificarIdRoute,
   AulaModuleIdLessonIdRoute: AulaModuleIdLessonIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
