@@ -176,7 +176,7 @@ function Onboarding() {
         />
       </div>
 
-      <div className="mx-auto grid min-h-dvh max-w-[1360px] grid-cols-1 items-stretch lg:grid-cols-[minmax(440px,560px)_minmax(0,1fr)]">
+      <div className="mx-auto grid min-h-dvh max-w-[1440px] grid-cols-1 items-stretch lg:grid-cols-[minmax(420px,520px)_minmax(0,1fr)] xl:grid-cols-[minmax(420px,500px)_minmax(0,1fr)_minmax(320px,380px)]">
         {/* Left: editorial art */}
         <aside className="relative hidden overflow-hidden lg:block">
           <img
@@ -296,8 +296,8 @@ function Onboarding() {
         </aside>
 
         {/* Right: form */}
-        <main className="relative flex items-center justify-center px-6 py-10 lg:px-12 lg:py-14 xl:px-16 xl:py-16">
-          <div className="w-full max-w-[580px]">
+        <main className="relative flex items-center justify-center px-6 py-10 lg:px-12 lg:py-14 xl:px-14 xl:py-16">
+          <div className="w-full max-w-[560px]">
             {/* Mobile mini-hero */}
             <div className="mb-8 flex items-center justify-between lg:hidden">
               <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.32em] text-primary">
@@ -690,7 +690,140 @@ function Onboarding() {
             </div>
           </div>
         </main>
+
+        {/* Right: live preview panel — fills desktop empty space */}
+        <LivePreview draft={draft} step={step} totalSteps={totalSteps} />
       </div>
+    </div>
+  );
+}
+
+function LivePreview({
+  draft,
+  step,
+  totalSteps,
+}: {
+  draft: Profile;
+  step: number;
+  totalSteps: number;
+}) {
+  const goalMeta = GOAL_META[draft.goal];
+  const GoalIcon = goalMeta.icon;
+  const filled = {
+    name: draft.name.trim().length >= 2,
+    goal: step >= 1,
+    pace: step >= 2,
+  };
+  const pct = Math.round(((step + 1) / totalSteps) * 100);
+  return (
+    <aside className="relative hidden overflow-hidden border-l border-border/60 xl:block">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_10%,oklch(0.76_0.09_82/0.10),transparent_55%),radial-gradient(circle_at_20%_90%,oklch(0.55_0.16_290/0.14),transparent_60%)]" />
+      <div className="relative flex h-full flex-col justify-between p-10">
+        <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+          <span className="inline-flex items-center gap-2 text-primary/85">
+            <Sparkles className="h-3 w-3" /> Prévia ao vivo
+          </span>
+          <span className="tabular-nums">{String(pct).padStart(3, " ")}%</span>
+        </div>
+
+        {/* Membership card */}
+        <div className="relative overflow-hidden rounded-3xl p-6 ring-1 ring-primary/25 bg-[linear-gradient(160deg,oklch(0.14_0.02_280/0.9),oklch(0.10_0.02_285/0.9))] shadow-[0_40px_100px_-40px_oklch(0.76_0.09_82/0.5),inset_0_1px_0_oklch(1_0_0/0.06)]">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
+          <span className="pointer-events-none absolute left-3 top-3 h-3 w-3 border-l border-t border-primary/60" />
+          <span className="pointer-events-none absolute right-3 top-3 h-3 w-3 border-r border-t border-primary/60" />
+          <span className="pointer-events-none absolute bottom-3 left-3 h-3 w-3 border-b border-l border-primary/60" />
+          <span className="pointer-events-none absolute bottom-3 right-3 h-3 w-3 border-b border-r border-primary/60" />
+
+          <div className="mb-5 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.3em] text-primary/70">
+            <span>Carteira</span>
+            <span>N° {String(step + 1).padStart(3, "0")}</span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="relative grid h-20 w-20 shrink-0 place-items-center rounded-2xl p-3 ring-1 ring-primary/50 bg-[radial-gradient(circle_at_30%_25%,oklch(0.22_0.02_275),oklch(0.14_0.02_280))] shadow-[0_20px_60px_-20px_oklch(0.76_0.09_82/0.7),inset_0_1px_0_oklch(1_0_0/0.08)]">
+              <Sigil id={draft.avatar} active />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div
+                className={
+                  "truncate font-serif text-[1.6rem] leading-tight tracking-tight transition-colors " +
+                  (filled.name ? "text-white" : "text-white/25")
+                }
+              >
+                {filled.name ? draft.name : "Seu nome"}
+              </div>
+              <div className="mt-1 truncate font-mono text-xs text-primary/70">
+                @{draft.handle || "handle"}
+              </div>
+            </div>
+          </div>
+
+          <dl className="mt-6 space-y-3 border-t border-primary/15 pt-5">
+            <PreviewRow
+              label="Objetivo"
+              filled={filled.goal}
+              icon={<GoalIcon className="h-3.5 w-3.5" />}
+              value={filled.goal ? GOALS[draft.goal].label : "a definir"}
+            />
+            <PreviewRow
+              label="Ritmo"
+              filled={filled.pace}
+              icon={<Clock className="h-3.5 w-3.5" />}
+              value={filled.pace ? `${draft.weeklyHours}h / semana` : "a definir"}
+            />
+            <PreviewRow
+              label="Cohort"
+              filled
+              icon={<Sparkles className="h-3.5 w-3.5" />}
+              value="01 · MMXXVI"
+            />
+          </dl>
+        </div>
+
+        <div className="space-y-3">
+          <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+            Progresso
+          </div>
+          <div className="h-px w-full overflow-hidden bg-border/50">
+            <div
+              className="h-full bg-primary transition-all duration-700 shadow-[0_0_10px_1px_oklch(0.76_0.09_82/0.9)]"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <p className="pt-2 font-serif text-[13px] italic leading-relaxed text-muted-foreground/90">
+            Cada porta calibra o que o concierge vai fazer por você na primeira semana.
+          </p>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function PreviewRow({
+  label,
+  value,
+  filled,
+  icon,
+}: {
+  label: string;
+  value: string;
+  filled: boolean;
+  icon: ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <dt className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+        <span className={filled ? "text-primary" : "text-muted-foreground/50"}>{icon}</span>
+        {label}
+      </dt>
+      <dd
+        className={
+          "truncate font-serif text-sm transition-colors " +
+          (filled ? "text-white/90" : "text-white/30 italic")
+        }
+      >
+        {value}
+      </dd>
     </div>
   );
 }
