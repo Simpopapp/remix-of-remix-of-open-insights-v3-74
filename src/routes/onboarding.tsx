@@ -178,7 +178,7 @@ function Onboarding() {
 
       <div
         data-onboarding-shell
-        className="grid min-h-dvh w-full grid-cols-1 items-stretch lg:grid-cols-[minmax(360px,34vw)_minmax(0,1fr)] xl:grid-cols-[minmax(340px,30vw)_minmax(500px,42vw)_minmax(360px,1fr)] 2xl:grid-cols-[minmax(360px,28vw)_minmax(560px,38vw)_minmax(420px,1fr)]"
+        className="grid min-h-dvh w-full grid-cols-1 items-stretch lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)] xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.25fr)_minmax(0,1fr)] 2xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.15fr)_minmax(0,1.05fr)]"
       >
         {/* Left: editorial art */}
         <aside className="relative hidden overflow-hidden lg:block">
@@ -299,8 +299,8 @@ function Onboarding() {
         </aside>
 
         {/* Right: form */}
-        <main className="relative flex items-center justify-center px-6 py-10 lg:px-10 lg:py-14 xl:px-12 xl:py-16 2xl:px-16">
-          <div className="w-full max-w-[560px]">
+        <main className="relative flex items-center justify-center px-6 py-10 lg:px-[8%] lg:py-14 xl:px-[9%] xl:py-16 2xl:px-[10%]">
+          <div className="w-full">
             {/* Mobile mini-hero */}
             <div className="mb-8 flex items-center justify-between lg:hidden">
               <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.32em] text-primary">
