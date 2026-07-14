@@ -740,7 +740,8 @@ function Onboarding() {
                   voltar
                 </span>
               </div>
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </main>
 
