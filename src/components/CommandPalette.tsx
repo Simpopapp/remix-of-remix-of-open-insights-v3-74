@@ -126,6 +126,7 @@ export function CommandPalette() {
             </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/ajuda" }))}>
               <HelpCircle className="mr-2 h-4 w-4" /> Ajuda
+            </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/revisao" }))}>
               <LineChart className="mr-2 h-4 w-4" /> Revisão semanal
             </CommandItem>
