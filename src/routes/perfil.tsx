@@ -7,6 +7,7 @@ import { useExercises } from "@/lib/user-state";
 import { course } from "@/lib/course-data";
 import { downloadDump, importDump, wipeAll } from "@/lib/storage";
 import { ActivityHeatmap } from "@/components/ActivityHeatmap";
+import { Sigil, SIGILS } from "@/components/Sigil";
 import { Download, RefreshCw, Trash2, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/perfil")({
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/perfil")({
 
 function PerfilPage() {
   const { profile, update, reset } = useProfile();
+  const isSigil = SIGILS.some((s) => s.id === profile.avatar);
   const { xp, level, levelProgress, rank, streak, watch } = useGamification();
   const { completedCount } = useProgress();
   const { count: exDone } = useExercises();
@@ -28,8 +30,8 @@ function PerfilPage() {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[320px_1fr]">
         <div className="rounded-2xl border border-primary/25 bg-card/50 p-6 text-center">
-          <div className="mx-auto grid h-24 w-24 place-items-center rounded-full border border-primary/40 bg-primary/10 text-4xl">
-            {profile.avatar}
+          <div className="mx-auto grid h-24 w-24 place-items-center rounded-full border border-primary/40 bg-primary/10 p-3">
+            {isSigil ? <Sigil id={profile.avatar} active className="h-full w-full" /> : <span className="text-4xl">{profile.avatar}</span>}
           </div>
           <div className="mt-4 font-serif text-2xl">{profile.name || "Sem nome"}</div>
           <div className="text-xs text-muted-foreground">@{profile.handle || "—"}</div>
@@ -114,16 +116,28 @@ function PerfilPage() {
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 />
               </Field>
-              <Field label="Avatar">
+              <Field label="Sigilo">
                 <div className="flex flex-wrap gap-1.5">
-                  {["◆","★","▲","●","♛","⚡","☾","✦","♞","☰"].map((a) => (
-                    <button
-                      key={a}
-                      type="button"
-                      onClick={() => update({ avatar: a })}
-                      className={"grid h-9 w-9 place-items-center rounded-md border text-lg " + (profile.avatar === a ? "border-primary bg-primary/15 text-primary" : "border-input hover:border-primary/50")}
-                    >{a}</button>
-                  ))}
+                  {SIGILS.map((sig) => {
+                    const active = profile.avatar === sig.id;
+                    return (
+                      <button
+                        key={sig.id}
+                        type="button"
+                        title={sig.name}
+                        aria-label={sig.name}
+                        onClick={() => update({ avatar: sig.id })}
+                        className={
+                          "grid h-11 w-11 place-items-center rounded-md border p-1.5 transition " +
+                          (active
+                            ? "border-primary bg-primary/15"
+                            : "border-input hover:border-primary/50")
+                        }
+                      >
+                        <Sigil id={sig.id} active={active} className="h-full w-full" />
+                      </button>
+                    );
+                  })}
                 </div>
               </Field>
             </div>
