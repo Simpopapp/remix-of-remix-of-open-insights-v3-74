@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   ArrowRight,
   Check,
@@ -93,6 +94,7 @@ function Onboarding() {
   const nav = useNavigate();
   const [step, setStep] = useState(0);
   const [focused, setFocused] = useState(false);
+  const [direction, setDirection] = useState(1);
   const [draft, setDraft] = useState<Profile>(() => ({
     ...profile,
     avatar: SIGILS.some((s) => s.id === profile.avatar) ? profile.avatar : "diamond",
@@ -121,9 +123,15 @@ function Onboarding() {
 
   const advance = () => {
     if (step === totalSteps - 1) return finish();
-    if (canAdvance) setStep((s) => Math.min(totalSteps - 1, s + 1));
+    if (canAdvance) {
+      setDirection(1);
+      setStep((s) => Math.min(totalSteps - 1, s + 1));
+    }
   };
-  const back = () => setStep((s) => Math.max(0, s - 1));
+  const back = () => {
+    setDirection(-1);
+    setStep((s) => Math.max(0, s - 1));
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
