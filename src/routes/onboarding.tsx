@@ -18,6 +18,7 @@ import {
 import { useProfile, GOALS, type Profile } from "@/lib/profile";
 import { fireConfetti } from "@/lib/confetti";
 import heroOnboarding from "@/assets/hero-onboarding.jpg";
+import { SIGILS, Sigil, DEFAULT_SIGIL_ID, isSigilId } from "@/components/Sigil";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
