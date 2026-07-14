@@ -358,39 +358,57 @@ function Onboarding() {
             </div>
 
             {/* Header — editorial */}
-            <div key={`h-${step}`} className="mb-10 animate-fade-in">
-              <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.32em] text-primary/85">
-                <StepIcon className="h-3.5 w-3.5" />
-                <span>{meta.kicker}</span>
-                <span className="h-px w-6 bg-primary/50" />
-                <span className="text-muted-foreground">{String(step + 1).padStart(2, "0")} de {String(totalSteps).padStart(2, "0")}</span>
-              </div>
-              <h1 className="mt-4 font-serif leading-[1.02] tracking-[-0.02em]" style={{ fontSize: "clamp(2.25rem, 3.6vw, 3.75rem)" }}>
-                {step === totalSteps - 1 ? (
-                  <>
-                    Tudo pronto,
-                    <br />
-                    <span className="italic text-gold-gradient">{draft.name || "aluno"}.</span>
-                  </>
-                ) : (
-                  meta.title
-                )}
-              </h1>
-              <p className="mt-3 max-w-md text-[14px] leading-relaxed text-muted-foreground">
-                {meta.sub}
-              </p>
-              <details className="group mt-3 max-w-md">
-                <summary className="cursor-pointer list-none font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/60 transition hover:text-primary/70">
-                  por que perguntamos?
-                </summary>
-                <blockquote className="mt-2 border-l border-primary/50 pl-3 font-serif text-[13px] italic leading-relaxed text-muted-foreground/85 animate-fade-in">
-                  {meta.epigraph}
-                </blockquote>
-              </details>
-            </div>
+            <AnimatePresence mode="wait" custom={direction} initial={false}>
+              <motion.div
+                key={`h-${step}`}
+                custom={direction}
+                initial={{ opacity: 0, y: direction > 0 ? 24 : -24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: direction > 0 ? -18 : 18 }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                className="mb-10"
+              >
+                <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.32em] text-primary/85">
+                  <StepIcon className="h-3.5 w-3.5" />
+                  <span>{meta.kicker}</span>
+                  <span className="h-px w-6 bg-primary/50" />
+                  <span className="text-muted-foreground">{String(step + 1).padStart(2, "0")} de {String(totalSteps).padStart(2, "0")}</span>
+                </div>
+                <h1 className="mt-4 font-serif leading-[1.02] tracking-[-0.02em]" style={{ fontSize: "clamp(2.25rem, 3.6vw, 3.75rem)" }}>
+                  {step === totalSteps - 1 ? (
+                    <>
+                      Tudo pronto,
+                      <br />
+                      <span className="italic text-gold-gradient">{draft.name || "aluno"}.</span>
+                    </>
+                  ) : (
+                    meta.title
+                  )}
+                </h1>
+                <p className="mt-3 max-w-md text-[14px] leading-relaxed text-muted-foreground">
+                  {meta.sub}
+                </p>
+                <details className="group mt-3 max-w-md">
+                  <summary className="cursor-pointer list-none font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/60 transition hover:text-primary/70">
+                    por que perguntamos?
+                  </summary>
+                  <blockquote className="mt-2 border-l border-primary/50 pl-3 font-serif text-[13px] italic leading-relaxed text-muted-foreground/85 animate-fade-in">
+                    {meta.epigraph}
+                  </blockquote>
+                </details>
+              </motion.div>
+            </AnimatePresence>
 
             {/* Body (no card chrome — editorial breathing) */}
-            <div key={`b-${step}`} className="animate-fade-in">
+            <AnimatePresence mode="wait" custom={direction} initial={false}>
+              <motion.div
+                key={`b-${step}`}
+                custom={direction}
+                initial={{ opacity: 0, y: direction > 0 ? 32 : -20, filter: "blur(6px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: direction > 0 ? -20 : 20, filter: "blur(6px)" }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+              >
               {step === 0 && (
                 <div className="space-y-8">
                   <Field label="Nome completo">
