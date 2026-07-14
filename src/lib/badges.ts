@@ -35,6 +35,8 @@ export function useBadges(): { badges: Badge[]; unlocked: number; total: number;
   const exercises = useExercises();
   const bookmarks = useBookmarks();
   const { list: highlights } = useHighlights();
+  const exam = useExam();
+  const { count: userProjectsCount } = useUserProjects();
 
   const pct = Math.round((completedCount / totalLessons) * 100);
   const modulesDone = course.modules.filter((m) => m.lessons.every((l) => isDone(m.id, l.id))).length;
