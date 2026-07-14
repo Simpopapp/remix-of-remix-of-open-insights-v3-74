@@ -3,7 +3,21 @@
 // the whole account state as one JSON file.
 
 const PREFIX = "aiae:";
-const VERSION = 1;
+const VERSION = 2;
+
+// Keys retired between versions. Removed on app boot and skipped on import.
+const OBSOLETE_KEYS = new Set<string>([
+  "aiae:streak:v1", // v1→v2: streak now derives from activity.ts + streak-freeze
+]);
+
+export function migrateStorage() {
+  if (typeof window === "undefined") return;
+  try {
+    for (const k of OBSOLETE_KEYS) window.localStorage.removeItem(k);
+  } catch {
+    // Ignore quota/privacy errors — obsolete keys will be cleaned on next attempt.
+  }
+}
 
 export type Dump = {
   version: number;
