@@ -1,6 +1,6 @@
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "@tanstack/react-router";
-import { Award, Bell, BookMarked, BookOpen, CalendarDays, FileText, Highlighter, Home, Layers, Library, LineChart, Map, NotebookPen, PlayCircle, Rocket, Search, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
+import { Award, Bell, BookMarked, BookOpen, CalendarDays, FileText, GraduationCap, HelpCircle, Highlighter, Home, Layers, Library, LineChart, Map, NotebookPen, PlayCircle, Rocket, Route as RouteIcon, ScrollText, Search, Sparkles, Sun, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { course } from "@/lib/course-data";
 import { buildIndex, resetIndex, searchContent, snippet } from "@/lib/search-index";
