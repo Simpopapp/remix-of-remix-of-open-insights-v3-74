@@ -156,7 +156,7 @@ function Onboarding() {
   const currentSigil = SIGILS.find((s) => s.id === draft.avatar) ?? SIGILS[0];
 
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-background text-foreground">
+    <div className="relative flex-1 w-full min-w-0 min-h-dvh overflow-hidden bg-background text-foreground">
       {/* Ambient — top-left key light, deep vignette, subtle vertical beam */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-[30%] -left-[15%] h-[900px] w-[900px] rounded-full bg-primary/[0.14] blur-[180px]" />
