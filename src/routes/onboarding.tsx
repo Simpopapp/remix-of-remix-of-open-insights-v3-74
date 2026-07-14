@@ -719,7 +719,7 @@ function Onboarding() {
         </main>
 
         {/* Right: live preview panel — fills desktop empty space */}
-        <LivePreview draft={draft} step={step} totalSteps={totalSteps} />
+        <LivePreview draft={draft} step={step} totalSteps={totalSteps} focused={focused} />
       </div>
     </div>
   );
@@ -729,10 +729,12 @@ function LivePreview({
   draft,
   step,
   totalSteps,
+  focused,
 }: {
   draft: Profile;
   step: number;
   totalSteps: number;
+  focused: boolean;
 }) {
   const goalMeta = GOAL_META[draft.goal];
   const GoalIcon = goalMeta.icon;
@@ -743,29 +745,21 @@ function LivePreview({
     pace: step >= 2,
   };
   const pct = Math.round(((step + 1) / totalSteps) * 100);
-  const chapterTitle = filled.name ? `Entrada de ${draft.name.split(" ")[0]}` : "Identidade em formação";
   return (
-    <aside className="relative hidden overflow-hidden border-l border-border/60 xl:block">
+    <aside
+      className={
+        "relative hidden overflow-hidden border-l border-border/60 xl:block transition-all duration-500 ease-out " +
+        (focused ? "opacity-40 blur-[1px]" : "opacity-100")
+      }
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,oklch(0.76_0.09_82/0.14),transparent_42%),radial-gradient(circle_at_80%_76%,oklch(0.55_0.16_290/0.18),transparent_48%),linear-gradient(180deg,oklch(0.17_0.02_280),oklch(0.10_0.02_285))]" />
       <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-primary/70 to-transparent" />
-      <div className="relative flex h-full flex-col gap-8 p-8 xl:p-10 2xl:p-14">
+      <div className="relative flex h-full flex-col gap-6 p-8 xl:p-10 2xl:p-14">
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
           <span className="inline-flex items-center gap-2 text-primary/85">
-            <Sparkles className="h-3 w-3" /> Prévia ao vivo
+            <Sparkles className="h-3 w-3" /> Espelho ao vivo
           </span>
           <span className="tabular-nums">{String(pct).padStart(3, " ")}%</span>
-        </div>
-
-        <div className="space-y-4">
-          <div className="font-mono text-[10px] uppercase tracking-[0.34em] text-primary/75">
-            Dossiê de entrada
-          </div>
-          <h2 className="max-w-[11ch] font-serif text-[2.45rem] leading-[0.98] tracking-tight text-foreground 2xl:text-[3.15rem]">
-            {chapterTitle}
-          </h2>
-          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-            A carteirinha, o plano inicial e o ritmo semanal se ajustam enquanto você responde.
-          </p>
         </div>
 
         <div className="grid flex-1 content-center gap-6 2xl:grid-cols-[minmax(0,1fr)_minmax(150px,0.55fr)] 2xl:items-center">
