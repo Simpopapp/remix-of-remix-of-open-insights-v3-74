@@ -163,6 +163,11 @@ function AppShell() {
   useGlobalPlaybackShortcuts();
 
   useEffect(() => {
+    // Clean up legacy storage keys retired in v2.
+    import("@/lib/storage").then((m) => m.migrateStorage());
+  }, []);
+
+  useEffect(() => {
     if (!profile.onboarded && pathname !== "/onboarding") {
       nav.navigate({ to: "/onboarding" });
     }

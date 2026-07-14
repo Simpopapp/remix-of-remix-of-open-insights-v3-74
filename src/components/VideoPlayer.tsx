@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, Pause, PictureInPicture2, RotateCcw, Volume2, VolumeX, Maximize2, Gauge } from "lucide-react";
 import { useVideoProgress } from "@/lib/video-progress";
-import { addWatchSeconds, pingStreak } from "@/lib/gamification";
+import { addWatchSeconds } from "@/lib/xp";
+import { pingActivity } from "@/lib/activity";
 import { onSeek, onCommand, reportTime } from "@/lib/video-bus";
 
 const RATES = [0.75, 1, 1.25, 1.5, 1.75, 2];
@@ -60,11 +61,12 @@ export function VideoPlayer({ moduleId, lessonId, poster, src, chapters, onNearC
       if (now - lastPingRef.current > 5000) {
         save(v.currentTime, v.duration || 0);
         addWatchSeconds(5);
+        pingActivity("watch");
         lastPingRef.current = now;
       }
       if (!firedRef.current && v.duration && v.currentTime / v.duration > 0.9) {
         firedRef.current = true;
-        pingStreak();
+        pingActivity("lesson");
         onNearComplete?.();
       }
     };

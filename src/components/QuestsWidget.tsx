@@ -63,7 +63,7 @@ export function QuestsWidget() {
                   ) : q.done ? (
                     <button
                       onClick={() => {
-                        claimQuest(q.id);
+                        claimQuest(q.id, q.xp);
                         toast.success(`+${q.xp} XP · ${q.title}`, { icon: "✦" });
                       }}
                       className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-primary-foreground hover:opacity-90"

@@ -2,6 +2,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { useProgress } from "./progress";
 import { useExercises } from "./user-state";
+import { addQuestXp } from "./xp";
 
 const KEY = "aiae:quests:v1";
 
@@ -82,10 +83,11 @@ export function addNoteWritten() {
   const s = read();
   write({ ...s, notesWritten: s.notesWritten + 1 });
 }
-export function claimQuest(id: string) {
+export function claimQuest(id: string, xp?: number) {
   const s = read();
   if (s.claimed.includes(id)) return;
   write({ ...s, claimed: [...s.claimed, id] });
+  if (typeof xp === "number" && xp > 0) addQuestXp(xp);
 }
 
 export type Quest = {

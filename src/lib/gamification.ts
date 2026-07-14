@@ -1,144 +1,44 @@
-import { useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
-import { useProgress } from "./progress";
-import { useExercises } from "./user-state";
+// Thin adapter over the canonical stores (xp.ts + streak.ts). Kept for
+// backwards compatibility with existing consumers of `useGamification()`.
+// New code should read from `useXp()` and `useStreak()` directly.
+import { useCallback, useMemo } from "react";
+import { useXp, addWatchSeconds } from "./xp";
+import { useStreak } from "./streak";
+import { pingActivity } from "./activity";
 
-const STREAK_KEY = "aiae:streak:v1";
-const WATCH_KEY = "aiae:watch:v1"; // seconds watched total
+export { addWatchSeconds };
 
-type StreakData = {
-  lastDay: string; // YYYY-MM-DD
-  current: number;
-  best: number;
-  freezes: number;
-};
-
-const DEFAULT_STREAK: StreakData = { lastDay: "", current: 0, best: 0, freezes: 2 };
-
-const listeners = new Set<() => void>();
-const notify = () => listeners.forEach((l) => l());
-
-function today() {
-  const d = new Date();
-  return d.toISOString().slice(0, 10);
-}
-function daysBetween(a: string, b: string) {
-  return Math.round((new Date(b).getTime() - new Date(a).getTime()) / 86400000);
-}
-
-let cachedStreakRaw: string | null | undefined;
-let cachedStreak: StreakData = DEFAULT_STREAK;
-
-function readStreak(): StreakData {
-  if (typeof window === "undefined") return DEFAULT_STREAK;
-  let raw: string | null;
-  try {
-    raw = window.localStorage.getItem(STREAK_KEY);
-  } catch {
-    return cachedStreak;
-  }
-  if (raw === cachedStreakRaw) return cachedStreak;
-  cachedStreakRaw = raw;
-  try {
-    cachedStreak = raw
-      ? { ...DEFAULT_STREAK, ...(JSON.parse(raw) as Partial<StreakData>) }
-      : DEFAULT_STREAK;
-  } catch {
-    cachedStreak = DEFAULT_STREAK;
-  }
-  return cachedStreak;
-}
-function writeStreak(s: StreakData) {
-  if (typeof window === "undefined") return;
-  const raw = JSON.stringify(s);
-  window.localStorage.setItem(STREAK_KEY, raw);
-  cachedStreakRaw = raw;
-  cachedStreak = s;
-  notify();
-}
-
-function readWatch(): number {
-  if (typeof window === "undefined") return 0;
-  return Number(window.localStorage.getItem(WATCH_KEY) ?? "0") || 0;
-}
-function writeWatch(seconds: number) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(WATCH_KEY, String(Math.max(0, Math.floor(seconds))));
-  notify();
-}
-
+/** @deprecated Streak advances automatically via `pingActivity`. Kept as a no-op alias. */
 export function pingStreak() {
-  const cur = readStreak();
-  const t = today();
-  if (cur.lastDay === t) return cur;
-  const gap = cur.lastDay ? daysBetween(cur.lastDay, t) : 1;
-  let next = { ...cur };
-  if (!cur.lastDay || gap === 1) {
-    next.current = cur.current + 1;
-  } else if (gap === 2 && cur.freezes > 0) {
-    next.freezes = cur.freezes - 1;
-    next.current = cur.current + 1;
-  } else {
-    next.current = 1;
-  }
-  next.best = Math.max(next.best, next.current);
-  next.lastDay = t;
-  writeStreak(next);
-  return next;
-}
-
-export function addWatchSeconds(s: number) {
-  writeWatch(readWatch() + s);
+  pingActivity("watch");
 }
 
 export function useGamification() {
-  const streak = useSyncExternalStore((cb) => {
-      listeners.add(cb);
-      return () => listeners.delete(cb);
-    }, readStreak, readStreak);
-  const watch = useSyncExternalStore((cb) => {
-      listeners.add(cb);
-      return () => listeners.delete(cb);
-    }, readWatch, readWatch);
+  const xp = useXp();
+  const streakData = useStreak();
 
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === STREAK_KEY || e.key === WATCH_KEY) notify();
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  const streak = useMemo(
+    () => ({
+      current: streakData.current,
+      best: streakData.longest,
+      freezes: streakData.freezesLeft,
+    }),
+    [streakData.current, streakData.longest, streakData.freezesLeft],
+  );
 
-  const { completedCount } = useProgress();
-  const { count: exercisesDone } = useExercises();
+  const ping = useCallback(() => pingActivity("watch"), []);
 
-  const xp = useMemo(() => {
-    // 50 XP por aula, 120 por exercício, 5 por hora assistida, 25 por dia de streak
-    return completedCount * 50 + exercisesDone * 120 + Math.floor(watch / 3600) * 5 + streak.current * 25;
-  }, [completedCount, exercisesDone, watch, streak.current]);
-
-  const level = useMemo(() => {
-    // Level curve: L requires L*L*100 XP total
-    let l = 1;
-    while ((l + 1) * (l + 1) * 100 <= xp) l++;
-    return l;
-  }, [xp]);
-
-  const nextLevelXp = (level + 1) * (level + 1) * 100;
-  const prevLevelXp = level * level * 100;
-  const levelProgress = Math.min(1, Math.max(0, (xp - prevLevelXp) / (nextLevelXp - prevLevelXp)));
-
-  const rank = useMemo(() => {
-    if (level >= 20) return "Arquiteto Imperial";
-    if (level >= 15) return "Mestre Concierge";
-    if (level >= 10) return "Operador de Elite";
-    if (level >= 6) return "Estrategista";
-    if (level >= 3) return "Aprendiz Avançado";
-    return "Iniciante";
-  }, [level]);
-
-  const ping = useCallback(() => pingStreak(), []);
-
-  return { streak, watch, xp, level, nextLevelXp, prevLevelXp, levelProgress, rank, ping };
+  return {
+    streak,
+    watch: xp.watch,
+    xp: xp.xp,
+    level: xp.level,
+    nextLevelXp: xp.nextLevelXp,
+    prevLevelXp: xp.prevLevelXp,
+    levelProgress: xp.levelProgress,
+    rank: xp.rank,
+    ping,
+  };
 }
 
 // ---------- Leaderboard (mock cohort) ----------

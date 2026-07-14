@@ -11,42 +11,31 @@ export const Route = createFileRoute("/atalhos")({
   component: AtalhosPage,
 });
 
+// SINGLE SOURCE OF TRUTH — every shortcut listed here is actually wired up.
+// Global player: src/lib/global-shortcuts.ts
+// Command palette: src/components/CommandPalette.tsx
+// Shortcuts overlay: src/components/ShortcutsOverlay.tsx
 const groups: { title: string; items: { keys: string[]; desc: string }[] }[] = [
   {
     title: "Global",
     items: [
-      { keys: ["⌘", "K"], desc: "Abrir busca / Command Palette" },
-      { keys: ["?"], desc: "Ver este overlay de atalhos" },
-      { keys: ["G", "D"], desc: "Ir para Dashboard" },
-      { keys: ["G", "N"], desc: "Ir para Notas" },
-      { keys: ["G", "F"], desc: "Ir para Modo Foco" },
-      { keys: ["G", "A"], desc: "Ir para Agenda" },
-      { keys: ["G", "R"], desc: "Ir para Revisão" },
-      { keys: ["G", "M"], desc: "Ir para Mapa do curso" },
+      { keys: ["⌘", "K"], desc: "Abrir Command Palette / busca global" },
+      { keys: ["Ctrl", "K"], desc: "Abrir Command Palette (Windows/Linux)" },
+      { keys: ["?"], desc: "Abrir/fechar este overlay de atalhos" },
     ],
   },
   {
     title: "Player de vídeo",
     items: [
       { keys: ["Espaço"], desc: "Play / pause" },
-      { keys: ["←", "→"], desc: "Voltar / avançar 5s" },
-      { keys: ["J", "L"], desc: "Voltar / avançar 10s" },
       { keys: ["K"], desc: "Play / pause" },
-      { keys: [",", "."], desc: "Diminuir / aumentar velocidade" },
+      { keys: ["→"], desc: "Avançar 10s" },
+      { keys: ["L"], desc: "Avançar 10s" },
+      { keys: ["←"], desc: "Voltar 10s" },
+      { keys: ["J"], desc: "Voltar 10s" },
+      { keys: [","], desc: "Diminuir velocidade" },
+      { keys: ["."], desc: "Aumentar velocidade" },
       { keys: ["F"], desc: "Tela cheia" },
-      { keys: ["P"], desc: "Picture-in-picture" },
-      { keys: ["M"], desc: "Mudo" },
-      { keys: ["0-9"], desc: "Pular para 0%-90% do vídeo" },
-    ],
-  },
-  {
-    title: "Aula",
-    items: [
-      { keys: ["C"], desc: "Marcar aula como concluída" },
-      { keys: ["B"], desc: "Favoritar / desfavoritar" },
-      { keys: ["N"], desc: "Focar campo de notas" },
-      { keys: ["["], desc: "Aula anterior" },
-      { keys: ["]"], desc: "Próxima aula" },
     ],
   },
 ];
@@ -60,7 +49,8 @@ function AtalhosPage() {
         <h1 className="font-serif text-4xl lg:text-5xl tracking-tight">Atalhos de teclado</h1>
       </div>
       <p className="mt-3 max-w-xl text-muted-foreground">
-        Voe pela plataforma sem tirar as mãos do teclado.
+        Cada atalho listado aqui está efetivamente implementado. Sem promessas
+        vazias — o que aparece funciona.
       </p>
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -87,6 +77,11 @@ function AtalhosPage() {
           </section>
         ))}
       </div>
+
+      <p className="mt-8 text-xs text-muted-foreground">
+        Não digitamos atalhos em campos de texto — foque fora de inputs para
+        acioná-los.
+      </p>
     </div>
   );
 }
