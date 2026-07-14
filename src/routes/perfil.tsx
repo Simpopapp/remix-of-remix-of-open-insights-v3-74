@@ -30,8 +30,8 @@ function PerfilPage() {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[320px_1fr]">
         <div className="rounded-2xl border border-primary/25 bg-card/50 p-6 text-center">
-          <div className="mx-auto grid h-24 w-24 place-items-center rounded-full border border-primary/40 bg-primary/10 text-4xl">
-            {profile.avatar}
+          <div className="mx-auto grid h-24 w-24 place-items-center rounded-full border border-primary/40 bg-primary/10 p-3">
+            {isSigil ? <Sigil id={profile.avatar} active className="h-full w-full" /> : <span className="text-4xl">{profile.avatar}</span>}
           </div>
           <div className="mt-4 font-serif text-2xl">{profile.name || "Sem nome"}</div>
           <div className="text-xs text-muted-foreground">@{profile.handle || "—"}</div>
