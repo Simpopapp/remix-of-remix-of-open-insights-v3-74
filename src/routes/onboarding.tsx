@@ -811,7 +811,18 @@ function LivePreview({
 
           <div className="flex items-center gap-4">
             <div className="relative grid h-24 w-24 shrink-0 place-items-center rounded-2xl p-4 ring-1 ring-primary/50 bg-[radial-gradient(circle_at_30%_25%,oklch(0.22_0.02_275),oklch(0.14_0.02_280))] shadow-[0_20px_60px_-20px_oklch(0.76_0.09_82/0.7),inset_0_1px_0_oklch(1_0_0/0.08)]">
-              <Sigil id={draft.avatar} active />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={draft.avatar}
+                  initial={{ opacity: 0, scale: 0.6, rotate: -12 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  exit={{ opacity: 0, scale: 0.6, rotate: 12 }}
+                  transition={{ type: "spring", stiffness: 220, damping: 18 }}
+                  className="h-full w-full"
+                >
+                  <Sigil id={draft.avatar} active />
+                </motion.div>
+              </AnimatePresence>
             </div>
             <div className="min-w-0 flex-1">
               <div
@@ -821,6 +832,14 @@ function LivePreview({
                 }
               >
                 {filled.name ? draft.name : "Seu nome"}
+                {!filled.name && (
+                  <motion.span
+                    aria-hidden
+                    className="ml-1 inline-block h-6 w-[2px] translate-y-1 bg-primary/70 align-middle"
+                    animate={{ opacity: [1, 0, 1] }}
+                    transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
+                  />
+                )}
               </div>
               <div className="mt-1 truncate font-mono text-xs text-primary/70">
                 @{draft.handle || "handle"}
@@ -853,7 +872,16 @@ function LivePreview({
           <div className="grid grid-cols-3 gap-3 2xl:grid-cols-1">
             <MiniMetric label="Sigilo" value={selectedSigil.name} active={filled.name} />
             <MiniMetric label="Aulas" value={String(Math.max(1, Math.round(draft.weeklyHours / 2))).padStart(2, "0")} active={filled.pace} />
-            <MiniMetric label="Ritmo" value={`${draft.weeklyHours}h`} active={filled.pace} />
+            <MiniMetric
+              label="Ritmo"
+              value={
+                <span className="inline-flex items-baseline">
+                  <motion.span>{hoursDisplay}</motion.span>
+                  <span>h</span>
+                </span>
+              }
+              active={filled.pace}
+            />
           </div>
         </div>
 
