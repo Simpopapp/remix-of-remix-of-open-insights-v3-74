@@ -31,6 +31,14 @@ import { useGamification } from "@/lib/gamification";
 import { useInbox } from "@/lib/inbox";
 import { useAutoFreeze } from "@/lib/auto-freeze";
 import { useGlobalPlaybackShortcuts } from "@/lib/global-shortcuts";
+import { Sigil, SIGILS } from "@/components/Sigil";
+
+function ProfileAvatar() {
+  const { profile } = useProfile();
+  const isSigil = SIGILS.some((s) => s.id === profile.avatar);
+  if (isSigil) return <Sigil id={profile.avatar} active className="h-full w-full" />;
+  return <span suppressHydrationWarning className="text-sm">{profile.avatar || "◆"}</span>;
+}
 
 function NotFoundComponent() {
   return (
