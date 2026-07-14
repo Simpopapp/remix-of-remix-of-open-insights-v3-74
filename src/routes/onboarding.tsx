@@ -92,6 +92,7 @@ function Onboarding() {
   const { profile, update } = useProfile();
   const nav = useNavigate();
   const [step, setStep] = useState(0);
+  const [focused, setFocused] = useState(false);
   const [draft, setDraft] = useState<Profile>(() => ({
     ...profile,
     avatar: SIGILS.some((s) => s.id === profile.avatar) ? profile.avatar : "diamond",
@@ -181,7 +182,12 @@ function Onboarding() {
         className="grid min-h-dvh w-full grid-cols-1 items-stretch lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)] xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.25fr)_minmax(0,1fr)] 2xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.15fr)_minmax(0,1.05fr)]"
       >
         {/* Left: editorial art */}
-        <aside className="relative hidden overflow-hidden lg:block">
+        <aside
+          className={
+            "relative hidden overflow-hidden lg:block transition-all duration-500 ease-out " +
+            (focused ? "opacity-40 blur-[1px]" : "opacity-100")
+          }
+        >
           <img
             src={heroOnboarding}
             alt=""
@@ -226,20 +232,11 @@ function Onboarding() {
               </div>
             </header>
 
-            <div className="max-w-[440px]">
+            <div className="max-w-[360px]">
               <div className="font-mono text-[10px] uppercase tracking-[0.36em] text-primary">
-                {meta.kicker} — {String(step + 1).padStart(2, "0")} / {String(totalSteps).padStart(2, "0")}
+                Ritual — {String(step + 1).padStart(2, "0")} / {String(totalSteps).padStart(2, "0")}
               </div>
-              <h2 className="mt-5 font-serif text-[2.6rem] leading-[1.02] tracking-[-0.02em] text-balance xl:text-[3rem]">
-                Antes de entrar,
-                <br />
-                <span className="italic text-gold-gradient">um breve ritual.</span>
-              </h2>
-              <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/75">
-                Quatro portas. Cada uma calibra o que a plataforma faz por você.
-              </p>
-
-              <ol className="relative mt-10 space-y-1.5">
+              <ol className="relative mt-8 space-y-1.5">
                 <span
                   aria-hidden
                   className="pointer-events-none absolute left-[15px] top-4 bottom-4 w-px bg-white/10"
@@ -255,14 +252,14 @@ function Onboarding() {
                           ? "bg-primary/[0.08] text-white"
                           : state === "done"
                           ? "text-primary/90"
-                          : "text-white/45")
+                          : "text-white/35")
                       }
                     >
                       <span
                         className={
                           "relative z-10 grid h-8 w-8 place-items-center rounded-full font-mono text-[11px] tabular-nums transition-all " +
                           (state === "active"
-                            ? "bg-primary text-primary-foreground shadow-[0_0_0_4px_oklch(0.76_0.09_82/0.18),0_10px_30px_-8px_oklch(0.76_0.09_82/0.7)]"
+                            ? "bg-primary text-primary-foreground shadow-[0_0_0_4px_oklch(0.76_0.09_82/0.18),0_10px_30px_-8px_oklch(0.76_0.09_82/0.7)] animate-[pulse_2.4s_ease-in-out_infinite]"
                             : state === "done"
                             ? "border border-primary/40 bg-primary/15 text-primary"
                             : "border border-white/20 bg-[oklch(0.08_0.02_280/0.6)]")
@@ -272,6 +269,11 @@ function Onboarding() {
                       </span>
                       <div className="min-w-0 flex-1">
                         <div className="font-mono text-[11px] uppercase tracking-[0.28em]">{s.key}</div>
+                        {state === "active" && (
+                          <div className="mt-1 font-serif text-[13px] italic leading-snug text-white/70 animate-fade-in">
+                            {s.kicker}
+                          </div>
+                        )}
                       </div>
                       <span
                         className={
@@ -283,10 +285,6 @@ function Onboarding() {
                   );
                 })}
               </ol>
-
-              <blockquote className="mt-10 border-l border-primary/70 pl-5 font-serif text-[15px] italic leading-relaxed text-white/85">
-                {meta.epigraph}
-              </blockquote>
             </div>
 
             <footer className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.32em] text-white/55">
@@ -299,7 +297,25 @@ function Onboarding() {
         </aside>
 
         {/* Right: form */}
-        <main className="relative flex items-center justify-center px-6 py-10 lg:px-[8%] lg:py-14 xl:px-[9%] xl:py-16 2xl:px-[10%]">
+        <main
+          onFocusCapture={() => setFocused(true)}
+          onBlurCapture={() => setFocused(false)}
+          onPointerEnter={() => setFocused(true)}
+          onPointerLeave={() => setFocused(false)}
+          className="relative flex items-center justify-center px-6 py-10 lg:px-[8%] lg:py-14 xl:px-[9%] xl:py-16 2xl:px-[10%]"
+        >
+          {/* Spotlight vignette when focused */}
+          <div
+            aria-hidden
+            className={
+              "pointer-events-none absolute inset-0 -z-0 transition-opacity duration-500 " +
+              (focused ? "opacity-100" : "opacity-0")
+            }
+            style={{
+              background:
+                "radial-gradient(ellipse at 50% 45%, oklch(0.76 0.09 82 / 0.06) 0%, transparent 55%)",
+            }}
+          />
           <div className="w-full">
             {/* Mobile mini-hero */}
             <div className="mb-8 flex items-center justify-between lg:hidden">
@@ -341,7 +357,7 @@ function Onboarding() {
                 <span className="h-px w-6 bg-primary/50" />
                 <span className="text-muted-foreground">{String(step + 1).padStart(2, "0")} de {String(totalSteps).padStart(2, "0")}</span>
               </div>
-              <h1 className="mt-4 font-serif text-[2.75rem] leading-[1.02] tracking-[-0.02em] lg:text-[3.25rem]">
+              <h1 className="mt-4 font-serif leading-[1.02] tracking-[-0.02em]" style={{ fontSize: "clamp(2.25rem, 3.6vw, 3.75rem)" }}>
                 {step === totalSteps - 1 ? (
                   <>
                     Tudo pronto,
@@ -352,9 +368,17 @@ function Onboarding() {
                   meta.title
                 )}
               </h1>
-              <p className="mt-4 max-w-md text-[15px] leading-relaxed text-muted-foreground">
+              <p className="mt-3 max-w-md text-[14px] leading-relaxed text-muted-foreground">
                 {meta.sub}
               </p>
+              <details className="group mt-3 max-w-md">
+                <summary className="cursor-pointer list-none font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/60 transition hover:text-primary/70">
+                  por que perguntamos?
+                </summary>
+                <blockquote className="mt-2 border-l border-primary/50 pl-3 font-serif text-[13px] italic leading-relaxed text-muted-foreground/85 animate-fade-in">
+                  {meta.epigraph}
+                </blockquote>
+              </details>
             </div>
 
             {/* Body (no card chrome — editorial breathing) */}
@@ -695,7 +719,7 @@ function Onboarding() {
         </main>
 
         {/* Right: live preview panel — fills desktop empty space */}
-        <LivePreview draft={draft} step={step} totalSteps={totalSteps} />
+        <LivePreview draft={draft} step={step} totalSteps={totalSteps} focused={focused} />
       </div>
     </div>
   );
@@ -705,10 +729,12 @@ function LivePreview({
   draft,
   step,
   totalSteps,
+  focused,
 }: {
   draft: Profile;
   step: number;
   totalSteps: number;
+  focused: boolean;
 }) {
   const goalMeta = GOAL_META[draft.goal];
   const GoalIcon = goalMeta.icon;
@@ -719,29 +745,21 @@ function LivePreview({
     pace: step >= 2,
   };
   const pct = Math.round(((step + 1) / totalSteps) * 100);
-  const chapterTitle = filled.name ? `Entrada de ${draft.name.split(" ")[0]}` : "Identidade em formação";
   return (
-    <aside className="relative hidden overflow-hidden border-l border-border/60 xl:block">
+    <aside
+      className={
+        "relative hidden overflow-hidden border-l border-border/60 xl:block transition-all duration-500 ease-out " +
+        (focused ? "opacity-40 blur-[1px]" : "opacity-100")
+      }
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,oklch(0.76_0.09_82/0.14),transparent_42%),radial-gradient(circle_at_80%_76%,oklch(0.55_0.16_290/0.18),transparent_48%),linear-gradient(180deg,oklch(0.17_0.02_280),oklch(0.10_0.02_285))]" />
       <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-primary/70 to-transparent" />
-      <div className="relative flex h-full flex-col gap-8 p-8 xl:p-10 2xl:p-14">
+      <div className="relative flex h-full flex-col gap-6 p-8 xl:p-10 2xl:p-14">
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
           <span className="inline-flex items-center gap-2 text-primary/85">
-            <Sparkles className="h-3 w-3" /> Prévia ao vivo
+            <Sparkles className="h-3 w-3" /> Espelho ao vivo
           </span>
           <span className="tabular-nums">{String(pct).padStart(3, " ")}%</span>
-        </div>
-
-        <div className="space-y-4">
-          <div className="font-mono text-[10px] uppercase tracking-[0.34em] text-primary/75">
-            Dossiê de entrada
-          </div>
-          <h2 className="max-w-[11ch] font-serif text-[2.45rem] leading-[0.98] tracking-tight text-foreground 2xl:text-[3.15rem]">
-            {chapterTitle}
-          </h2>
-          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-            A carteirinha, o plano inicial e o ritmo semanal se ajustam enquanto você responde.
-          </p>
         </div>
 
         <div className="grid flex-1 content-center gap-6 2xl:grid-cols-[minmax(0,1fr)_minmax(150px,0.55fr)] 2xl:items-center">

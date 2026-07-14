@@ -1,156 +1,88 @@
-# PRD de Conclusão — Área do Aluno "AI App Empire"
+# Plano: Onboarding com foco cinematográfico
 
-Documento de fechamento do produto. Não é lista de bugs — é o contrato do que precisa estar verdadeiro para a plataforma sustentar o preço high-ticket. Cada seção define: **problema real → princípio → escopo → critério de aceite → métrica de sucesso**.
+## Diagnóstico do problema
 
----
+Hoje a tela mostra **três seções simultâneas** (rail lateral esquerdo com passos + main com pergunta ativa + painel direito de contexto/preview). Cada uma é bonita isolada, mas juntas competem por atenção:
 
-## 0. Princípios de qualidade (não-negociáveis)
+- O olho não sabe onde pousar primeiro (3 zonas de igual peso visual)
+- O usuário lê tudo antes de agir → paralisia
+- Sem hierarquia clara entre "o que EU faço agora" vs "meta" vs "preview"
+- Densidade textual (epígrafes, hints, kickers, subtítulos, meta) sobrecarrega já no Ato I
 
-1. **Nenhum botão mente.** Toda ação visível ou faz o que promete, ou não existe.
-2. **Uma fonte de verdade por conceito.** Streak, XP, progresso e nível têm UM cálculo canônico consumido por todas as telas.
-3. **Todo evento fecha loop.** Ação do usuário → efeito no estado → feedback imediato (toast/confetti) → registro persistente (inbox/atividade/badge).
-4. **Nada é órfão.** Toda tela existente aparece na navegação, no ⌘K e no mapa de atalhos, ou é removida.
-5. **Estado sobrevive ao refresh.** Nenhuma feature depende de memória volátil.
-6. **Mock é honesto.** Conteúdo demonstrativo é rotulado como "amostra" quando não é interativo, nunca finge ser real.
+O objetivo: manter as 3 zonas (elas são boas), mas fazer **uma dominar** a cada momento, com as outras recuando para papéis de suporte.
 
 ---
 
-## 1. Fundações de dados (P0 — bloqueia tudo)
+## Onda 1 — Foco radical (hierarquia + redução de ruído)
 
-### 1.1 Unificar Streak
-- **Problema:** `gamification.ts` e `streak.ts` calculam streak de formas diferentes; dashboard e `/revisao` mostram números divergentes.
-- **Escopo:** `streak.ts` (baseado em `activity.ts` + freezes) vira canônico. `gamification.ts` importa dali, não recalcula. `pingStreak` legado é removido; `pingActivity` passa a ser o único gatilho.
-- **Aceite:** grep por `pingStreak` retorna zero. Dashboard, `/revisao`, `/conquistas`, `/estatisticas` mostram o mesmo número em qualquer instante.
+Objetivo: no primeiro segundo, o usuário sabe **exatamente** o que fazer.
 
-### 1.2 Unificar XP e Nível
-- **Problema:** três fórmulas de XP espalhadas; `claimQuest` promete XP mas não soma no total real; nível no header pode discordar do nível no `/conquistas`.
-- **Escopo:** criar `src/lib/xp.ts` com `computeXp({lessons, exercises, watchSeconds, streakDays, questsXp})` e store persistente de `questsXp` acumulado. `useGamification` e `useQuests` consomem daqui.
-- **Aceite:** reivindicar quest anima o contador de XP no header e altera a barra de nível em tempo real. Todas as telas leem o mesmo `xp`/`level`/`rank`.
+1. **Zona ativa em destaque cinematográfico**
+   - Main central ganha ~55–60% da largura, tipografia da pergunta em display grande (clamp 40→64px), input/CTA com peso visual dominante.
+   - Rail esquerdo e painel direito descem para ~65% de opacidade em repouso; voltam a 100% ao hover/focus.
 
-### 1.3 Storage versionado e resiliente
-- **Escopo:** `storage.ts` ganha migração `v1→v2` para consolidar chaves obsoletas (`aiae:streak:v1` → derivado). Try/catch em toda leitura; quota exceeded degrada silenciosamente.
-- **Aceite:** limpar `localStorage` no meio da sessão não quebra a UI; recarregar volta ao estado inicial sem crash.
+2. **Rail esquerdo vira "trilha", não "menu"**
+   - Remover títulos/subtítulos dos passos inativos — mostrar só ícone + número + label curta (1 palavra: Identidade, Objetivo, Ritmo, Selo).
+   - Passo ativo expande com kicker + micro-descrição; os outros colapsam para chips verticais finos.
+   - Linha conectora animada (progress spine) entre os pontos.
 
----
+3. **Painel direito vira "eco", não "co-protagonista"**
+   - Remover epígrafes e textos longos do painel; ele passa a refletir **em tempo real** o input do usuário (nome digitado → aparece no card de preview; goal escolhido → ícone/pace atualiza; ritmo → barra preenche).
+   - Sem conteúdo próprio quando o campo está vazio: mostra só um estado "aguardando" sutil (silhueta do sigil + linha piscando).
 
-## 2. Ciclo pedagógico completo (P0)
+4. **Reduzir texto por passo**
+   - 1 pergunta (h1) + 1 subtítulo curto (máx 12 palavras) + campo + CTA. Nada mais no viewport inicial do ato.
+   - Epígrafes movidas para um `<details>` "por que perguntamos?" recolhido.
 
-### 2.1 Aula → Progresso → Certificado
-- **Problema hoje:** `/certificado` libera por % de aulas assistidas e ignora `/prova`. Certificado sem prova = credencial sem valor.
-- **Regra final:**
-  - Certificado exige: **≥ 90% aulas** + **prova final aprovada (≥ 70%)** + **≥ 1 projeto na vitrine**.
-  - Cada requisito tem estado visual (bloqueado / pendente / concluído) com CTA direto.
-- **Aceite:** botão "Emitir certificado" só habilita quando os três estados são verdes; hash determinístico gera ID; `/verificar/$id` reconstrói.
-
-### 2.2 Prova final séria
-- **Escopo:** pool ≥ 40 questões, sorteio de 20, timer 30min, 3 tentativas com cooldown de 24h (mock: cooldown simulado), gabarito revelado só após aprovação, resultado persistido para o certificado consumir.
-- **Aceite:** reprovação bloqueia botão por período; aprovação dispara confetti + inbox + badge + destrava certificado.
-
-### 2.3 Exercícios com estado real
-- **Escopo:** cada exercício tem status (não iniciado / em progresso / entregue), campo de submissão (texto + link), e aparece em `/revisao` quando entregue nos últimos 7d.
-- **Aceite:** entregar exercício soma XP via `xp.ts`, incrementa quest, aparece na atividade e no inbox.
+5. **CTA único e óbvio**
+   - Botão "Continuar →" com brilho/gradient, sempre no mesmo lugar (canto inferior direito da main). Enter também avança.
+   - Voltar vira link fantasma pequeno, não botão.
 
 ---
 
-## 3. Gamificação que fecha loop (P1)
+## Onda 2 — Cinemática progressiva (revelação em camadas)
 
-### 3.1 Notificações de conquista
-- Todo `unlock` de badge, `level up` e `quest claim` gera item em `/inbox` com deep-link, dispara toast e (para badges/level) confetti.
-- Overlay de level-up existente vira consumidor do mesmo evento — hoje ele dispara solto.
+Objetivo: transformar o onboarding em uma **experiência que se desenrola**, não uma tela estática.
 
-### 3.2 Badges alcançáveis
-- Auditar `badges.ts`: cada badge precisa ter um contador real incrementado em algum lugar do código. Badges sem gatilho são removidos ou o gatilho é implementado.
-- Caso "Ferramenteiro": `CommandPalette` chama `incrementCmdkCount()` em cada abertura.
+1. **Entrada em ato — reveal sequencial**
+   - Ao carregar/trocar de passo: rail fade-in (150ms) → pergunta desliza de baixo (300ms, spring) → painel direito materializa (450ms).
+   - O usuário vê a interface se montar → entende naturalmente a ordem de leitura.
 
-### 3.3 Quests com efeito
-- `claimQuest(id)` chama `addQuestXp(xp)` em `xp.ts`. Widget de quests mostra XP subindo. Quest reivindicada não pode ser reivindicada de novo (já ok) e persiste ao refresh.
+2. **Spotlight dinâmico por foco**
+   - Ao focar o input: rail e painel escurecem mais (opacity 0.4, blur sutil 2px), vinheta radial suave centraliza atenção no campo.
+   - Ao desfocar: tudo volta ao repouso. Sensação de "modo edição" vs "modo panorama".
 
----
+3. **Painel direito como espelho vivo (live mirror)**
+   - Digitou o nome → card de perfil aparece com typewriter no handle sugerido.
+   - Escolheu objetivo → ícone do goal faz morph, pace anima contando (0h → 8h).
+   - Ajustou ritmo → linha do tempo semanal preenche dia a dia.
+   - Confirmação (Ato IV): o painel vira **o certificado final**, com o sigil escolhido pulsando + confetti no submit.
 
-## 4. Navegação e descoberta (P1)
+4. **Trilha esquerda vira storyline**
+   - Passos concluídos: ícone vira check dourado, label ganha strike sutil e brilho breve.
+   - Passo atual: pulso suave no ícone (respiração 2s).
+   - Passos futuros: silhueta neutra, sem detalhe → mistério/promessa.
 
-### 4.1 Fim das rotas órfãs
-- Auditar toda rota em `src/routes/*.tsx`: precisa estar em sidebar OU em ⌘K OU ser filha explícita de outra rota. Ex.: `/marcadores`, `/glossario`, `/novidades`, `/hoje`, `/ajuda`, `/atalhos` — todas indexadas no ⌘K com descrição.
+5. **Transições entre atos com narrativa**
+   - Ao avançar: pergunta atual sobe e desvanece, próxima entra por baixo. Painel direito faz cross-fade dos widgets.
+   - Micro-som opcional (toggle mudo por padrão) — click sutil ao avançar.
 
-### 4.2 Atalhos honestos
-- `/atalhos` é gerado a partir de `global-shortcuts.ts` (fonte única). Documento e código não podem divergir.
-- Atalhos do player (`J`/`L`/`,`/`.`/`M`) implementados de verdade no `VideoPlayer.tsx` ou removidos da lista.
-
-### 4.3 Busca global completa
-- Índice inclui: aulas, transcrições, notas, exercícios, prompts, glossário, marcadores. Resultados agrupados por tipo, com deep-link (incluindo `?t=` para timestamps).
-
----
-
-## 5. Fechamento de features "esqueleto" (P1)
-
-Para cada tela abaixo, mapear cada elemento clicável e garantir que ou funciona ou some.
-
-| Tela | Ação hoje | Ação final |
-|---|---|---|
-| `/comunidade` | Reservar ✔ (feito) | + Filtros de evento funcionam, "Ver gravação" leva à aula, botão "Perguntar" abre inbox de mentor |
-| `/biblioteca` | Download ✔ | + Filtro por categoria, badge "amostra" nos assets stub, busca local |
-| `/projetos` (Vitrine) | Ver lista | Submeter projeto (form local) → aparece na vitrine → conta pro certificado |
-| `/agenda` | Planejar semana | Eventos geram entrada em `activity.ts` quando marcados como concluídos; sincroniza com quests |
-| `/foco` (Pomodoro) | Timer | Ao completar, chama `addFocusMinutes` + `pingActivity('focus')` + XP + som opcional |
-| `/prompts` | Copiar | + Favoritar prompt persistente, categoria, busca |
-| `/ranking` | Lista mock | Rótulo "cohort simulada" visível; posição do usuário destacada com sua foto/avatar real do perfil |
-| `/trilhas` | Lista trilhas | Usa `profile.goal` do onboarding para ordenar e recomendar "sua trilha" |
-| `/inbox` | Lê mensagens | Marca como lida, arquiva, filtra por tipo (sistema/mentor/conquista) |
-| `/perfil` | Vê dados | Edita nome/avatar/timezone/meta; mudanças refletem no header e no ranking |
-
-**Aceite geral:** um QA manual clicando em cada botão de cada tela não encontra nada que não responda.
+6. **Estado terminal memorável (Ato IV)**
+   - Layout colapsa: rail e painel se fundem no centro formando o **cartão-selo final** (identidade + objetivo + ritmo + sigil), com CTA "Entrar no painel" pulsando.
+   - Confetti + fade cinematográfico para a rota `/`.
 
 ---
 
-## 6. UX de acabamento (P2)
+## Escopo técnico (resumo)
 
-- **Estados vazios:** toda lista vazia tem ilustração/ícone + frase + CTA. Nada de "Nenhum item".
-- **Skeletons:** rotas que dependem de cálculo pesado (`/estatisticas`, `/ranking`, `/revisao`) mostram skeleton no primeiro paint.
-- **Erro por rota:** `errorComponent` e `notFoundComponent` em toda rota com loader (hoje quase nenhuma tem).
-- **Acessibilidade:** foco visível global, `aria-live` para toasts, skip-link no `__root`, tap-targets ≥ 44px auditados no mobile.
-- **SEO por rota:** `head()` específico em cada rota pública (hoje só root); títulos <60 chars.
+- Arquivo único: `src/routes/onboarding.tsx` (+ possível extração de `LiveMirror`, `StepRail` para componentes locais).
+- Animações: `framer-motion` (já disponível). Nenhuma dep nova.
+- Sem mudança na lógica de `useProfile`, GOALS, rotas ou persistência.
+- Preservar totalmente os 4 passos, ordem, validações e submit.
 
----
+## Entregas
 
-## 7. Onda de execução recomendada
+- Onda 1 → PR 1: refator visual + redução de texto + spotlight base.
+- Onda 2 → PR 2: motion sequencial, live mirror, estado terminal.
 
-**Onda 1 — Fundações (bloqueante, ~1 lote grande)**
-1.1 Streak unificado · 1.2 XP unificado · 1.3 storage versionado · 3.3 quests com XP real · 4.2 atalhos honestos.
-
-**Onda 2 — Ciclo pedagógico**
-2.1 Certificado real · 2.2 Prova séria · 2.3 Exercícios com submissão · 3.1 Notificações de conquista · 3.2 Badges alcançáveis.
-
-**Onda 3 — Fechamento de esqueletos**
-Tabela da seção 5, tela por tela, na ordem: comunidade → projetos → agenda → foco → prompts → inbox → perfil → ranking → trilhas → biblioteca.
-
-**Onda 4 — Descoberta e acabamento**
-4.1 Rotas indexadas · 4.3 Busca global expandida · Seção 6 inteira.
-
----
-
-## 8. Definição de "pronto" do produto
-
-A área do aluno está pronta quando, em uma sessão de 15 min, um avaliador consegue:
-
-1. Fazer onboarding e ver sua trilha personalizada no dashboard.
-2. Assistir uma aula, anotar com timestamp, favoritar, marcar concluída → ver XP subir, quest avançar, streak pingar, atividade acender.
-3. Entregar um exercício → ver aparecer em `/revisao` e no inbox.
-4. Reservar um evento → ver no inbox e na agenda.
-5. Fazer a prova de um módulo → ganhar badge → receber notificação no inbox.
-6. Chegar em `/certificado` e ver exatamente o que falta (aulas, prova final, projeto) com CTAs diretos.
-7. Usar ⌘K para encontrar qualquer tela ou aula, e `?` para ver atalhos que de fato funcionam.
-
-Nenhum passo desses depende de "imaginar que funciona".
-
----
-
-## 9. Fora de escopo (explícito)
-
-- Backend real, auth, pagamentos (usuário pediu mock).
-- Comentários sociais persistentes multi-usuário.
-- Vídeo real com transcodificação — segue `<video>` + mocks.
-- Notificações push nativas / email.
-
----
-
-Confirma esse PRD (ou pede ajuste em seções específicas) que eu executo Onda 1 inteira num único lote, sem atalhos.
+Confirma para eu executar a Onda 1?
