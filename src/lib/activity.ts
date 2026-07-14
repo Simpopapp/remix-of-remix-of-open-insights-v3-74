@@ -32,6 +32,19 @@ function write(next: ActivityMap) {
   notify();
 }
 
+const HOURS_KEY = "aiae:activity-hours:v1";
+function bumpHourCounter() {
+  if (typeof window === "undefined") return;
+  const hr = new Date().getHours();
+  try {
+    const raw = window.localStorage.getItem(HOURS_KEY);
+    const obj = raw ? JSON.parse(raw) : {};
+    if (hr < 8) obj.early = (obj.early ?? 0) + 1;
+    else if (hr >= 22) obj.night = (obj.night ?? 0) + 1;
+    window.localStorage.setItem(HOURS_KEY, JSON.stringify(obj));
+  } catch { /* noop */ }
+}
+
 export function pingActivity(kind: ActivityKind, amount = 1) {
   const cur = read();
   const t = today();
@@ -39,6 +52,7 @@ export function pingActivity(kind: ActivityKind, amount = 1) {
   day[kind] = (day[kind] ?? 0) + amount;
   cur[t] = day;
   write(cur);
+  bumpHourCounter();
 }
 
 function subscribe(cb: () => void) {
