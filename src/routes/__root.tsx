@@ -221,9 +221,9 @@ function AppShell() {
             <Link
               to="/perfil"
               aria-label="Abrir perfil"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-primary/40 bg-primary/10 text-sm hover:border-primary"
+              className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-full border border-primary/40 bg-primary/10 p-1 text-sm hover:border-primary"
             >
-              <span suppressHydrationWarning>{profile.avatar}</span>
+              <ProfileAvatar />
             </Link>
           </div>
         </header>
