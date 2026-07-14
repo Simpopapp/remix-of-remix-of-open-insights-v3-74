@@ -712,16 +712,19 @@ function LivePreview({
 }) {
   const goalMeta = GOAL_META[draft.goal];
   const GoalIcon = goalMeta.icon;
+  const selectedSigil = SIGILS.find((s) => s.id === draft.avatar) ?? SIGILS[0];
   const filled = {
     name: draft.name.trim().length >= 2,
     goal: step >= 1,
     pace: step >= 2,
   };
   const pct = Math.round(((step + 1) / totalSteps) * 100);
+  const chapterTitle = filled.name ? `Entrada de ${draft.name.split(" ")[0]}` : "Identidade em formação";
   return (
     <aside className="relative hidden overflow-hidden border-l border-border/60 xl:block">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_10%,oklch(0.76_0.09_82/0.10),transparent_55%),radial-gradient(circle_at_20%_90%,oklch(0.55_0.16_290/0.14),transparent_60%)]" />
-      <div className="relative flex h-full flex-col justify-between p-10">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,oklch(0.76_0.09_82/0.14),transparent_42%),radial-gradient(circle_at_80%_76%,oklch(0.55_0.16_290/0.18),transparent_48%),linear-gradient(180deg,oklch(0.17_0.02_280),oklch(0.10_0.02_285))]" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-primary/70 to-transparent" />
+      <div className="relative flex h-full flex-col gap-8 p-8 xl:p-10 2xl:p-14">
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
           <span className="inline-flex items-center gap-2 text-primary/85">
             <Sparkles className="h-3 w-3" /> Prévia ao vivo
@@ -729,8 +732,21 @@ function LivePreview({
           <span className="tabular-nums">{String(pct).padStart(3, " ")}%</span>
         </div>
 
-        {/* Membership card */}
-        <div className="relative overflow-hidden rounded-3xl p-6 ring-1 ring-primary/25 bg-[linear-gradient(160deg,oklch(0.14_0.02_280/0.9),oklch(0.10_0.02_285/0.9))] shadow-[0_40px_100px_-40px_oklch(0.76_0.09_82/0.5),inset_0_1px_0_oklch(1_0_0/0.06)]">
+        <div className="space-y-4">
+          <div className="font-mono text-[10px] uppercase tracking-[0.34em] text-primary/75">
+            Dossiê de entrada
+          </div>
+          <h2 className="max-w-[11ch] font-serif text-[2.45rem] leading-[0.98] tracking-tight text-foreground 2xl:text-[3.15rem]">
+            {chapterTitle}
+          </h2>
+          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+            A carteirinha, o plano inicial e o ritmo semanal se ajustam enquanto você responde.
+          </p>
+        </div>
+
+        <div className="grid flex-1 content-center gap-6 2xl:grid-cols-[minmax(0,1fr)_minmax(150px,0.55fr)] 2xl:items-center">
+          {/* Membership card */}
+          <div className="relative overflow-hidden rounded-3xl p-6 ring-1 ring-primary/25 bg-[linear-gradient(160deg,oklch(0.14_0.02_280/0.94),oklch(0.10_0.02_285/0.94))] shadow-[0_40px_100px_-40px_oklch(0.76_0.09_82/0.5),inset_0_1px_0_oklch(1_0_0/0.06)]">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
           <span className="pointer-events-none absolute left-3 top-3 h-3 w-3 border-l border-t border-primary/60" />
           <span className="pointer-events-none absolute right-3 top-3 h-3 w-3 border-r border-t border-primary/60" />
@@ -743,13 +759,13 @@ function LivePreview({
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="relative grid h-20 w-20 shrink-0 place-items-center rounded-2xl p-3 ring-1 ring-primary/50 bg-[radial-gradient(circle_at_30%_25%,oklch(0.22_0.02_275),oklch(0.14_0.02_280))] shadow-[0_20px_60px_-20px_oklch(0.76_0.09_82/0.7),inset_0_1px_0_oklch(1_0_0/0.08)]">
+            <div className="relative grid h-24 w-24 shrink-0 place-items-center rounded-2xl p-4 ring-1 ring-primary/50 bg-[radial-gradient(circle_at_30%_25%,oklch(0.22_0.02_275),oklch(0.14_0.02_280))] shadow-[0_20px_60px_-20px_oklch(0.76_0.09_82/0.7),inset_0_1px_0_oklch(1_0_0/0.08)]">
               <Sigil id={draft.avatar} active />
             </div>
             <div className="min-w-0 flex-1">
               <div
                 className={
-                  "truncate font-serif text-[1.6rem] leading-tight tracking-tight transition-colors " +
+                  "truncate font-serif text-[1.9rem] leading-tight tracking-tight transition-colors " +
                   (filled.name ? "text-white" : "text-white/25")
                 }
               >
@@ -781,9 +797,27 @@ function LivePreview({
               value="01 · MMXXVI"
             />
           </dl>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 2xl:grid-cols-1">
+            <MiniMetric label="Sigilo" value={selectedSigil.name} active={filled.name} />
+            <MiniMetric label="Aulas" value={String(Math.max(1, Math.round(draft.weeklyHours / 2))).padStart(2, "0")} active={filled.pace} />
+            <MiniMetric label="Ritmo" value={`${draft.weeklyHours}h`} active={filled.pace} />
+          </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-5">
+          <div className="grid grid-cols-4 gap-2">
+            {STEP_META.map((item, index) => (
+              <div
+                key={item.key}
+                className={
+                  "h-1 rounded-full transition-all duration-500 " +
+                  (index <= step ? "bg-primary shadow-[0_0_12px_oklch(0.76_0.09_82/0.65)]" : "bg-border/70")
+                }
+              />
+            ))}
+          </div>
           <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
             Progresso
           </div>
@@ -799,6 +833,31 @@ function LivePreview({
         </div>
       </div>
     </aside>
+  );
+}
+
+function MiniMetric({ label, value, active }: { label: string; value: string; active: boolean }) {
+  return (
+    <div
+      className={
+        "min-w-0 rounded-2xl p-4 ring-1 transition-all " +
+        (active
+          ? "bg-primary/[0.08] ring-primary/30 shadow-[0_18px_50px_-32px_oklch(0.76_0.09_82/0.8)]"
+          : "bg-background/25 ring-border/60")
+      }
+    >
+      <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-muted-foreground">
+        {label}
+      </div>
+      <div
+        className={
+          "mt-2 truncate font-serif text-[1.35rem] leading-none transition-colors " +
+          (active ? "text-primary" : "text-muted-foreground/45")
+        }
+      >
+        {value}
+      </div>
+    </div>
   );
 }
 
