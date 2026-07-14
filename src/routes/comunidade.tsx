@@ -3,6 +3,7 @@ import { Calendar, Check, MessageCircle, Users, Video } from "lucide-react";
 import { toast } from "sonner";
 import { HeroBanner } from "@/components/HeroBanner";
 import { useReservations } from "@/lib/reservations";
+import { pushInbox } from "@/lib/inbox";
 import { slugify } from "@/lib/download";
 import heroComunidade from "@/assets/hero-comunidade.jpg";
 
@@ -158,10 +159,23 @@ function CommunityPage() {
                 <div className="grid h-9 w-9 place-items-center rounded-full bg-primary/15 text-primary font-mono text-xs">
                   {m.initials}
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="text-sm font-medium truncate">{m.name}</div>
                   <div className="text-[11px] text-muted-foreground truncate">{m.role}</div>
                 </div>
+                <button
+                  onClick={() => {
+                    pushInbox({
+                      from: m.name,
+                      title: `Solicitação de mentoria enviada a ${m.name}`,
+                      body: `Seu pedido foi encaminhado. ${m.name} costuma responder em até 48h úteis pelo canal privado #mentoria.`,
+                      tag: "concierge",
+                      href: "/inbox",
+                    });
+                    toast.success("Pedido enviado", { description: `Encaminhado para ${m.name}` });
+                  }}
+                  className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 text-[10px] uppercase tracking-widest text-primary hover:bg-primary/20"
+                >Perguntar</button>
               </li>
             ))}
           </ul>

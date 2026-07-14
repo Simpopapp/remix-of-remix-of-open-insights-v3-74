@@ -1,12 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { course } from "@/lib/course-data";
 import { useProgress } from "@/lib/progress";
-import { ArrowRight, Rocket, Users, Building, Compass } from "lucide-react";
+import { useProfile } from "@/lib/profile";
+import { ArrowRight, Rocket, Users, Building, Compass, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/trilhas")({
   head: () => ({ meta: [{ title: "Trilhas — AI App Empire" }] }),
   component: TrilhasPage,
 });
+
+const GOAL_TO_TRACK: Record<string, string> = {
+  "launch-mvp": "mvp",
+  "acquire-clients": "clients",
+  "scale-agency": "agency",
+  explore: "master",
+};
 
 type Track = {
   id: string;
@@ -65,6 +73,9 @@ function TrilhasPage() {
   ];
 
   const { isDone } = useProgress();
+  const { profile } = useProfile();
+  const recommendedId = GOAL_TO_TRACK[profile.goal] ?? "mvp";
+  const sortedTracks = [...TRACKS].sort((a, b) => (a.id === recommendedId ? -1 : b.id === recommendedId ? 1 : 0));
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-10">
@@ -74,7 +85,7 @@ function TrilhasPage() {
       </p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
-        {TRACKS.map((t) => {
+        {sortedTracks.map((t) => {
           const Icon = t.icon;
           const mods = t.moduleIds.map((id) => course.modules.find((m) => m.id === id)!).filter(Boolean);
           const totalLessons = mods.reduce((n, m) => n + m.lessons.length, 0);
@@ -88,7 +99,12 @@ function TrilhasPage() {
             .find((x) => !isDone(x.m, x.l));
 
           return (
-            <div key={t.id} className={`relative overflow-hidden rounded-2xl border border-primary/25 bg-gradient-to-br ${t.gradient} p-6`}>
+            <div key={t.id} className={`relative overflow-hidden rounded-2xl border ${t.id === recommendedId ? "border-primary/60 ring-1 ring-primary/40" : "border-primary/25"} bg-gradient-to-br ${t.gradient} p-6`}>
+              {t.id === recommendedId && (
+                <div className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-primary/50 bg-primary/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-primary">
+                  <Sparkles className="h-3 w-3" /> Sua trilha
+                </div>
+              )}
               <div className="flex items-start gap-4">
                 <div className="grid h-12 w-12 place-items-center rounded-xl border border-primary/40 bg-background">
                   <Icon className="h-5 w-5 text-primary" />

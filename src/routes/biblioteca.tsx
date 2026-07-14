@@ -136,11 +136,12 @@ function LibraryPage() {
                 <Icon className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-[10px] uppercase tracking-widest text-primary">
                     {i.type}
                   </span>
                   <span className="text-[10px] text-muted-foreground">· {i.size}</span>
+                  <span className="rounded-full border border-border bg-background/60 px-1.5 py-0.5 text-[9px] uppercase tracking-widest text-muted-foreground">amostra</span>
                 </div>
                 <div className="mt-1 font-medium">{i.title}</div>
                 <div className="text-sm text-muted-foreground">{i.desc}</div>

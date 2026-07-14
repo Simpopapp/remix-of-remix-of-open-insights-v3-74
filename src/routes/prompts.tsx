@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Check, Copy, Search } from "lucide-react";
+import { Check, Copy, Search, Star } from "lucide-react";
 import { prompts, promptCategories, type Prompt } from "@/lib/prompts-data";
+import { usePromptFavs } from "@/lib/prompt-favs";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/prompts")({
   head: () => ({
@@ -15,20 +17,23 @@ export const Route = createFileRoute("/prompts")({
 
 function PromptsPage() {
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState<Prompt["category"] | "Todos">("Todos");
+  const [cat, setCat] = useState<Prompt["category"] | "Todos" | "Favoritos">("Todos");
   const [copied, setCopied] = useState<string | null>(null);
+  const { isFav, toggle: toggleFav } = usePromptFavs();
 
   const filtered = useMemo(() => {
     return prompts.filter((p) => {
-      if (cat !== "Todos" && p.category !== cat) return false;
+      if (cat === "Favoritos") { if (!isFav(p.id)) return false; }
+      else if (cat !== "Todos" && p.category !== cat) return false;
       if (q && !(p.title + p.useCase + p.body).toLowerCase().includes(q.toLowerCase())) return false;
       return true;
     });
-  }, [q, cat]);
+  }, [q, cat, isFav]);
 
   function copy(p: Prompt) {
     navigator.clipboard.writeText(p.body);
     setCopied(p.id);
+    toast.success("Prompt copiado", { description: p.title });
     setTimeout(() => setCopied(null), 1500);
   }
 
@@ -54,7 +59,7 @@ function PromptsPage() {
           />
         </div>
         <div className="flex flex-wrap gap-1.5">
-          {(["Todos", ...promptCategories] as const).map((c) => (
+          {(["Todos", "Favoritos", ...promptCategories] as const).map((c) => (
             <button
               key={c}
               onClick={() => setCat(c)}
@@ -85,20 +90,21 @@ function PromptsPage() {
                 <h3 className="mt-1 font-serif text-lg">{p.title}</h3>
                 <p className="text-xs text-muted-foreground">{p.useCase}</p>
               </div>
-              <button
-                onClick={() => copy(p)}
-                className="inline-flex items-center gap-1 rounded-md border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs text-primary hover:bg-primary/20"
-              >
-                {copied === p.id ? (
-                  <>
-                    <Check className="h-3.5 w-3.5" /> copiado
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3.5 w-3.5" /> copiar
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => toggleFav(p.id)}
+                  aria-label={isFav(p.id) ? "Remover favorito" : "Favoritar"}
+                  className={"rounded-md p-1.5 " + (isFav(p.id) ? "text-primary" : "text-muted-foreground hover:text-primary")}
+                >
+                  <Star className={"h-3.5 w-3.5 " + (isFav(p.id) ? "fill-current" : "")} />
+                </button>
+                <button
+                  onClick={() => copy(p)}
+                  className="inline-flex items-center gap-1 rounded-md border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs text-primary hover:bg-primary/20"
+                >
+                  {copied === p.id ? (<><Check className="h-3.5 w-3.5" /> copiado</>) : (<><Copy className="h-3.5 w-3.5" /> copiar</>)}
+                </button>
+              </div>
             </div>
 
             <pre className="mt-4 whitespace-pre-wrap rounded-lg border border-border/60 bg-background/60 p-3 text-[11px] leading-relaxed text-muted-foreground font-mono max-h-52 overflow-y-auto">

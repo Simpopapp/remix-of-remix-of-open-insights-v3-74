@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useMemo } from "react";
 import { useInbox, type InboxMessage } from "@/lib/inbox";
 import { CheckCheck, Inbox, Trash2 } from "lucide-react";
 import { renderMarkdown } from "@/lib/markdown";
@@ -12,6 +13,15 @@ export const Route = createFileRoute("/inbox")({
   }),
   component: InboxPage,
 });
+
+type Filter = "todas" | InboxMessage["tag"];
+const FILTERS: { id: Filter; label: string }[] = [
+  { id: "todas", label: "Todas" },
+  { id: "concierge", label: "Concierge" },
+  { id: "cohort", label: "Cohort" },
+  { id: "conquista", label: "Conquistas" },
+  { id: "sistema", label: "Sistema" },
+];
 
 const tagStyles: Record<InboxMessage["tag"], string> = {
   concierge: "bg-primary/15 text-primary border-primary/40",
@@ -33,6 +43,8 @@ function timeAgo(iso: string) {
 
 function InboxPage() {
   const { list, unread, markRead, markAll, clear } = useInbox();
+  const [filter, setFilter] = useState<Filter>("todas");
+  const visible = useMemo(() => filter === "todas" ? list : list.filter((m) => m.tag === filter), [list, filter]);
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
@@ -54,14 +66,29 @@ function InboxPage() {
         )}
       </div>
 
-      <div className="mt-8 space-y-3">
-        {list.length === 0 && (
+      <div className="mt-6 flex flex-wrap gap-1.5">
+        {FILTERS.map((f) => {
+          const count = f.id === "todas" ? list.length : list.filter((m) => m.tag === f.id).length;
+          return (
+            <button
+              key={f.id}
+              onClick={() => setFilter(f.id)}
+              className={"rounded-full border px-3 py-1 text-xs uppercase tracking-[0.15em] " + (filter === f.id ? "border-primary bg-primary/15 text-primary" : "border-border text-muted-foreground hover:border-primary/40")}
+            >
+              {f.label} <span className="opacity-60">({count})</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="mt-6 space-y-3">
+        {visible.length === 0 && (
           <div className="rounded-2xl border border-dashed border-border p-12 text-center">
             <Inbox className="mx-auto h-8 w-8 text-muted-foreground" />
-            <p className="mt-4 text-sm text-muted-foreground">Sem mensagens.</p>
+            <p className="mt-4 text-sm text-muted-foreground">Sem mensagens neste filtro.</p>
           </div>
         )}
-        {list.map((m) => {
+        {visible.map((m) => {
           const body = (
             <div
               className="mt-2 text-sm text-muted-foreground leading-relaxed [&_strong]:text-foreground"
