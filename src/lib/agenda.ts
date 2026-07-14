@@ -1,4 +1,8 @@
 import { useCallback, useSyncExternalStore } from "react";
+import { pingActivity } from "@/lib/activity";
+import { pushInbox } from "@/lib/inbox";
+
+
 
 const KEY = "aiae:agenda:v1";
 
@@ -69,7 +73,18 @@ export function useAgenda() {
   }, []);
   const toggleDone = useCallback((id: string) => {
     const cur = read();
+    const block = cur.blocks.find((b) => b.id === id);
+    const willBeDone = block ? !block.done : false;
     write({ blocks: cur.blocks.map((b) => (b.id === id ? { ...b, done: !b.done } : b)) });
+    if (willBeDone && block) {
+      pingActivity("focus");
+      pushInbox({
+        from: "Agenda",
+        title: `Bloco concluído: ${block.title}`,
+        body: `Você concluiu **${block.title}** (${block.start}–${block.end}). Atividade registrada no heatmap.`,
+        tag: "sistema",
+      });
+    }
   }, []);
 
   return { blocks: state.blocks, add, update, remove, toggleDone };
