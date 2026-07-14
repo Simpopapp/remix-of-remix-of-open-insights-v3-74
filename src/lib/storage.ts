@@ -66,9 +66,11 @@ export function importDump(raw: string): { ok: true; count: number } | { ok: fal
     let count = 0;
     for (const [k, v] of Object.entries(parsed.data)) {
       if (!k.startsWith(PREFIX) || typeof v !== "string") continue;
+      if (OBSOLETE_KEYS.has(k)) continue;
       window.localStorage.setItem(k, v);
       count++;
     }
+    migrateStorage();
     // Nudge every subscriber via storage event
     window.dispatchEvent(new StorageEvent("storage"));
     return { ok: true, count };
