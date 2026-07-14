@@ -1,11 +1,13 @@
 import { useMemo } from "react";
-import { Award, BookMarked, BookOpen, Brain, Calendar, CheckCircle2, Compass, Feather, Flame, Flag, Highlighter, Layers, type LucideIcon, Medal, Moon, Rocket, Shield, Sparkles, Star, StickyNote, Sunrise, Target, Timer, Trophy, Users, Wand2, Zap } from "lucide-react";
+import { Award, BookMarked, BookOpen, Brain, Calendar, CheckCircle2, Compass, Feather, Flame, Flag, Highlighter, Layers, type LucideIcon, Medal, Moon, Rocket, ScrollText, Shield, ShieldCheck, Sparkles, Star, StickyNote, Sunrise, Target, Timer, Trophy, Users, Wand2, Zap } from "lucide-react";
 import { course, totalLessons } from "./course-data";
 import { useProgress } from "./progress";
 import { useActivity } from "./activity";
 import { useStreak } from "./streak";
 import { useExercises, useBookmarks } from "./user-state";
 import { useHighlights } from "./highlights";
+import { useExam } from "./exam";
+import { useUserProjects } from "./user-projects";
 
 export type BadgeTier = "bronze" | "silver" | "gold" | "legend";
 
@@ -33,6 +35,8 @@ export function useBadges(): { badges: Badge[]; unlocked: number; total: number;
   const exercises = useExercises();
   const bookmarks = useBookmarks();
   const { list: highlights } = useHighlights();
+  const exam = useExam();
+  const { count: userProjectsCount } = useUserProjects();
 
   const pct = Math.round((completedCount / totalLessons) * 100);
   const modulesDone = course.modules.filter((m) => m.lessons.every((l) => isDone(m.id, l.id))).length;
@@ -112,6 +116,9 @@ export function useBadges(): { badges: Badge[]; unlocked: number; total: number;
     { id: "concierge", icon: Users, title: "Concierge", desc: "Perfil personalizado.", tier: "bronze", category: "elite", progress: Object.keys(readMap("aiae:profile:v1")).length > 0 ? 1 : 0, target: 1 },
     { id: "wand", icon: Wand2, title: "Ferramenteiro", desc: "Usou o Command Palette 3x.", tier: "bronze", category: "elite", progress: Math.min(Number(readMap("aiae:cmdk-count:v1").n ?? 0), 3), target: 3 },
     { id: "check", icon: CheckCircle2, title: "Ritual completo", desc: "Tudo do dia zerado.", tier: "gold", category: "elite", progress: streak >= 1 && quizzesPassed >= 1 && exercises.count >= 1 ? 1 : 0, target: 1 },
+    { id: "final-exam", icon: ScrollText, title: "Prova final aprovada", desc: "Passou a prova com ≥70%.", tier: "gold", category: "elite", progress: exam.best?.passed ? 1 : 0, target: 1 },
+    { id: "final-exam-90", icon: ShieldCheck, title: "Distinção máxima", desc: "Melhor tentativa ≥90%.", tier: "legend", category: "elite", progress: exam.best && exam.best.pct >= 90 ? 1 : 0, target: 1 },
+    { id: "vitrine", icon: Rocket, title: "Publicado na vitrine", desc: "Primeiro projeto publicado.", tier: "silver", category: "elite", progress: Math.min(userProjectsCount, 1), target: 1 },
   ];
 
   const badges: Badge[] = raw.map((b) => ({ ...b, unlocked: b.progress >= b.target }));

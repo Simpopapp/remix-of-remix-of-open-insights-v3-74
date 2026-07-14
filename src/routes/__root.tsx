@@ -24,6 +24,7 @@ import { OfflineBanner } from "@/components/OfflineBanner";
 
 import { Toaster } from "@/components/ui/sonner";
 import { LevelUpWatcher } from "@/lib/level-toast";
+import { AchievementWatcher } from "@/lib/achievement-watcher";
 import { useTheme } from "@/lib/theme";
 import { useProfile } from "@/lib/profile";
 import { useGamification } from "@/lib/gamification";
@@ -233,6 +234,7 @@ function AppShell() {
       <ConciergeChat />
       <ShortcutsOverlay />
       <LevelUpWatcher />
+      <AchievementWatcher />
       <MiniPlayer />
       <OfflineBanner />
       <Toaster position="top-right" theme={resolved} />

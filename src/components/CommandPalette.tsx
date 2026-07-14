@@ -22,6 +22,13 @@ export function CommandPalette() {
     if (open) {
       resetIndex();
       buildIndex();
+      if (typeof window !== "undefined") {
+        try {
+          const raw = window.localStorage.getItem("aiae:cmdk-count:v1");
+          const n = (raw ? JSON.parse(raw).n ?? 0 : 0) + 1;
+          window.localStorage.setItem("aiae:cmdk-count:v1", JSON.stringify({ n }));
+        } catch { /* noop */ }
+      }
     }
   }, [open]);
 
