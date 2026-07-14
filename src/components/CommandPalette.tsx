@@ -1,6 +1,6 @@
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "@tanstack/react-router";
-import { Award, Bell, BookMarked, BookOpen, CalendarDays, FileText, Highlighter, Home, Layers, Library, LineChart, Map, NotebookPen, PlayCircle, Rocket, Search, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
+import { Award, Bell, BookMarked, BookOpen, CalendarDays, FileText, GraduationCap, HelpCircle, Highlighter, Home, Layers, Library, LineChart, Map, NotebookPen, PlayCircle, Rocket, Route as RouteIcon, ScrollText, Search, Sparkles, Sun, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { course } from "@/lib/course-data";
 import { buildIndex, resetIndex, searchContent, snippet } from "@/lib/search-index";
@@ -102,6 +102,30 @@ export function CommandPalette() {
           <CommandGroup heading="Navegação">
             <CommandItem onSelect={() => go(() => navigate({ to: "/" }))}>
               <Home className="mr-2 h-4 w-4" /> Dashboard
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/hoje" }))}>
+              <Sun className="mr-2 h-4 w-4" /> Hoje
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/trilhas" }))}>
+              <RouteIcon className="mr-2 h-4 w-4" /> Trilhas
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/estatisticas" }))}>
+              <LineChart className="mr-2 h-4 w-4" /> Estatísticas
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/ranking" }))}>
+              <Trophy className="mr-2 h-4 w-4" /> Ranking da cohort
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/prova" }))}>
+              <ScrollText className="mr-2 h-4 w-4" /> Prova final
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/certificado" }))}>
+              <GraduationCap className="mr-2 h-4 w-4" /> Certificado
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/novidades" }))}>
+              <Sparkles className="mr-2 h-4 w-4" /> Novidades
+            </CommandItem>
+            <CommandItem onSelect={() => go(() => navigate({ to: "/ajuda" }))}>
+              <HelpCircle className="mr-2 h-4 w-4" /> Ajuda
             </CommandItem>
             <CommandItem onSelect={() => go(() => navigate({ to: "/revisao" }))}>
               <LineChart className="mr-2 h-4 w-4" /> Revisão semanal
