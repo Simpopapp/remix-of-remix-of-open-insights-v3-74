@@ -1,11 +1,13 @@
 import { useMemo } from "react";
-import { Award, BookMarked, BookOpen, Brain, Calendar, CheckCircle2, Compass, Feather, Flame, Flag, Highlighter, Layers, type LucideIcon, Medal, Moon, Rocket, Shield, Sparkles, Star, StickyNote, Sunrise, Target, Timer, Trophy, Users, Wand2, Zap } from "lucide-react";
+import { Award, BookMarked, BookOpen, Brain, Calendar, CheckCircle2, Compass, Feather, Flame, Flag, Highlighter, Layers, type LucideIcon, Medal, Moon, Rocket, ScrollText, Shield, ShieldCheck, Sparkles, Star, StickyNote, Sunrise, Target, Timer, Trophy, Users, Wand2, Zap } from "lucide-react";
 import { course, totalLessons } from "./course-data";
 import { useProgress } from "./progress";
 import { useActivity } from "./activity";
 import { useStreak } from "./streak";
 import { useExercises, useBookmarks } from "./user-state";
 import { useHighlights } from "./highlights";
+import { useExam } from "./exam";
+import { useUserProjects } from "./user-projects";
 
 export type BadgeTier = "bronze" | "silver" | "gold" | "legend";
 
