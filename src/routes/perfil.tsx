@@ -116,16 +116,28 @@ function PerfilPage() {
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 />
               </Field>
-              <Field label="Avatar">
+              <Field label="Sigilo">
                 <div className="flex flex-wrap gap-1.5">
-                  {["◆","★","▲","●","♛","⚡","☾","✦","♞","☰"].map((a) => (
-                    <button
-                      key={a}
-                      type="button"
-                      onClick={() => update({ avatar: a })}
-                      className={"grid h-9 w-9 place-items-center rounded-md border text-lg " + (profile.avatar === a ? "border-primary bg-primary/15 text-primary" : "border-input hover:border-primary/50")}
-                    >{a}</button>
-                  ))}
+                  {SIGILS.map((sig) => {
+                    const active = profile.avatar === sig.id;
+                    return (
+                      <button
+                        key={sig.id}
+                        type="button"
+                        title={sig.name}
+                        aria-label={sig.name}
+                        onClick={() => update({ avatar: sig.id })}
+                        className={
+                          "grid h-11 w-11 place-items-center rounded-md border p-1.5 transition " +
+                          (active
+                            ? "border-primary bg-primary/15"
+                            : "border-input hover:border-primary/50")
+                        }
+                      >
+                        <Sigil id={sig.id} active={active} className="h-full w-full" />
+                      </button>
+                    );
+                  })}
                 </div>
               </Field>
             </div>
