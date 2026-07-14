@@ -176,71 +176,93 @@ function Onboarding() {
         />
       </div>
 
-      <div className="mx-auto grid min-h-dvh max-w-[1400px] grid-cols-1 lg:grid-cols-[minmax(0,540px)_1fr]">
+      <div className="mx-auto grid min-h-dvh max-w-[1360px] grid-cols-1 items-stretch lg:grid-cols-[minmax(440px,560px)_minmax(0,1fr)]">
         {/* Left: editorial art */}
         <aside className="relative hidden overflow-hidden lg:block">
           <img
             src={heroOnboarding}
             alt=""
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out"
-            style={{ transform: `scale(${1.08 + step * 0.02}) translateY(${step * -6}px)`, filter: "saturate(1.05) contrast(1.05)" }}
+            style={{
+              objectPosition: "18% center",
+              transform: `scale(${1.06 + step * 0.015}) translateY(${step * -4}px)`,
+              filter: "brightness(0.42) saturate(1.15) contrast(1.08)",
+            }}
           />
-          {/* Deep vignette + gold rim from right */}
-          <div className="absolute inset-0 bg-[linear-gradient(115deg,oklch(0.08_0.02_280/0.55)_0%,transparent_45%,oklch(0.08_0.02_280/0.9)_100%)]" />
-          <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-primary/50 to-transparent" />
+          {/* Legibility scrims — stacked for guaranteed contrast */}
+          <div className="absolute inset-0 bg-[oklch(0.08_0.02_280/0.55)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(100deg,oklch(0.06_0.02_280/0.92)_0%,oklch(0.06_0.02_280/0.7)_55%,oklch(0.06_0.02_280/0.2)_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/70 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/80 to-transparent" />
+          <div
+            className="absolute inset-0 opacity-40"
+            style={{
+              background:
+                "radial-gradient(ellipse at 30% 45%, transparent 35%, oklch(0.06 0.02 280 / 0.75) 85%)",
+            }}
+          />
+          {/* Gold rim divider */}
+          <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-primary/70 to-transparent shadow-[0_0_24px_oklch(0.76_0.09_82/0.5)]" />
           {/* Corner ornaments */}
-          <span className="pointer-events-none absolute left-8 top-8 h-6 w-6 border-l border-t border-primary/60" />
-          <span className="pointer-events-none absolute right-8 top-8 h-6 w-6 border-r border-t border-primary/60" />
-          <span className="pointer-events-none absolute bottom-8 left-8 h-6 w-6 border-b border-l border-primary/60" />
-          <span className="pointer-events-none absolute bottom-8 right-8 h-6 w-6 border-b border-r border-primary/60" />
+          <span className="pointer-events-none absolute left-8 top-8 h-6 w-6 border-l border-t border-primary/70" />
+          <span className="pointer-events-none absolute right-8 top-8 h-6 w-6 border-r border-t border-primary/70" />
+          <span className="pointer-events-none absolute bottom-8 left-8 h-6 w-6 border-b border-l border-primary/70" />
+          <span className="pointer-events-none absolute bottom-8 right-8 h-6 w-6 border-b border-r border-primary/70" />
 
-          <div className="relative flex h-full flex-col justify-between p-12">
+          <div
+            className="relative flex h-full flex-col justify-between p-10 xl:p-14 text-white"
+            style={{ textShadow: "0 2px 24px oklch(0.06 0.02 280 / 0.9)" }}
+          >
             <header className="flex items-center justify-between">
               <div className="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.36em] text-primary">
-                <span className="h-1 w-6 bg-primary" />
+                <span className="h-1 w-6 bg-primary shadow-[0_0_10px_oklch(0.76_0.09_82/0.9)]" />
                 AI App Empire
               </div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-primary/70">
+              <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/70">
                 Cohort 01 · MMXXVI
               </div>
             </header>
 
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.36em] text-primary/80">
+            <div className="max-w-[440px]">
+              <div className="font-mono text-[10px] uppercase tracking-[0.36em] text-primary">
                 {meta.kicker} — {String(step + 1).padStart(2, "0")} / {String(totalSteps).padStart(2, "0")}
               </div>
-              <h2 className="mt-5 font-serif text-[3.2rem] leading-[0.98] tracking-[-0.02em]">
+              <h2 className="mt-5 font-serif text-[2.6rem] leading-[1.02] tracking-[-0.02em] text-balance xl:text-[3rem]">
                 Antes de entrar,
                 <br />
                 <span className="italic text-gold-gradient">um breve ritual.</span>
               </h2>
-              <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-muted-foreground">
+              <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/75">
                 Quatro portas. Cada uma calibra o que a plataforma faz por você.
               </p>
 
-              <ol className="mt-10 space-y-2">
+              <ol className="relative mt-10 space-y-1.5">
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute left-[15px] top-4 bottom-4 w-px bg-white/10"
+                />
                 {STEP_META.map((s, i) => {
                   const state = i === step ? "active" : i < step ? "done" : "todo";
                   return (
                     <li
                       key={s.key}
                       className={
-                        "group flex items-center gap-4 rounded-lg py-2 pl-2 pr-3 transition-all duration-500 " +
+                        "group relative flex items-center gap-4 rounded-lg py-2 pl-2 pr-3 transition-all duration-500 " +
                         (state === "active"
-                          ? "bg-primary/[0.06] text-foreground"
+                          ? "bg-primary/[0.08] text-white"
                           : state === "done"
-                          ? "text-primary/80"
-                          : "text-muted-foreground/45")
+                          ? "text-primary/90"
+                          : "text-white/45")
                       }
                     >
                       <span
                         className={
-                          "grid h-8 w-8 place-items-center rounded-full font-mono text-[11px] tabular-nums transition-all " +
+                          "relative z-10 grid h-8 w-8 place-items-center rounded-full font-mono text-[11px] tabular-nums transition-all " +
                           (state === "active"
                             ? "bg-primary text-primary-foreground shadow-[0_0_0_4px_oklch(0.76_0.09_82/0.18),0_10px_30px_-8px_oklch(0.76_0.09_82/0.7)]"
                             : state === "done"
-                            ? "border border-primary/40 bg-primary/10 text-primary"
-                            : "border border-border")
+                            ? "border border-primary/40 bg-primary/15 text-primary"
+                            : "border border-white/20 bg-[oklch(0.08_0.02_280/0.6)]")
                         }
                       >
                         {state === "done" ? <Check className="h-3.5 w-3.5" /> : String(i + 1).padStart(2, "0")}
@@ -251,7 +273,7 @@ function Onboarding() {
                       <span
                         className={
                           "h-px transition-all duration-500 " +
-                          (state === "active" ? "w-8 bg-primary" : "w-3 bg-border")
+                          (state === "active" ? "w-8 bg-primary shadow-[0_0_8px_oklch(0.76_0.09_82/0.9)]" : "w-3 bg-white/20")
                         }
                       />
                     </li>
@@ -259,12 +281,12 @@ function Onboarding() {
                 })}
               </ol>
 
-              <blockquote className="mt-10 border-l border-primary/60 pl-5 font-serif text-[15px] italic leading-relaxed text-muted-foreground/90">
+              <blockquote className="mt-10 border-l border-primary/70 pl-5 font-serif text-[15px] italic leading-relaxed text-white/85">
                 {meta.epigraph}
               </blockquote>
             </div>
 
-            <footer className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground/60">
+            <footer className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.32em] text-white/55">
               <span>Nº {String(step + 1).padStart(3, "0")} / 004</span>
               <span className="inline-flex items-center gap-1.5">
                 <Command className="h-3 w-3" /> Enter avança
@@ -274,8 +296,8 @@ function Onboarding() {
         </aside>
 
         {/* Right: form */}
-        <main className="relative flex items-center justify-center px-6 py-10 lg:p-16">
-          <div className="w-full max-w-[560px]">
+        <main className="relative flex items-center justify-center px-6 py-10 lg:px-12 lg:py-14 xl:px-16 xl:py-16">
+          <div className="w-full max-w-[580px]">
             {/* Mobile mini-hero */}
             <div className="mb-8 flex items-center justify-between lg:hidden">
               <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.32em] text-primary">
